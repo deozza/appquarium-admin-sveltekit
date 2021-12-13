@@ -4,8 +4,8 @@ services:
     image: node:16
     container_name: appquarium-admin-svelte
     volumes:
-      - ./:/home/appquarium-admin
-    working_dir: /home/appquarium-admin
+      - ./:/home/appquarium-admin-svelte
+    working_dir: /home/appquarium-admin-svelte
     ports:
       - 3000:3000
     environment:
