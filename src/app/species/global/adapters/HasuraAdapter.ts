@@ -1,11 +1,9 @@
 import AdapterInterface from "./AdapterInterface";
-
-import HasuraClient from "../../../utils/hasura/HasuraClient";
 import UseCaseError from "../../../utils/useCasesResult/types/UseCaseError";
-import HasuraQueryBuilder from "../../../utils/hasura/HasuraRequestBuilder/HasuraQueryBuilder";
-import HasuraMutationInsertBuilder from "../../../utils/hasura/HasuraRequestBuilder/HasuraMutationInsertBuilder";
-import HasuraMutationUpdateBuilder from "../../../utils/hasura/HasuraRequestBuilder/HasuraMutationUpdateBuilder";
-import HasuraMutationDeleteBuilder from "../../../utils/hasura/HasuraRequestBuilder/HasuraMutationDeleteBuilder";
+import HasuraQueryBuilder from "../../../adapters/hasura/HasuraRequestBuilder/HasuraQueryBuilder";
+import HasuraMutationInsertBuilder from "../../../adapters/hasura/HasuraRequestBuilder/HasuraMutationInsertBuilder";
+import HasuraMutationUpdateBuilder from "../../../adapters/hasura/HasuraRequestBuilder/HasuraMutationUpdateBuilder";
+import HasuraMutationDeleteBuilder from "../../../adapters/hasura/HasuraRequestBuilder/HasuraMutationDeleteBuilder";
 
 import Species from "../entities/Species";
 import SpeciesGenre from "../entities/SpeciesGenre";
@@ -13,6 +11,7 @@ import SpeciesFamily from "../entities/SpeciesFamily";
 import WaterConstraints from "../entities/WaterConstraints";
 import SpeciesNaming from "../entities/SpeciesNaming";
 import AnimalSpecs from "../entities/AnimalSpecs";
+import HasuraClient from "../../../adapters/hasura/HasuraClient";
 
 export default class HasuraAdapter extends HasuraClient implements AdapterInterface {
 
@@ -32,6 +31,7 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
   }
 
   async queryListOfSpecies(): Promise<Array<Species> | UseCaseError> {
+
     let queryBuilder: HasuraQueryBuilder = new HasuraQueryBuilder('species')
     queryBuilder.addOrderBy('created_at')
     queryBuilder.addReturn('uuid', 'category', 'publication_state', 'created_at', 'updated_at', 'species_naming {name,  species_genre {name}}')

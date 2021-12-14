@@ -11,6 +11,7 @@ import AnimalSpecs from "../entities/AnimalSpecs";
 import Services from "../services/Services";
 
 export default class SpeciesUseCase implements UseCaseInterface {
+
   async getTotalSpecies(jwt: string): Promise<Result> {
     let result: Result = new Result()
     const speciesService: Services = new Services()
