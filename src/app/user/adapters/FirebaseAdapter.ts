@@ -3,12 +3,14 @@ import type AdapterInterface from "./AdapterInterface.ts";
 import User from "../entities/User";
 
 import {getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import firebaseInit from "../../adapters/firebase/initFirebase";
 
 export default class FirebaseAdapter implements AdapterInterface {
 
   private readonly auth: any
 
   constructor() {
+    firebaseInit()
     this.auth = getAuth()
   }
 
