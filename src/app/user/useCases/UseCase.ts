@@ -12,10 +12,17 @@ export default class UserUseCase implements UseCaseInterface {
     const userServices: Services = new Services()
     let result: Result = new Result()
 
-    const user: User | null = await userServices.authenticateUser(email, password)
+    let user: User | null = await userServices.authenticateUser(email, password)
 
     if (user === null) {
       result.addError('User not found', 404)
+      return result
+    }
+
+    user = userServices.setCookie(user)
+
+    if (user === null) {
+      result.addError('Cookie failed', 400)
       return result
     }
 

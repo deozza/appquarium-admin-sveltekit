@@ -5,7 +5,7 @@ import User from "../entities/User";
 import type AdapterInterface from "../adapters/AdapterInterface";
 import FirebaseAdapter from "../adapters/FirebaseAdapter";
 import HasuraAdapter from "../adapters/HasuraAdapter";
-//import Cookies from 'js-cookie';
+import Cookies from 'js-cookie';
 
 export default class Services implements ServicesInterface {
 
@@ -29,9 +29,13 @@ export default class Services implements ServicesInterface {
   }
 
   setCookie(user: User): User | null{
-    //Cookies.set('appquarium-jwt', user.jwt)
+    Cookies.set('appquarium-jwt', user.jwt, {sameSite: "strict"})
 
     return user
+  }
+
+  removeCookie(): null {
+    Cookies.remove('appquarium-jwt')
   }
 
 }

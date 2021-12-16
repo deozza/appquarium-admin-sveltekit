@@ -33,4 +33,25 @@ export default class Theme{
             sm: 'text-sm'
         }
     }
+
+    public static ELEMENT_SIZES(): object {
+        return {
+            small: 'small',
+            normal: 'normal',
+            large: 'large'
+        }
+    }
+
+    public static ELEMENT_STYLE(): object {
+        return {
+            black: 'black',
+            white: 'white',
+            primary: 'primary',
+            secondary: 'secondary',
+            success: 'success',
+            warning: 'warning',
+            danger: 'danger',
+            info: 'info',
+        }
+    }
 }
