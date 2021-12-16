@@ -1,18 +1,22 @@
+<script lang="ts" context="module">
+    import BaseHeaderModel from "../components/atoms/typography/header/BaseHeaderModel";
+
+    export const header: BaseHeaderModel = new BaseHeaderModel('Connexion').setDisplaySizeOrTrowError('xxxl')
+</script>
+
 <script lang="ts">
-    import firebaseInit from "../app/adapters/firebase/initFirebase";
     import UserUseCase from "../app/user/useCases/UseCase";
     import Result from "../app/utils/useCasesResult/Result";
-
+    import BaseHeader from "../components/atoms/typography/header/BaseHeader.svelte";
 
     export let email: string = ''
     export let password: string = ''
 
-    async function login(){
-        firebaseInit()
+    async function login() {
         const userUseCase: UserUseCase = new UserUseCase()
         const user: Result = await userUseCase.login(email, password)
 
-        if(user.isFailed()){
+        if (user.isFailed()) {
 
         }
     }
@@ -20,9 +24,9 @@
 </script>
 
 <div class="flex items-center justify-center h-screen">
-    <section class="min-w-[50%] min-h-[33%] flex flex-col justify-center align-items-center space-y-6 p-6 bg-white border-2 rounded-md border-black">
-        <h1 class="text-3xl text-center">Connexion</h1>
-        <form on:submit|preventDefault={login}>
+    <section class="min-w-[50%] min-h-[33%] flex flex-col justify-center items-center space-y-6 p-6 bg-white border-2 rounded-md border-black">
+        <BaseHeader baseHeaderModel="{header}" />
+        <form class="min-w-full" on:submit|preventDefault={login}>
             <ul class="space-y-6">
                 <li class="flex flex-col justify-center  align-items-center">
                     <div class="flex flex-row justify-center justify-items-center align-items-center">
