@@ -1,4 +1,5 @@
-import AdapterInterface from "./AdapterInterface";
+import type AdapterInterface from "./AdapterInterface";
+
 import UseCaseError from "../../../utils/useCasesResult/types/UseCaseError";
 import HasuraQueryBuilder from "../../../adapters/hasura/HasuraRequestBuilder/HasuraQueryBuilder";
 import HasuraMutationInsertBuilder from "../../../adapters/hasura/HasuraRequestBuilder/HasuraMutationInsertBuilder";

@@ -1,25 +1,30 @@
-import AdapterInterface from "./AdapterInterface";
+import type AdapterInterface from "./AdapterInterface.ts";
 
 import User from "../entities/User";
 
-import firebase from "firebase";
+import {getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 
 export default class FirebaseAdapter implements AdapterInterface {
 
-  private auth: any
+  private readonly auth: any
 
-  constructor(auth: any) {
-    this.auth = auth
+  constructor() {
+    this.auth = getAuth()
   }
 
   async authenticateWithEmailAndPassword(email: string, password: string): Promise<User | null> {
     try {
-      const userFromFirebase: firebase.auth.UserCredential = await this.auth.signInWithEmailAndPassword(
+      const userFromFirebase = await signInWithEmailAndPassword(
+        this.auth,
         email,
         password
       )
 
-      return new User(await userFromFirebase.user?.getIdToken()!);
+      const user:User = new User(await userFromFirebase.user?.getIdToken()!)
+      user.uid = userFromFirebase.user?.uid
+      user.email = userFromFirebase.user?.email
+
+      return user
     } catch (e) {
       return null
     }

@@ -1,11 +1,9 @@
-import firebase from "firebase";
-
 export default class Image {
   url: string = ''
   alt: string = ''
   origin: string = ''
 
-  setFromFirebase(file: firebase.storage.Reference) {
+  setFromFirebase(file) {
     this.url = ''
     this.alt = ''
     this.origin = ''

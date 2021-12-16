@@ -1,4 +1,4 @@
-import ServiceInterface from "./ServiceInterface";
+import type ServiceInterface from "./ServiceInterface";
 
 import UseCaseError from "../../utils/useCasesResult/types/UseCaseError";
 
@@ -9,15 +9,9 @@ import FirebaseAdapter from "../adapters/FirebaseAdapter";
 
 export default class Service implements ServiceInterface{
 
-  private readonly module: any
-
-  constructor(module: any) {
-    this.module = module
-  }
-
   getComputedFileName(fileName: string): string {
-    return fileName.replaceAll(' ', '_')
-      .replaceAll("'", '_')
+    return fileName.replace(' ', '_')
+      .replace("'", '_')
       .toLowerCase();
   }
 
@@ -31,19 +25,19 @@ export default class Service implements ServiceInterface{
   }
 
   async uploadFile(path: string, file: File, metadata: object): Promise<Image | Array<UseCaseError>> {
-    const adapter: AdapterInterface = new FirebaseAdapter(this.module)
+    const adapter: AdapterInterface = new FirebaseAdapter()
 
     return await adapter.uploadFile(path, file, metadata)
   }
 
   async editFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>> {
-    const adapter: AdapterInterface = new FirebaseAdapter(this.module)
+    const adapter: AdapterInterface = new FirebaseAdapter()
 
     return await adapter.editFileMetadata(image)
   }
 
   async deleteFile(image: Image): Promise<boolean | Array<UseCaseError>> {
-    const adapter: AdapterInterface = new FirebaseAdapter(this.module)
+    const adapter: AdapterInterface = new FirebaseAdapter()
 
     return await adapter.deleteFile(image)
   }

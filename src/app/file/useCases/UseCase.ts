@@ -1,4 +1,4 @@
-import UseCaseInterface from "./UseCaseInterface";
+import type UseCaseInterface from "./UseCaseInterface";
 
 import UseCaseError from "../../utils/useCasesResult/types/UseCaseError";
 import Result from "../../utils/useCasesResult/Result";
@@ -8,15 +8,10 @@ import Image from "../entities/Image";
 import Service from "../services/Service";
 
 export default class UseCase implements UseCaseInterface {
-  private readonly module: any
-
-  constructor(module: any) {
-    this.module = module
-  }
 
   async  uploadFile(fileName: string, fileSource: string, basePath: string, file: File | null): Promise<Result> {
     const result: Result = new Result()
-    const fileService: Service = new Service(this.module)
+    const fileService: Service = new Service()
 
     if(file === null){
       result.addError('File should not be empty', 400)
@@ -40,7 +35,7 @@ export default class UseCase implements UseCaseInterface {
 
   async editFileMetadata(image: Image): Promise<Result> {
     const result: Result = new Result()
-    const fileService: Service = new Service(this.module)
+    const fileService: Service = new Service()
 
     const isEdited: boolean | Array<UseCaseError> = await fileService.editFileMetadata(image)
     if(typeof isEdited !== 'boolean'){
@@ -54,7 +49,7 @@ export default class UseCase implements UseCaseInterface {
 
   async deleteFile(image: Image): Promise<Result> {
     const result: Result = new Result()
-    const fileService: Service = new Service(this.module)
+    const fileService: Service = new Service()
 
     const isDeleted: boolean | Array<UseCaseError> = await fileService.deleteFile(image)
     if(typeof isDeleted !== 'boolean'){

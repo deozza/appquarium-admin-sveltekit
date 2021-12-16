@@ -1,25 +1,24 @@
-import AdapterInterface from "./AdapterInterface";
+import type AdapterInterface from "./AdapterInterface";
 
 import UseCaseError from "../../utils/useCasesResult/types/UseCaseError";
 
 import Image from "../entities/Image";
 
-import firebase from "firebase";
-
+import  { getStorage, ref, getDownloadURL, updateMetadata, uploadBytes, deleteObject } from 'firebase/storage'
 export default class FirebaseAdapter implements AdapterInterface{
-  private storage: firebase.storage.Storage
+  private storage
 
-  constructor(storage: firebase.storage.Storage) {
-    this.storage = storage
+  constructor() {
+    this.storage = getStorage()
   }
 
   async uploadFile(path: string, file: File, metadata: object): Promise<Image | Array<UseCaseError>> {
-    return await this.storage.ref(path).put(file, metadata)
+      return await uploadBytes(ref(this.storage, path), file, metadata)
       .then(async () => {
         const newImage: Image = new Image()
         newImage.alt = metadata['customMetadata']['alt']
         newImage.origin = metadata['customMetadata']['origin']
-        newImage.url = await this.storage.ref(path).getDownloadURL()
+        newImage.url = await getDownloadURL(ref(this.storage, path))
        return newImage
 
       })
@@ -30,7 +29,9 @@ export default class FirebaseAdapter implements AdapterInterface{
   }
 
   async editFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>> {
-    return await this.storage.refFromURL(image.url).updateMetadata({customMetadata: {alt: image.alt, origin: image.origin}})
+
+
+    return await updateMetadata(ref(this.storage, image.url), {customMetadata: {alt: image.alt, origin: image.origin}})
       .then(() => {
         return true
       })
@@ -41,7 +42,7 @@ export default class FirebaseAdapter implements AdapterInterface{
   }
 
   async deleteFile(image: Image): Promise<boolean | Array<UseCaseError>> {
-    return await this.storage.refFromURL(image.url).delete()
+    return await deleteObject(ref(this.storage, image.url))
       .then(() => {
         return true
       })

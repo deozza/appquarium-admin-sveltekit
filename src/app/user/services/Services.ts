@@ -1,29 +1,23 @@
-import ServicesInterface from "./ServicesInterface";
+import type ServicesInterface from "./ServicesInterface";
 
-import Credentials from "../entities/Credentials";
 import User from "../entities/User";
 
-import AdapterInterface from "../adapters/AdapterInterface";
+import type AdapterInterface from "../adapters/AdapterInterface";
 import FirebaseAdapter from "../adapters/FirebaseAdapter";
 import HasuraAdapter from "../adapters/HasuraAdapter";
+//import Cookies from 'js-cookie';
 
 export default class Services implements ServicesInterface {
 
-  private readonly module: any
+  async authenticateUser(email: string, password: string): Promise<User | null> {
 
-  constructor(module: any) {
-    this.module = module
-  }
+    const adapter: AdapterInterface | null = new FirebaseAdapter()
 
-  async authenticateUser(credentials: Credentials): Promise<User | null> {
-
-    const adapter: AdapterInterface | null = new FirebaseAdapter(this.module)
-
-    return await adapter.authenticateWithEmailAndPassword(credentials.email.value, credentials.password.value)
+    return await adapter.authenticateWithEmailAndPassword(email, password)
   }
 
   async getRefreshedToken(): Promise<string | null> {
-    const adapter: AdapterInterface | null = new FirebaseAdapter(this.module)
+    const adapter: AdapterInterface | null = new FirebaseAdapter()
 
     return await adapter.getRefreshedToken()
   }
@@ -33,4 +27,11 @@ export default class Services implements ServicesInterface {
 
     return await adapter.queryTotalUsers()
   }
+
+  setCookie(user: User): User | null{
+    //Cookies.set('appquarium-jwt', user.jwt)
+
+    return user
+  }
+
 }

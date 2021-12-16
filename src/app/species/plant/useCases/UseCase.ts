@@ -1,4 +1,4 @@
-import UseCaseInterface from "./UseCaseInterface";
+import type UseCaseInterface from "./UseCaseInterface";
 
 import Result from "../../../utils/useCasesResult/Result";
 import UseCaseError from "../../../utils/useCasesResult/types/UseCaseError";

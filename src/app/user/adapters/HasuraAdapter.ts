@@ -1,4 +1,4 @@
-import AdapterInterface from "./AdapterInterface";
+import type AdapterInterface from "./AdapterInterface";
 
 import HasuraClient from "../../adapters/hasura/HasuraClient";
 import HasuraQueryBuilder from "../../adapters/hasura/HasuraRequestBuilder/HasuraQueryBuilder";

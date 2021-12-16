@@ -10,7 +10,7 @@ export default class HasuraClient {
     }
 
     if(jwt !== ''){
-      headers.Authorization = `Bearer ${jwt}`
+      headers['Authorization'] = `Bearer ${jwt}`
     }
 
     this.client = new GraphQLClient(import.meta.env.VITE_HASURA_ENDPOINT, {headers: headers})

@@ -1,4 +1,4 @@
-import ServicesInterface from "./ServicesInterface";
+import type ServicesInterface from "./ServicesInterface";
 
 import UseCaseError from "../../../utils/useCasesResult/types/UseCaseError";
 import Result from "../../../utils/useCasesResult/Result";
@@ -11,7 +11,7 @@ import SpeciesFamily from "../entities/SpeciesFamily";
 import SpeciesGenre from "../entities/SpeciesGenre";
 import AnimalSpecs from "../entities/AnimalSpecs";
 
-import AdapterInterface from "../adapters/AdapterInterface";
+import type AdapterInterface from "../adapters/AdapterInterface";
 import HasuraAdapter from "../adapters/HasuraAdapter";
 
 export default class Services implements ServicesInterface {

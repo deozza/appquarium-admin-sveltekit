@@ -1,25 +1,18 @@
-import UseCaseInterface from "./UseCaseInterface";
+import type UseCaseInterface from "./UseCaseInterface";
 
 import Result from "../../utils/useCasesResult/Result";
 
-import Credentials from "../entities/Credentials";
 import User from "../entities/User";
 
 import Services from "../services/Services";
 
 export default class UserUseCase implements UseCaseInterface {
 
-  private readonly module: any
-
-  constructor(module: any) {
-    this.module = module
-  }
-
-  async login(credentials: Credentials): Promise<Result> {
-    const userServices: Services = new Services(this.module)
+  async login(email: string, password: string): Promise<Result> {
+    const userServices: Services = new Services()
     let result: Result = new Result()
 
-    const user: User | null = await userServices.authenticateUser(credentials)
+    const user: User | null = await userServices.authenticateUser(email, password)
 
     if (user === null) {
       result.addError('User not found', 404)
@@ -32,7 +25,7 @@ export default class UserUseCase implements UseCaseInterface {
   }
 
   async checkTokenIsValidOrRefresh(token: string): Promise<Result> {
-    const userServices: Services = new Services(this.module)
+    const userServices: Services = new Services()
     let result: Result = new Result()
 
     const tokenDecodablePart = token.split('.')[1]
@@ -56,7 +49,7 @@ export default class UserUseCase implements UseCaseInterface {
   }
 
   async getTotalUsers(jwt: string): Promise<Result> {
-    const userServices: Services = new Services(null)
+    const userServices: Services = new Services()
     let result: Result = new Result()
 
     const totalUsers: number | null = await userServices.queryTotalUsers(jwt)
