@@ -46,7 +46,6 @@ const addInvertebrateButton: BaseButtonModel = new BaseButtonModel('Ajouter un i
     .setTypeOrThrowError('button')
     .setStyleOrThrowError('warning')
 
-export let result: Result = new Result()
 export let listOfSpecies: Array<Species> = []
 
 </script>

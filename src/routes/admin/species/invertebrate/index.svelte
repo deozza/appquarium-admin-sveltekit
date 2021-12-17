@@ -32,7 +32,6 @@ const header: BaseHeaderModel = new BaseHeaderModel('Dashboard nvertébrés')
     .setDisplaySizeOrTrowError('xxxl')
     .setSizeOrTrowError('h1')
 
-export let result: Result = new Result()
 export let listOfInvertebrates: Array<Species> = []
 
 </script>

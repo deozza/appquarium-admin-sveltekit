@@ -32,7 +32,6 @@ const header: BaseHeaderModel = new BaseHeaderModel('Dashboard plantes')
     .setDisplaySizeOrTrowError('xxxl')
     .setSizeOrTrowError('h1')
 
-export let result: Result = new Result()
 export let listOfPlant: Array<Species> = []
 
 </script>

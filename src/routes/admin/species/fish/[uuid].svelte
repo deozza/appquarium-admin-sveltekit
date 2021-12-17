@@ -36,7 +36,7 @@
     import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
 
     export let species: Species = new Species([])
-    export let header: BaseHeaderModel = new BaseHeaderModel(species.computeName())
+    const header: BaseHeaderModel = new BaseHeaderModel(species.computeName())
         .setDisplaySizeOrTrowError('xxxl')
         .setSizeOrTrowError('h1')
 </script>
