@@ -12,6 +12,7 @@
         class:pointer-events-none={baseButtonModel.isDisabled === true}
         type="{baseButtonModel.type}"
         disabled="{isDisabled ? 'disabled' : ''}"
+        on:click
 >
     {baseButtonModel.content}
 </button>

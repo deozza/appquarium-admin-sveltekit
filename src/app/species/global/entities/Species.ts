@@ -42,7 +42,7 @@ export default class Species {
       throw new InvalidSpeciesObjectError()
     }
 
-    return '/species/' + this.category + '/' + this.uuid
+    return '/admin/species/' + this.category + '/' + this.uuid
   }
 
   public computeName(): string {

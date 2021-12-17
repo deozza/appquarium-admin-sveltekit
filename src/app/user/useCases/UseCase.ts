@@ -31,6 +31,43 @@ export default class UserUseCase implements UseCaseInterface {
     return result
   }
 
+
+  getToken(): Result{
+    const userServices: Services = new Services()
+    let result: Result = new Result()
+
+    const token: string | undefined = userServices.getCookie()
+
+    if(token === undefined){
+      result.addError('User is not logged in', 401)
+      return result
+    }
+
+    result.content = token
+    result.addSuccess('Token found', 200)
+
+    return result
+  }
+
+  logout(): Result{
+    const userServices: Services = new Services()
+    let result: Result = new Result()
+
+    userServices.removeCookie()
+
+    const token: string | undefined = userServices.getCookie()
+
+    if(token !== undefined){
+      result.addError('User is still logged in', 400)
+      return result
+    }
+
+    result.content = true
+    result.addSuccess('Token removed', 204)
+
+    return result
+  }
+
   async checkTokenIsValidOrRefresh(token: string): Promise<Result> {
     const userServices: Services = new Services()
     let result: Result = new Result()
@@ -71,20 +108,4 @@ export default class UserUseCase implements UseCaseInterface {
     return result
   }
 
-  getToken(): Result{
-    const userServices: Services = new Services()
-    let result: Result = new Result()
-
-    const token: string | undefined = userServices.getCookie()
-
-    if(token === undefined){
-      result.addError('User is not logged in', 401)
-      return result
-    }
-
-    result.content = token
-    result.addSuccess('Token found', 200)
-
-    return result
-  }
 }

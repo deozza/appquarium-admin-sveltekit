@@ -6,7 +6,7 @@ import Species from "../../global/entities/Species";
 import SpeciesFamily from "../../global/entities/SpeciesFamily";
 import SpeciesGenre from "../../global/entities/SpeciesGenre";
 
-import type SpeciesHasuraAdapter from "../../global/adapters/HasuraAdapter";
+import SpeciesHasuraAdapter from "../../global/adapters/HasuraAdapter";
 
 export default class Services implements ServicesInterface {
   async queryGetListOfInvertebrates(jwt: string): Promise<Array<Species> | UseCaseError> {
