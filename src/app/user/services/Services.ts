@@ -38,4 +38,7 @@ export default class Services implements ServicesInterface {
     Cookies.remove('appquarium-jwt')
   }
 
+  getCookie(): string | undefined{
+    return Cookies.get('appquarium-jwt')
+  }
 }

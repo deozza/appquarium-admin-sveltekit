@@ -70,4 +70,21 @@ export default class UserUseCase implements UseCaseInterface {
     result.addSuccess("Query is ok", 200)
     return result
   }
+
+  getToken(): Result{
+    const userServices: Services = new Services()
+    let result: Result = new Result()
+
+    const token: string | undefined = userServices.getCookie()
+
+    if(token === undefined){
+      result.addError('User is not logged in', 401)
+      return result
+    }
+
+    result.content = token
+    result.addSuccess('Token found', 200)
+
+    return result
+  }
 }

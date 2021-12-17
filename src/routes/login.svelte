@@ -60,7 +60,7 @@
         const user: Result = await userUseCase.login(email.value, password.value)
 
         if (user.isSuccessful()) {
-            return goto('/')
+            return goto('/admin')
         }
 
         if (user.errors[0].code === 404) {
