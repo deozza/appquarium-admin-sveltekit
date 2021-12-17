@@ -3,27 +3,12 @@
     import BaseParagraphModel from "../components/atoms/typography/paragraph/BaseParagraphModel";
     import BaseParagraph from "../components/atoms/typography/paragraph/BaseParagraph.svelte";
     import BaseHeader from "../components/atoms/typography/header/BaseHeader.svelte";
+    import BaseButton from "../components/atoms/button/BaseButton.svelte";
 
     export const header: BaseHeaderModel = new BaseHeaderModel('Connexion').setDisplaySizeOrTrowError('xxxl')
 
     export const errorParagraph: BaseParagraphModel = new BaseParagraphModel("")
         .setColorOrTrowError('danger')
-</script>
-
-<script lang="ts">
-    import {goto} from '$app/navigation';
-
-    import BaseButton from "../components/atoms/button/BaseButton.svelte";
-    import BaseButtonModel from "../components/atoms/button/BaseButtonModel";
-
-    import UserUseCase from "../app/user/useCases/UseCase";
-    import Result from "../app/utils/useCasesResult/Result";
-
-    export let email: string = ''
-    export let password: string = ''
-
-    export let submitButton: BaseButtonModel = new BaseButtonModel('Se connecter')
-        .setStyleOrThrowError('success')
 
     export const pageStates: object = {
         'normal': '',
@@ -31,26 +16,60 @@
         'cookieFailed': "Une erreur est survenue, veuillez réessayer plus tard"
     }
 
+</script>
+
+<script lang="ts">
+    import {goto} from '$app/navigation';
+
+    import BaseButtonModel from "../components/atoms/button/BaseButtonModel";
+    import BaseTextInputModel from "../components/atoms/input/text/BaseTextInputModel";
+    import BaseTextInput from "../components/atoms/input/text/BaseTextInput.svelte";
+    import BaseLabelModel from "../components/atoms/input/BaseLabelModel";
+    import BaseLabel from "../components/atoms/input/BaseLabel.svelte";
+
+    import UserUseCase from "../app/user/useCases/UseCase";
+    import Result from "../app/utils/useCasesResult/Result";
+
+
+    export const emailLabel: BaseLabelModel = new BaseLabelModel('Email', 'email')
+    export let email: BaseTextInputModel = new BaseTextInputModel('email')
+    email.type = 'email'
+    email.required = true
+    email.minlength = 6
+    email.errorMessage = "L'email est invalide"
+
+    export const passwordLabel: BaseLabelModel = new BaseLabelModel('Mot de passe', 'password')
+    export let password: BaseTextInputModel = new BaseTextInputModel('password')
+    password.type = 'password'
+    password.required = true
+    password.minlength = 6
+    password.errorMessage = "Le mot de passe est invalide"
+
+    export let submitButton: BaseButtonModel = new BaseButtonModel('Se connecter')
+        .setStyleOrThrowError('success')
+
     export let currentPageState: string = pageStates.normal
 
     async function login() {
-        currentPageState = pageStates.normal
+        email.error = false
+        password.error = false
         submitButton.setLoading(true)
         submitButton = submitButton
 
         const userUseCase: UserUseCase = new UserUseCase()
-        const user: Result = await userUseCase.login(email, password)
+        const user: Result = await userUseCase.login(email.value, password.value)
 
-        if(user.isSuccessful()){
+        if (user.isSuccessful()) {
             return goto('/')
         }
 
-        if(user.errors[0].code === 404){
-            currentPageState = pageStates.loginFailed
+        if (user.errors[0].code === 404) {
+            email.error = true
+            password.error = true
             errorParagraph.setContent(currentPageState)
         }
 
-        if(user.errors[0].code === 400){
+        if (user.errors[0].code === 400) {
             currentPageState = pageStates.cookieFailed
             errorParagraph.setContent(currentPageState)
         }
@@ -68,14 +87,14 @@
             <ul class="space-y-6">
                 <li class="flex-c">
                     <div class="flex-r">
-                        <label class="flex-1 py-2 px-3" for="email">Email</label>
-                        <input class="border rounded-md border-black px-2" type="email" id="email" name="email" bind:value={email} required>
+                        <BaseLabel baseLabelModel="{emailLabel}" />
+                        <BaseTextInput baseTextInputModel="{email}" />
                     </div>
                 </li>
                 <li class="flex-c">
                     <div class="flex-r">
-                        <label class="flex-1 py-2 px-3" for="password">Mot de passe</label>
-                        <input class="border rounded-md border-black px-2" type="password" id="password" name="password" bind:value={password} required>
+                        <BaseLabel baseLabelModel="{passwordLabel}" />
+                        <BaseTextInput baseTextInputModel="{password}" />
                     </div>
                 </li>
                 <li class="flex-c space-y-2">
@@ -95,10 +114,6 @@
         padding: 0.5em;
         align-items: normal;
         width: 98%;
-    }
-
-    li > div > input {
-        flex: 2;
     }
 
 </style>
