@@ -24,27 +24,12 @@
 </script>
 
 <script lang="ts">
-import BaseHeaderModel from "../../../components/atoms/typography/header/BaseHeaderModel";
+
+import {buttonsAdd, header} from "../../../components/pages/admin/index/Modeles";
+
 import BaseHeader from "../../../components/atoms/typography/header/BaseHeader.svelte";
-import BaseButtonModel from "../../../components/atoms/button/BaseButtonModel";
 import BaseButton from "../../../components/atoms/button/BaseButton.svelte";
 import Species from "../../../app/species/global/entities/Species";
-
-const header: BaseHeaderModel = new BaseHeaderModel('Dashboard espèces')
-    .setDisplaySizeOrTrowError('xxxl')
-    .setSizeOrTrowError('h1')
-
-const addFishButton: BaseButtonModel = new BaseButtonModel('Ajouter un poisson')
-    .setTypeOrThrowError('button')
-    .setStyleOrThrowError('primary')
-
-const addPlantButton: BaseButtonModel = new BaseButtonModel('Ajouter une plante')
-    .setTypeOrThrowError('button')
-    .setStyleOrThrowError('success')
-
-const addInvertebrateButton: BaseButtonModel = new BaseButtonModel('Ajouter un invertébré')
-    .setTypeOrThrowError('button')
-    .setStyleOrThrowError('warning')
 
 export let listOfSpecies: Array<Species> = []
 
@@ -84,15 +69,11 @@ export let listOfSpecies: Array<Species> = []
     </template>
 
     <div class="flex-r">
-        <a href="/admin/species/fish/add">
-            <BaseButton baseButtonModel={addFishButton}/>
-        </a>
-        <a href="/admin/species/plant/add">
-            <BaseButton baseButtonModel={addPlantButton}/>
-        </a>
-        <a href="/admin/species/invertebrate/add">
-            <BaseButton baseButtonModel={addInvertebrateButton}/>
-        </a>
+        {#each buttonsAdd as button}
+            <a href={button.link}>
+                <BaseButton baseButtonModel={button.modele}/>
+            </a>
+        {/each}
     </div>
 
 </div>
