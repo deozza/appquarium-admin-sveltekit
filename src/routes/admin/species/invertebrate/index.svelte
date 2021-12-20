@@ -66,7 +66,7 @@
     </template>
 
 
-    <a href="/admin/species/plan/add">
+    <a href="/admin/species/invertebrate/add">
         <BaseButton baseButtonModel={addInvertebrateButton}/>
     </a>
 </div>
