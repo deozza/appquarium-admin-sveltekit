@@ -21,7 +21,10 @@
             maxlength={baseTextInputModel.maxlength}
             required={baseTextInputModel.required === true ? 'required' : ''}
             readonly={baseTextInputModel.readonly === true ? 'readonly' : ''}
+            list={baseTextInputModel.datalist !== null ? baseTextInputModel.datalist : null}
             on:input={handleInput}
+            on:change
+            on:focusout
     >
 
     {#if baseTextInputModel.error}

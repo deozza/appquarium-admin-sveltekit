@@ -14,6 +14,7 @@ export default class BaseTextInputModel extends BaseInputModel{
     private _placeholder: string
     private _minlength: number | null
     private _maxlength: number | null
+    private _datalist: string | null
 
     public constructor(name: string) {
         super(name)
@@ -21,6 +22,7 @@ export default class BaseTextInputModel extends BaseInputModel{
         this._placeholder = ''
         this._minlength = null
         this._maxlength = null
+        this._datalist = null
     }
 
     get type(): string {
@@ -64,5 +66,13 @@ export default class BaseTextInputModel extends BaseInputModel{
             throw new Error()
         }
         this._maxlength = value;
+    }
+
+    get datalist(): string|null {
+        return this._datalist;
+    }
+
+    set datalist(value: string) {
+        this._datalist = value;
     }
 }
