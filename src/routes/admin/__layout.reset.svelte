@@ -2,7 +2,7 @@
 
     import UserUseCase from "../../app/user/useCases/UseCase";
     import Result from "../../app/utils/useCasesResult/Result";
-
+/*
     export async function load({}){
         const userUserCase: UserUseCase = new UserUseCase()
 
@@ -17,6 +17,8 @@
 
         return{}
     }
+
+ */
 </script>
 
 <script lang="ts">
