@@ -20,8 +20,6 @@
         formElements.loginButton.setLoading(true)
         formElements.loginButton = formElements.loginButton
 
-        console.log(formElements.emailInput.value, formElements.passwordInput.value)
-
         const userUseCase: UserUseCase = new UserUseCase()
         const user: Result = await userUseCase.login(formElements.emailInput.value, formElements.passwordInput.value)
 

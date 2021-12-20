@@ -21,15 +21,15 @@ const addInvertebrateButton: BaseButtonModel = new BaseButtonModel('Ajouter un i
 export const buttonsAdd: Array<object> =[
     {
         modele: addFishButton,
-        link : "/admin/species/fishes/add"
+        link : "/admin/species/fish/add"
     },
     {
         modele: addPlantButton,
-        link: "/admin/species/plants/add"
+        link: "/admin/species/plant/add"
     },
     {
         modele: addInvertebrateButton,
-        link: "/admin/species/invertebrates/add"
+        link: "/admin/species/invertebrate/add"
     }
 ]
 

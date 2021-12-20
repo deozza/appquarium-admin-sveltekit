@@ -8,12 +8,22 @@
      */
     export async function load(){
         const userUseCase: UserUseCase = new UserUseCase()
-
         const jwt: Result = userUseCase.getToken()
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
-
         const listOfSpecies: Result = await speciesUseCase.getListOfSpecies(jwt.content)
+
+        if(listOfSpecies.isFailed()){
+            for(const error of listOfSpecies.errors){
+                if(error.code === 401){
+                    userUseCase.logout()
+                    return {
+                        redirect: '/login',
+                        status: 302
+                    }
+                }
+            }
+        }
 
         return {
             props: {

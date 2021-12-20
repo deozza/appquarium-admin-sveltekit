@@ -55,9 +55,9 @@
             <button >Espèces</button>
             <div class="flex-c items-start text-xl space-y-3 pl-3" >
                 <a href="/admin/species">Voir toutes</a>
-                <a href="/admin/species/fishes">Poissons</a>
-                <a href="/admin/species/plants">Plantes</a>
-                <a href="/admin/species/invertebrates">Invertébrés</a>
+                <a href="/admin/species/fish">Poissons</a>
+                <a href="/admin/species/plant">Plantes</a>
+                <a href="/admin/species/invertebrate">Invertébrés</a>
             </div>
             <BaseButton baseButtonModel={logoutButton} on:click={logout}/>
         </div>
