@@ -8,11 +8,9 @@
      */
     export async function load(){
         const userUseCase: UserUseCase = new UserUseCase()
-
         const jwt: Result = userUseCase.getToken()
 
         const fishUseCase: FishUseCase = new FishUseCase()
-
         const listOfFishes: Result = await fishUseCase.getListOfFishes(jwt.content)
 
         return {
@@ -24,14 +22,13 @@
 </script>
 
 <script lang="ts">
-import {header} from "../../../../components/pages/admin/fishes/index/Modeles";
+    import {header, addFishButton} from "../../../../components/pages/admin/fishes/index/Modeles";
 
-import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
-import Species from "../../../../app/species/global/entities/Species";
+    import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
+    import Species from "../../../../app/species/global/entities/Species";
+    import BaseButton from "../../../../components/atoms/button/BaseButton.svelte";
 
-
-export let listOfFishes: Array<Species> = []
-
+    export let listOfFishes: Array<Species> = []
 </script>
 
 
@@ -64,6 +61,10 @@ export let listOfFishes: Array<Species> = []
             </tbody>
         </table>
     </template>
+
+    <a href="/admin/species/fish/add">
+        <BaseButton baseButtonModel={addFishButton}/>
+    </a>
 </div>
 
 <style>
