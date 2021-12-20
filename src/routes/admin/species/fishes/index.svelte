@@ -24,13 +24,11 @@
 </script>
 
 <script lang="ts">
-import BaseHeaderModel from "../../../../components/atoms/typography/header/BaseHeaderModel";
+import {header} from "../../../../components/pages/admin/fishes/index/Modeles";
+
 import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
 import Species from "../../../../app/species/global/entities/Species";
 
-const header: BaseHeaderModel = new BaseHeaderModel('Dashboard poissons')
-    .setDisplaySizeOrTrowError('xxxl')
-    .setSizeOrTrowError('h1')
 
 export let listOfFishes: Array<Species> = []
 
@@ -38,7 +36,7 @@ export let listOfFishes: Array<Species> = []
 
 
 <div class="flex-c" id="content">
-    <BaseHeader baseHeaderModel={header}/>
+    <BaseHeader baseHeaderModel={header} />
 
     <template slot="body">
         <table class="table-auto">
