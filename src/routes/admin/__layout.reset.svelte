@@ -2,13 +2,13 @@
 
     import UserUseCase from "../../app/user/useCases/UseCase";
     import Result from "../../app/utils/useCasesResult/Result";
-/*
+    import {browser} from "$app/env";
+
     export async function load({}){
         const userUserCase: UserUseCase = new UserUseCase()
+        const token: Result = userUserCase.getToken()
 
-        const user: Result = userUserCase.getToken()
-
-        if(user.isFailed()){
+        if(browser && token.isFailed()){
             return {
                 redirect: '/login',
                 status: 302
@@ -18,7 +18,6 @@
         return{}
     }
 
- */
 </script>
 
 <script lang="ts">

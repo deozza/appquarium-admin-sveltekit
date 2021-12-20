@@ -11,7 +11,7 @@ export default class User {
     this.jwt = jwt;
   }
 
-  extractUserInfoFromJwt(): void {
+  extractUserInfoFromJwt(): object {
 
     if (this.jwt === '') {
       return
@@ -21,5 +21,7 @@ export default class User {
 
       this.uid = decoded.user_id
       this.email = decoded.email
+
+    return decoded
   }
 }
