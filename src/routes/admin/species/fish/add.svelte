@@ -53,7 +53,7 @@
 </script>
 
 <script lang="ts">
-    import {header} from "../../../../components/pages/admin/fishes/add/Modeles";
+    import {header} from "../../../../components/pages/admin/fish/add/Modeles";
     import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
     import SpeciesGenre from "../../../../app/species/global/entities/SpeciesGenre";
     import SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";

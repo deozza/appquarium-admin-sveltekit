@@ -22,7 +22,7 @@
 </script>
 
 <script lang="ts">
-    import {header, addFishButton} from "../../../../components/pages/admin/fishes/index/Modeles";
+    import {header, addFishButton} from "../../../../components/pages/admin/fish/index/Modeles";
 
     import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
     import Species from "../../../../app/species/global/entities/Species";

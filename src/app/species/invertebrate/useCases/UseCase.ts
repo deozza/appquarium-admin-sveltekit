@@ -8,6 +8,8 @@ import SpeciesGenre from "../../global/entities/SpeciesGenre";
 import SpeciesFamily from "../../global/entities/SpeciesFamily";
 
 import Services from "../services/Services";
+import {default as SpeciesServices} from "../../global/services/Services";
+import User from "../../../user/entities/User";
 
 export default class InvertebrateUseCase implements UseCaseInterface {
   async getListOfInvertebrates(jwt: string): Promise<Result> {
@@ -56,5 +58,11 @@ export default class InvertebrateUseCase implements UseCaseInterface {
     result.content = invertebrateFamilies
     result.addSuccess("Query is ok", 200)
     return result
+  }
+
+
+  initNewInvertebrate(user: User): Species {
+    const speciesService: SpeciesServices = new SpeciesServices()
+    return speciesService.initNewSpecies(user, 'invertebrate')
   }
 }

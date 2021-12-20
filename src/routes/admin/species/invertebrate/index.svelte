@@ -13,26 +13,24 @@
 
         const invertebrateUseCase: InvertebrateUseCase = new InvertebrateUseCase()
 
-        const listOfInvertebrates: Result = await invertebrateUseCase.getListOfInvertebrates(jwt.content)
+        const listOfInvertbrates: Result = await invertebrateUseCase.getListOfInvertebrates(jwt.content)
 
         return {
             props: {
-                listOfInvertebrates: listOfInvertebrates.content
+                listOfInvertbrates: listOfInvertbrates.content
             }
         }
     }
 </script>
 
 <script lang="ts">
-import BaseHeaderModel from "../../../../components/atoms/typography/header/BaseHeaderModel";
-import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
-import Species from "../../../../app/species/global/entities/Species";
+    import {header, addInvertebrateButton} from "../../../../components/pages/admin/invertebrate/index/Modeles";
 
-const header: BaseHeaderModel = new BaseHeaderModel('Dashboard nvertébrés')
-    .setDisplaySizeOrTrowError('xxxl')
-    .setSizeOrTrowError('h1')
+    import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
+    import Species from "../../../../app/species/global/entities/Species";
+    import BaseButton from "../../../../components/atoms/button/BaseButton.svelte";
 
-export let listOfInvertebrates: Array<Species> = []
+    export let listOfInvertbrates: Array<Species> = []
 
 </script>
 
@@ -52,7 +50,7 @@ export let listOfInvertebrates: Array<Species> = []
             </tr>
             </thead>
             <tbody>
-            {#each listOfInvertebrates as invertebrate, i}
+            {#each listOfInvertbrates as invertebrate, i}
                 <tr>
                     <td>{i + 1}</td>
                     <td>
@@ -66,6 +64,11 @@ export let listOfInvertebrates: Array<Species> = []
             </tbody>
         </table>
     </template>
+
+
+    <a href="/admin/species/plan/add">
+        <BaseButton baseButtonModel={addInvertebrateButton}/>
+    </a>
 </div>
 
 <style>

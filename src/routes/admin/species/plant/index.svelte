@@ -24,15 +24,13 @@
 </script>
 
 <script lang="ts">
-import BaseHeaderModel from "../../../../components/atoms/typography/header/BaseHeaderModel";
-import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
-import Species from "../../../../app/species/global/entities/Species";
+    import {header, addPlantButton} from "../../../../components/pages/admin/plant/index/Modeles";
 
-const header: BaseHeaderModel = new BaseHeaderModel('Dashboard plantes')
-    .setDisplaySizeOrTrowError('xxxl')
-    .setSizeOrTrowError('h1')
+    import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
+    import Species from "../../../../app/species/global/entities/Species";
+    import BaseButton from "../../../../components/atoms/button/BaseButton.svelte";
 
-export let listOfPlant: Array<Species> = []
+    export let listOfPlant: Array<Species> = []
 
 </script>
 
@@ -66,6 +64,11 @@ export let listOfPlant: Array<Species> = []
             </tbody>
         </table>
     </template>
+
+
+    <a href="/admin/species/plan/add">
+        <BaseButton baseButtonModel={addPlantButton}/>
+    </a>
 </div>
 
 <style>

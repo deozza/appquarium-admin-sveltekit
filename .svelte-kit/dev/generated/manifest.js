@@ -5,8 +5,10 @@ const c = [
 	() => import("../../../src/routes/admin/index.svelte"),
 	() => import("../../../src/routes/admin/species/index.svelte"),
 	() => import("../../../src/routes/admin/species/invertebrate/index.svelte"),
+	() => import("../../../src/routes/admin/species/invertebrate/add.svelte"),
 	() => import("../../../src/routes/admin/species/invertebrate/[uuid].svelte"),
 	() => import("../../../src/routes/admin/species/plant/index.svelte"),
+	() => import("../../../src/routes/admin/species/plant/add.svelte"),
 	() => import("../../../src/routes/admin/species/plant/[uuid].svelte"),
 	() => import("../../../src/routes/admin/species/fish/index.svelte"),
 	() => import("../../../src/routes/admin/species/fish/add.svelte"),
@@ -26,26 +28,32 @@ export const routes = [
 	// src/routes/admin/species/invertebrate/index.svelte
 	[/^\/admin\/species\/invertebrate\/?$/, [c[2], c[5]], []],
 
+	// src/routes/admin/species/invertebrate/add.svelte
+	[/^\/admin\/species\/invertebrate\/add\/?$/, [c[2], c[6]], []],
+
 	// src/routes/admin/species/invertebrate/[uuid].svelte
-	[/^\/admin\/species\/invertebrate\/([^/]+?)\/?$/, [c[2], c[6]], [], (m) => ({ uuid: d(m[1])})],
+	[/^\/admin\/species\/invertebrate\/([^/]+?)\/?$/, [c[2], c[7]], [], (m) => ({ uuid: d(m[1])})],
 
 	// src/routes/admin/species/plant/index.svelte
-	[/^\/admin\/species\/plant\/?$/, [c[2], c[7]], []],
+	[/^\/admin\/species\/plant\/?$/, [c[2], c[8]], []],
+
+	// src/routes/admin/species/plant/add.svelte
+	[/^\/admin\/species\/plant\/add\/?$/, [c[2], c[9]], []],
 
 	// src/routes/admin/species/plant/[uuid].svelte
-	[/^\/admin\/species\/plant\/([^/]+?)\/?$/, [c[2], c[8]], [], (m) => ({ uuid: d(m[1])})],
+	[/^\/admin\/species\/plant\/([^/]+?)\/?$/, [c[2], c[10]], [], (m) => ({ uuid: d(m[1])})],
 
 	// src/routes/admin/species/fish/index.svelte
-	[/^\/admin\/species\/fish\/?$/, [c[2], c[9]], []],
+	[/^\/admin\/species\/fish\/?$/, [c[2], c[11]], []],
 
 	// src/routes/admin/species/fish/add.svelte
-	[/^\/admin\/species\/fish\/add\/?$/, [c[2], c[10]], []],
+	[/^\/admin\/species\/fish\/add\/?$/, [c[2], c[12]], []],
 
 	// src/routes/admin/species/fish/[uuid].svelte
-	[/^\/admin\/species\/fish\/([^/]+?)\/?$/, [c[2], c[11]], [], (m) => ({ uuid: d(m[1])})],
+	[/^\/admin\/species\/fish\/([^/]+?)\/?$/, [c[2], c[13]], [], (m) => ({ uuid: d(m[1])})],
 
 	// src/routes/login.svelte
-	[/^\/login\/?$/, [c[0], c[12]], [c[1]]]
+	[/^\/login\/?$/, [c[0], c[14]], [c[1]]]
 ];
 
 // we import the root layout/error components eagerly, so that
