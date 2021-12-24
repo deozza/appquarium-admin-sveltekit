@@ -70,6 +70,8 @@
     import NamingForm from "../../../../components/molecules/species/namingForm/NamingForm.svelte";
     import SpeciesGenre from "../../../../app/species/global/entities/SpeciesGenre";
     import SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";
+    import WaterConstraintsForm
+        from "../../../../components/molecules/species/waterConstraintsForm/WaterConstraintsForm.svelte";
 
     export let plant: Species = new Species([])
     export let speciesGenres: Array<SpeciesGenre> = []
@@ -79,6 +81,15 @@
     const header: BaseHeaderModel = new BaseHeaderModel(plant.computeName())
         .setDisplaySizeOrTrowError('xxxl')
         .setSizeOrTrowError('h1')
+
+    const namingFormHeader: BaseHeaderModel = new BaseHeaderModel('Nom')
+        .setDisplaySizeOrTrowError('xxl')
+        .setSizeOrTrowError('h2')
+
+    const waterConstraintsFormHeader: BaseHeaderModel = new BaseHeaderModel("Contraintes d'eau")
+        .setDisplaySizeOrTrowError('xxl')
+        .setSizeOrTrowError('h2')
+
 </script>
 
 <div class="flex-c">
@@ -87,6 +98,12 @@
     </section>
 
     <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
+        <BaseHeader baseHeaderModel={namingFormHeader} />
         <NamingForm species={plant} speciesFamilies={speciesFamilies} speciesGenres={speciesGenres} user={user}/>
+    </section>
+
+    <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
+        <BaseHeader baseHeaderModel={waterConstraintsFormHeader} />
+        <WaterConstraintsForm species={plant} user={user}/>
     </section>
 </div>
