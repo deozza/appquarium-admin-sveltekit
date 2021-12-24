@@ -1,6 +1,6 @@
 {
-  "name": "appquarium-admin-svelte",
-  "version": "0.0.1",
+  "name": "appquarium-admin",
+  "version": "0.1.0",
   "scripts": {
     "dev": "svelte-kit dev --host 0.0.0.0",
     "build": "svelte-kit build",
@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "next",
+    "@sveltejs/adapter-netlify": "^1.0.0-next.36",
     "@sveltejs/kit": "next",
     "@types/js-cookie": "^3.0.1",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
