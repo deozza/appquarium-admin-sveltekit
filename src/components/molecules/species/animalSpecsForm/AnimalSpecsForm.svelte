@@ -23,6 +23,13 @@
         formElements.submitButton.content = 'Modifier'
     }
 
+    if(species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED'){
+        formElements.submitButton.isDisabled = true
+        formElements.maleSizeInput.readonly = true
+        formElements.femaleSizeInput.readonly = true
+        formElements.longevityInput.readonly = true
+    }
+
     async function submitAnimalSpecsForm(){
 
         formElements.submitButton.setLoading(true)

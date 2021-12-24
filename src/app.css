@@ -65,7 +65,7 @@
     }
 
     .pill{
-        @apply mx-1 p-3 text-sm rounded-full text-white
+        @apply mx-1 py-1 px-3 text-sm rounded-full text-white
     }
 
     .pill.pill-primary {

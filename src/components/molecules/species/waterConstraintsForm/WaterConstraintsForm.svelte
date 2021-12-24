@@ -26,6 +26,16 @@
         formElements.submitButton.content = 'Modifier'
     }
 
+    if(species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED'){
+        formElements.submitButton.isDisabled = true
+        formElements.phMinInput.readonly = true
+        formElements.phMaxInput.readonly = true
+        formElements.ghMinInput.readonly = true
+        formElements.ghMaxInput.readonly = true
+        formElements.tempMinInput.readonly = true
+        formElements.tempMaxInput.readonly = true
+    }
+
     async function submitWaterConstraintsForm(){
 
         formElements.submitButton.setLoading(true)

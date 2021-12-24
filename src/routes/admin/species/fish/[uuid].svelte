@@ -75,7 +75,8 @@
     import AnimalSpecsForm from "../../../../components/molecules/species/animalSpecsForm/AnimalSpecsForm.svelte";
     import BasePillModel from "../../../../components/atoms/pill/BasePillModel";
     import BasePill from "../../../../components/atoms/pill/BasePill.svelte";
-
+    import PublicationStateSwitcher
+        from "../../../../components/molecules/species/publicationStateSwitcher/PublicationStateSwitcher.svelte";
 
     export let fish: Species = new Species([])
     export let speciesGenres: Array<SpeciesGenre> = []
@@ -122,5 +123,9 @@
     <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
         <BaseHeader baseHeaderModel={animalSpecsFormHeader} />
         <AnimalSpecsForm species={fish} user={user} />
+    </section>
+
+    <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
+        <PublicationStateSwitcher species={fish} user={user}/>
     </section>
 </div>

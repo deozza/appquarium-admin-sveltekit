@@ -73,7 +73,7 @@
                     <td>
                         <a class="font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300" href={plant.computeLinkToSpecies()} sveltekit:prefetch>{plant.computeName()}</a>
                     </td>
-                    <td>{plant.publication_state}</td>
+                    <td>{plant.getPublicationStateContent()}</td>
                     <td>{plant.created_at.getDate() + '/' + plant.created_at.getMonth() + '/' + plant.created_at.getFullYear() + ' ' + plant.created_at.getHours() + ':' + plant.created_at.getMinutes()}</td>
                     <td>{plant.updated_at.getDate() + '/' + plant.updated_at.getMonth() + '/' + plant.updated_at.getFullYear() + ' ' + plant.updated_at.getHours() + ':' + plant.updated_at.getMinutes()}</td>
                 </tr>

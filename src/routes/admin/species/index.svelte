@@ -75,7 +75,7 @@ export let listOfSpecies: Array<Species> = []
                         <a class="font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300" href={species.computeLinkToSpecies()} sveltekit:prefetch>{species.computeName()}</a>
                     </td>
                     <td>{species.category}</td>
-                    <td>{species.publication_state}</td>
+                    <td>{species.getPublicationStateContent()}</td>
                     <td>{species.created_at.getDate() + '/' + species.created_at.getMonth() + '/' + species.created_at.getFullYear() + ' ' + species.created_at.getHours() + ':' + species.created_at.getMinutes()}</td>
                     <td>{species.updated_at.getDate() + '/' + species.updated_at.getMonth() + '/' + species.updated_at.getFullYear() + ' ' + species.updated_at.getHours() + ':' + species.updated_at.getMinutes()}</td>
                 </tr>

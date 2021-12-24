@@ -71,7 +71,7 @@
                     <td>
                         <a class="font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300" href={fish.computeLinkToSpecies()} sveltekit:prefetch>{fish.computeName()}</a>
                     </td>
-                    <td>{fish.publication_state}</td>
+                    <td>{fish.getPublicationStateContent()}</td>
                     <td>{fish.created_at.getDate() + '/' + fish.created_at.getMonth() + '/' + fish.created_at.getFullYear() + ' ' + fish.created_at.getHours() + ':' + fish.created_at.getMinutes()}</td>
                     <td>{fish.updated_at.getDate() + '/' + fish.updated_at.getMonth() + '/' + fish.updated_at.getFullYear() + ' ' + fish.updated_at.getHours() + ':' + fish.updated_at.getMinutes()}</td>
                 </tr>

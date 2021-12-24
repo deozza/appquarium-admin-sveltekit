@@ -31,6 +31,15 @@
         formElements.submitButton.content = 'Modifier'
     }
 
+    if(species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED'){
+        formElements.submitButton.isDisabled = true
+        formElements.speciesGenreInput.readonly = true
+        formElements.speciesFamilyInput.readonly = true
+        formElements.speciesNameInput.readonly = true
+        formElements.speciesCommonNamesInput.readonly = true
+        formElements.speciesOldNamesInput.readonly = true
+    }
+
     function linkUuidWithSpeciesGenre(speciesGenreName: string) {
         const speciesGenre = speciesGenres.find((genre: SpeciesGenre) => genre.name === speciesGenreName)
 
