@@ -15,9 +15,6 @@
     export let speciesOrigins: Array<string> = []
     export let user: User = new User('')
 
-    console.log('speciesOrigins : ')
-    console.log(speciesOrigins)
-
     formElements.originInput.value = species.origin
 
     if (species.origin !== '') {
@@ -39,8 +36,6 @@
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
         const result: Result = await speciesUseCase.updateGeneralInfos(user.jwt, species)
-
-        console.log(result)
 
         if (result.isFailed()) {
             formElements.submitButton.setLoading(false)
