@@ -58,7 +58,7 @@
     import SpeciesGenre from "../../../../app/species/global/entities/SpeciesGenre";
     import SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";
     import Species from "../../../../app/species/global/entities/Species";
-    import NamingForm from "../../../../components/molecules/species/NamingForm.svelte";
+    import NamingForm from "../../../../components/molecules/species/namingForm/NamingForm.svelte";
 
     export let speciesGenres: Array<SpeciesGenre> = []
     export let speciesFamilies: Array<SpeciesFamily> = []

@@ -1,0 +1,135 @@
+<script lang="ts">
+    import {formElements} from "./Modeles";
+
+    import BaseLabel from "../../../atoms/input/BaseLabel.svelte";
+    import BaseNumberInput from "../../../atoms/input/number/BaseNumberInput.svelte";
+    import BaseButton from "../../../atoms/button/BaseButton.svelte";
+    import Species from "../../../../app/species/global/entities/Species";
+    import User from "../../../../app/user/entities/User";
+    import SpeciesUseCase from "../../../../app/species/global/useCases/UseCase";
+    import Result from "../../../../app/utils/useCasesResult/Result";
+    import {goto} from '$app/navigation';
+    import UserUseCase from "../../../../app/user/useCases/UseCase";
+
+    export let species: Species = new Species([])
+    export let user: User = new User('')
+
+    formElements.phMinInput.value = species.water_constraint.ph_min
+    formElements.phMaxInput.value = species.water_constraint.ph_max
+    formElements.ghMinInput.value = species.water_constraint.gh_min
+    formElements.ghMaxInput.value = species.water_constraint.gh_max
+    formElements.tempMinInput.value = species.water_constraint.temp_min
+    formElements.tempMaxInput.value = species.water_constraint.temp_max
+
+    if(species.water_constraint.uuid !== ''){
+        formElements.submitButton.setStyleOrThrowError('warning')
+        formElements.submitButton.content = 'Modifier'
+    }
+
+    async function submitWaterConstraintsForm(){
+
+        formElements.submitButton.setLoading(true)
+        species.water_constraint.ph_min = formElements.phMinInput.value
+        species.water_constraint.ph_max = formElements.phMaxInput.value
+        species.water_constraint.gh_min = formElements.ghMinInput.value
+        species.water_constraint.gh_max = formElements.ghMaxInput.value
+        species.water_constraint.temp_min = formElements.tempMinInput.value
+        species.water_constraint.temp_max = formElements.tempMaxInput.value
+
+        const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
+        let result: Result
+        if (species.uuid !== '') {
+            result = await speciesUseCase.updateWaterConstraints(user.jwt, species)
+        } else {
+            result = await speciesUseCase.addWaterConstraints(user.jwt, species)
+        }
+
+        if (result.isFailed()) {
+            formElements.submitButton.setLoading(false)
+
+            for(const error of result.errors){
+
+                if (error.code === 401) {
+                    const userUseCase: UserUseCase = new UserUseCase()
+                    userUseCase.logout()
+                    return {
+                        redirect: "/login",
+                        status: 302
+                    }
+                }
+
+                switch (error.type) {
+                    case 'ph_min': formElements.phMinInput.error = true;formElements.phMaxInput.error = true;break
+                    case 'gh_min': formElements.ghMinInput.error = true;formElements.ghMaxInput.error = true;break;
+                    case 'temp_min': formElements.tempMinInput.error = true;formElements.tempMaxInput.error = true;break;
+                }
+            }
+
+        }
+
+        formElements.submitButton.setLoading(false)
+
+        if (result.success?.code === 201) {
+            species.uuid = result.content
+            return goto(species.computeLinkToSpecies())
+        }
+    }
+</script>
+
+<form class="min-w-full" on:submit|preventDefault={submitWaterConstraintsForm}>
+    <ul class="space-y-6">
+        <li class="flex-c">
+            <div class="flex-r ">
+                <BaseLabel baseLabelModel={formElements.phMinLabel}/>
+                <BaseNumberInput baseNumberInputModel={formElements.phMinInput} />
+            </div>
+        </li>
+        <li class="flex-c">
+            <div class="flex-r ">
+                <BaseLabel baseLabelModel={formElements.phMaxLabel}/>
+                <BaseNumberInput baseNumberInputModel={formElements.phMaxInput} />
+            </div>
+        </li>
+        <li class="flex-c">
+            <div class="flex-r ">
+                <BaseLabel baseLabelModel={formElements.ghMinLabel}/>
+                <BaseNumberInput baseNumberInputModel={formElements.ghMinInput} />
+            </div>
+        </li>
+        <li class="flex-c">
+            <div class="flex-r ">
+                <BaseLabel baseLabelModel={formElements.ghMaxLabel}/>
+                <BaseNumberInput baseNumberInputModel={formElements.ghMaxInput} />
+            </div>
+        </li>
+
+        <li class="flex-c">
+            <div class="flex-r ">
+                <BaseLabel baseLabelModel={formElements.tempMinLabel}/>
+                <BaseNumberInput baseNumberInputModel={formElements.tempMinInput} />
+            </div>
+        </li>
+        <li class="flex-c">
+            <div class="flex-r ">
+                <BaseLabel baseLabelModel={formElements.tempMaxLabel}/>
+                <BaseNumberInput baseNumberInputModel={formElements.tempMaxInput} />
+            </div>
+        </li>
+
+
+        <li class="flex-c space-y-2">
+            <BaseButton baseButtonModel="{formElements.submitButton}" />
+        </li>
+    </ul>
+</form>
+
+
+<style>
+
+    li > div {
+        padding: 0.5em;
+        align-items: normal;
+        width: 98%;
+    }
+
+</style>

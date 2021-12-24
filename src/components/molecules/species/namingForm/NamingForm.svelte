@@ -1,17 +1,18 @@
 <script lang="ts">
     import {formElements} from "./Modeles";
 
-    import BaseButton from "../../atoms/button/BaseButton.svelte";
-    import BaseLabel from "../../atoms/input/BaseLabel.svelte";
-    import BaseTextInput from "../../atoms/input/text/BaseTextInput.svelte";
-    import SpeciesGenre from "../../../app/species/global/entities/SpeciesGenre";
-    import SpeciesFamily from "../../../app/species/global/entities/SpeciesFamily";
-    import Species from "../../../app/species/global/entities/Species";
-    import SpeciesUseCase from "../../../app/species/global/useCases/UseCase";
+    import BaseButton from "../../../atoms/button/BaseButton.svelte";
+    import BaseLabel from "../../../atoms/input/BaseLabel.svelte";
+    import BaseTextInput from "../../../atoms/input/text/BaseTextInput.svelte";
+    import SpeciesGenre from "../../../../app/species/global/entities/SpeciesGenre";
+    import SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";
+    import Species from "../../../../app/species/global/entities/Species";
+    import SpeciesUseCase from "../../../../app/species/global/useCases/UseCase";
 
     import {goto} from '$app/navigation';
-    import Result from "../../../app/utils/useCasesResult/Result";
-    import User from "../../../app/user/entities/User";
+    import Result from "../../../../app/utils/useCasesResult/Result";
+    import User from "../../../../app/user/entities/User";
+    import UserUseCase from "../../../../app/user/useCases/UseCase";
 
     export let species: Species = new Species([])
     export let speciesGenres: Array<SpeciesGenre> = []
@@ -24,6 +25,11 @@
     formElements.speciesNameInput.value = species.species_naming.name
     formElements.speciesGenreInput.value = species.species_naming.species_genre.name
     formElements.speciesFamilyInput.value = species.species_naming.species_family.name
+
+    if(species.species_naming.uuid !== ''){
+        formElements.submitButton.setStyleOrThrowError('warning')
+        formElements.submitButton.content = 'Modifier'
+    }
 
     function linkUuidWithSpeciesGenre(speciesGenreName: string) {
         const speciesGenre = speciesGenres.find((genre: SpeciesGenre) => genre.name === speciesGenreName)
@@ -65,8 +71,7 @@
 
     async function submitNamingForm(){
 
-        formElements.submitButton.isloading = true
-        formElements.submitButton = formElements.submitButton
+        formElements.submitButton.setLoading(true)
 
         species.species_naming.name = formElements.speciesNameInput.value
 
@@ -77,16 +82,25 @@
         } else {
             result = await speciesUseCase.createSpecies(user.jwt, species)
         }
-        if (result.isFailed()) {
-            formElements.submitButton.isloading = false
-            formElements.submitButton = formElements.submitButton
 
-            console.log(result.errors)
+        if (result.isFailed()) {
+            formElements.submitButton.setLoading(false)
+
+            for(const error of result.errors){
+
+                if (error.code === 401) {
+                    const userUseCase: UserUseCase = new UserUseCase()
+                    userUseCase.logout()
+                    return {
+                        redirect: "/login",
+                        status: 302
+                    }
+                }
+            }
+
         }
 
-
-        formElements.submitButton.isloading = false
-        formElements.submitButton = formElements.submitButton
+        formElements.submitButton.setLoading(false)
 
         if (result.success?.code === 201) {
             species.uuid = result.content

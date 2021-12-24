@@ -13,11 +13,28 @@
 
         const invertebrateUseCase: InvertebrateUseCase = new InvertebrateUseCase()
 
-        const listOfInvertbrates: Result = await invertebrateUseCase.getListOfInvertebrates(jwt.content)
+        const listOfInvertebrates: Result = await invertebrateUseCase.getListOfInvertebrates(jwt.content)
 
+        if (listOfInvertebrates.isFailed()){
+            for(const error of listOfInvertebrates.errors){
+                if(error.code === 401){
+                    userUseCase.logout()
+                    return {
+                        redirect : '/login',
+                        status: 302
+                    }
+                }
+            }
+
+            return {
+                props: {
+                    listOfInvertebrates: []
+                }
+            }
+        }
         return {
             props: {
-                listOfInvertbrates: listOfInvertbrates.content
+                listOfInvertebrates: listOfInvertebrates.content
             }
         }
     }
@@ -30,7 +47,7 @@
     import Species from "../../../../app/species/global/entities/Species";
     import BaseButton from "../../../../components/atoms/button/BaseButton.svelte";
 
-    export let listOfInvertbrates: Array<Species> = []
+    export let listOfInvertebrates: Array<Species> = []
 
 </script>
 
@@ -50,7 +67,7 @@
             </tr>
             </thead>
             <tbody>
-            {#each listOfInvertbrates as invertebrate, i}
+            {#each listOfInvertebrates as invertebrate, i}
                 <tr>
                     <td>{i + 1}</td>
                     <td>

@@ -13,6 +13,24 @@
         const fishUseCase: FishUseCase = new FishUseCase()
         const listOfFishes: Result = await fishUseCase.getListOfFishes(jwt.content)
 
+        if (listOfFishes.isFailed()){
+            for(const error of listOfFishes.errors){
+                if(error.code === 401){
+                    userUseCase.logout()
+                    return {
+                        redirect : '/login',
+                        status: 302
+                    }
+                }
+            }
+
+            return {
+                props: {
+                    listOfFishes: []
+                }
+            }
+        }
+
         return {
             props: {
                 listOfFishes: listOfFishes.content

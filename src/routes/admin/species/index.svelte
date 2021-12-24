@@ -23,6 +23,12 @@
                     }
                 }
             }
+
+            return {
+                props: {
+                    listOfSpecies: []
+                }
+            }
         }
 
         return {

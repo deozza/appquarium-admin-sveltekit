@@ -15,6 +15,23 @@
 
         const listOfPlants: Result = await plantUseCase.getListOfPlants(jwt.content)
 
+        if (listOfPlants.isFailed()){
+            for(const error of listOfPlants.errors){
+                if(error.code === 401){
+                    userUseCase.logout()
+                    return {
+                        redirect : '/login',
+                        status: 302
+                    }
+                }
+            }
+
+            return {
+                props: {
+                    listOfPlants: []
+                }
+            }
+        }
         return {
             props: {
                 listOfPlants: listOfPlants.content

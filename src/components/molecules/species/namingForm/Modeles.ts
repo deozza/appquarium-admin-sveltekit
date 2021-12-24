@@ -1,6 +1,6 @@
-import BaseButtonModel from "../../atoms/button/BaseButtonModel";
-import BaseTextInputModel from "../../atoms/input/text/BaseTextInputModel";
-import BaseLabelModel from "../../atoms/input/BaseLabelModel";
+import BaseButtonModel from "../../../atoms/button/BaseButtonModel";
+import BaseTextInputModel from "../../../atoms/input/text/BaseTextInputModel";
+import BaseLabelModel from "../../../atoms/input/BaseLabelModel";
 
 
 const speciesNameLabel: BaseLabelModel = new BaseLabelModel("Nom de l'espèce", 'speciesName')

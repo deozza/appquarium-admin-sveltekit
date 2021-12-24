@@ -67,9 +67,12 @@
     import Species from "../../../../app/species/global/entities/Species";
     import BaseHeaderModel from "../../../../components/atoms/typography/header/BaseHeaderModel";
     import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
-    import NamingForm from "../../../../components/molecules/species/NamingForm.svelte";
     import SpeciesGenre from "../../../../app/species/global/entities/SpeciesGenre";
     import SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";
+    import WaterConstraintsForm from "../../../../components/molecules/species/waterConstraintsForm/WaterConstraintsForm.svelte";
+    import NamingForm from "../../../../components/molecules/species/namingForm/NamingForm.svelte";
+    import AnimalSpecsForm from "../../../../components/molecules/species/animalSpecsForm/AnimalSpecsForm.svelte";
+
 
     export let fish: Species = new Species([])
     export let speciesGenres: Array<SpeciesGenre> = []
@@ -79,14 +82,37 @@
     const header: BaseHeaderModel = new BaseHeaderModel(fish.computeName())
         .setDisplaySizeOrTrowError('xxxl')
         .setSizeOrTrowError('h1')
+
+    const namingFormHeader: BaseHeaderModel = new BaseHeaderModel('Nom')
+        .setDisplaySizeOrTrowError('xxl')
+        .setSizeOrTrowError('h2')
+
+    const waterConstraintsFormHeader: BaseHeaderModel = new BaseHeaderModel("Contraintes d'eau")
+        .setDisplaySizeOrTrowError('xxl')
+        .setSizeOrTrowError('h2')
+
+    const animalSpecsFormHeader: BaseHeaderModel = new BaseHeaderModel("Caractéristiques animales")
+        .setDisplaySizeOrTrowError('xxl')
+        .setSizeOrTrowError('h2')
 </script>
 
-<div class="flex-c">
+<div class="flex-c space-y-6">
     <section>
         <BaseHeader baseHeaderModel={header} />
     </section>
 
     <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
+        <BaseHeader baseHeaderModel={namingFormHeader} />
         <NamingForm species={fish} speciesFamilies={speciesFamilies} speciesGenres={speciesGenres} user={user}/>
+    </section>
+
+    <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
+        <BaseHeader baseHeaderModel={waterConstraintsFormHeader} />
+        <WaterConstraintsForm species={fish} user={user}/>
+    </section>
+
+    <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
+        <BaseHeader baseHeaderModel={animalSpecsFormHeader} />
+        <AnimalSpecsForm species={fish} user={user} />
     </section>
 </div>

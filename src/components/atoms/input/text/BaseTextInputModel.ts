@@ -62,7 +62,7 @@ export default class BaseTextInputModel extends BaseInputModel{
     }
 
     set maxlength(value: number | null) {
-        if(this._minlength !== null && value > this._minlength){
+        if(this._minlength !== null && value < this._minlength){
             throw new Error()
         }
         this._maxlength = value;
