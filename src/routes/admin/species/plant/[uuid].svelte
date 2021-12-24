@@ -72,6 +72,8 @@
     import SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";
     import WaterConstraintsForm
         from "../../../../components/molecules/species/waterConstraintsForm/WaterConstraintsForm.svelte";
+    import BasePillModel from "../../../../components/atoms/pill/BasePillModel";
+    import BasePill from "../../../../components/atoms/pill/BasePill.svelte";
 
     export let plant: Species = new Species([])
     export let speciesGenres: Array<SpeciesGenre> = []
@@ -81,6 +83,9 @@
     const header: BaseHeaderModel = new BaseHeaderModel(plant.computeName())
         .setDisplaySizeOrTrowError('xxxl')
         .setSizeOrTrowError('h1')
+
+    const statusPill: BasePillModel = new BasePillModel(plant.getPublicationStateContent())
+    statusPill.setStyleOrThrowError(plant.getPublicationStateStyle())
 
     const namingFormHeader: BaseHeaderModel = new BaseHeaderModel('Nom')
         .setDisplaySizeOrTrowError('xxl')
@@ -94,7 +99,9 @@
 
 <div class="flex-c">
     <section>
-        <BaseHeader baseHeaderModel={header} />
+        <BaseHeader baseHeaderModel={header} >
+            <BasePill basePillModel={statusPill} />
+        </BaseHeader>
     </section>
 
     <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">

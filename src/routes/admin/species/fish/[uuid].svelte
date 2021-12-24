@@ -69,9 +69,12 @@
     import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
     import SpeciesGenre from "../../../../app/species/global/entities/SpeciesGenre";
     import SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";
-    import WaterConstraintsForm from "../../../../components/molecules/species/waterConstraintsForm/WaterConstraintsForm.svelte";
+    import WaterConstraintsForm
+        from "../../../../components/molecules/species/waterConstraintsForm/WaterConstraintsForm.svelte";
     import NamingForm from "../../../../components/molecules/species/namingForm/NamingForm.svelte";
     import AnimalSpecsForm from "../../../../components/molecules/species/animalSpecsForm/AnimalSpecsForm.svelte";
+    import BasePillModel from "../../../../components/atoms/pill/BasePillModel";
+    import BasePill from "../../../../components/atoms/pill/BasePill.svelte";
 
 
     export let fish: Species = new Species([])
@@ -82,6 +85,9 @@
     const header: BaseHeaderModel = new BaseHeaderModel(fish.computeName())
         .setDisplaySizeOrTrowError('xxxl')
         .setSizeOrTrowError('h1')
+
+    const statusPill: BasePillModel = new BasePillModel(fish.getPublicationStateContent())
+    statusPill.setStyleOrThrowError(fish.getPublicationStateStyle())
 
     const namingFormHeader: BaseHeaderModel = new BaseHeaderModel('Nom')
         .setDisplaySizeOrTrowError('xxl')
@@ -98,7 +104,9 @@
 
 <div class="flex-c space-y-6">
     <section>
-        <BaseHeader baseHeaderModel={header} />
+        <BaseHeader baseHeaderModel={header} >
+            <BasePill basePillModel={statusPill} />
+        </BaseHeader>
     </section>
 
     <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
