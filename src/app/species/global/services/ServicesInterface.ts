@@ -18,6 +18,8 @@ export default interface ServicesInterface {
 
   createSpecies(jwt: string, species: Species): Promise<string | UseCaseError>
 
+  updateGeneralInfos(jwt: string, uuid: string, origin: string): Promise<string | Array<UseCaseError>>
+
   updateSpeciesNaming(jwt: string, speciesNaming: SpeciesNaming): Promise<SpeciesNaming | UseCaseError>
 
   updateWaterConstraints(jwt: string, waterConstraints: WaterConstraints): Promise<WaterConstraints | Array<UseCaseError>>

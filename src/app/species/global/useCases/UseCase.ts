@@ -122,6 +122,20 @@ export default class SpeciesUseCase implements UseCaseInterface {
     return result
   }
 
+  async updateGeneralInfos(jwt: string, species: Species): Promise<Result> {
+    let result: Result = new Result()
+    const speciesService: Services = new Services()
+
+    const editedSpecies: string | Array<UseCaseError> = await speciesService.updateGeneralInfos(jwt, species.uuid, species.origin)
+    if (typeof editedSpecies !== 'string') {
+      result.errors = editedSpecies
+      return result
+    }
+
+    result.addSuccess('Query is OK', 200)
+    return result
+  }
+
   async updateSpeciesNaming(jwt: string, species: Species): Promise<Result> {
     let result: Result = new Result()
     const speciesService: Services = new Services()

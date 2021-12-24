@@ -29,6 +29,8 @@ export default interface AdapterInterface {
 
   mutationCreateSpecies(species: Species): Promise<string | UseCaseError>
 
+  mutationUpdateOrigin(uuid: string, origin: string): Promise<string | Array<UseCaseError>>
+
   mutationUpdateSpeciesNaming(speciesNaming: SpeciesNaming): Promise<SpeciesNaming | UseCaseError>
 
   mutationCreateWaterConstraints(uuid: string, waterConstraints: WaterConstraints): Promise<string | Array<UseCaseError>>

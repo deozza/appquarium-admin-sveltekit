@@ -52,11 +52,26 @@
             return {}
         }
 
+        const speciesOrigins: Result = await speciesUseCase.getSpeciesOrigins(jwt.content)
+        if (speciesOrigins.isFailed()) {
+            for (const error of speciesOrigins.errors) {
+                if (error.code === 401) {
+                    userUseCase.logout()
+                    return {
+                        redirect: "/login",
+                        status: 302
+                    }
+                }
+            }
+            return {}
+        }
+
         return {
             props: {
                 fish: fish.content,
                 speciesGenres: speciesGenres.content,
                 speciesFamilies: speciesFamilies.content,
+                speciesOrigins: speciesOrigins.content,
                 user: user
             }
         }
@@ -67,18 +82,20 @@
     import Species from "../../../../app/species/global/entities/Species";
     import BaseHeaderModel from "../../../../components/atoms/typography/header/BaseHeaderModel";
     import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
-    import SpeciesGenre from "../../../../app/species/global/entities/SpeciesGenre";
-    import SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";
-    import WaterConstraintsForm
-        from "../../../../components/molecules/species/waterConstraintsForm/WaterConstraintsForm.svelte";
-    import NamingForm from "../../../../components/molecules/species/namingForm/NamingForm.svelte";
-    import AnimalSpecsForm from "../../../../components/molecules/species/animalSpecsForm/AnimalSpecsForm.svelte";
     import BasePillModel from "../../../../components/atoms/pill/BasePillModel";
     import BasePill from "../../../../components/atoms/pill/BasePill.svelte";
+    import SpeciesGenre from "../../../../app/species/global/entities/SpeciesGenre";
+    import SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";
+    import GeneralForm from "../../../../components/molecules/species/generalForm/GeneralForm.svelte";
+    import NamingForm from "../../../../components/molecules/species/namingForm/NamingForm.svelte";
+    import WaterConstraintsForm
+        from "../../../../components/molecules/species/waterConstraintsForm/WaterConstraintsForm.svelte";
+    import AnimalSpecsForm from "../../../../components/molecules/species/animalSpecsForm/AnimalSpecsForm.svelte";
     import PublicationStateSwitcher
         from "../../../../components/molecules/species/publicationStateSwitcher/PublicationStateSwitcher.svelte";
 
     export let fish: Species = new Species([])
+    export let speciesOrigins: Array<string> = []
     export let speciesGenres: Array<SpeciesGenre> = []
     export let speciesFamilies: Array<SpeciesFamily> = []
     export let user: User = new User('')
@@ -89,6 +106,10 @@
 
     const statusPill: BasePillModel = new BasePillModel(fish.getPublicationStateContent())
     statusPill.setStyleOrThrowError(fish.getPublicationStateStyle())
+
+    const generalFormHeader: BaseHeaderModel = new BaseHeaderModel('Infos générales')
+        .setDisplaySizeOrTrowError('xxl')
+        .setSizeOrTrowError('h2')
 
     const namingFormHeader: BaseHeaderModel = new BaseHeaderModel('Nom')
         .setDisplaySizeOrTrowError('xxl')
@@ -108,6 +129,11 @@
         <BaseHeader baseHeaderModel={header} >
             <BasePill basePillModel={statusPill} />
         </BaseHeader>
+    </section>
+
+    <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
+        <BaseHeader baseHeaderModel={generalFormHeader} />
+        <GeneralForm species={fish} speciesOrigins={speciesOrigins} user={user}/>
     </section>
 
     <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">

@@ -255,6 +255,36 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
     }
   }
 
+  async mutationUpdateOrigin(uuid: string, origin: string): Promise<string | Array<UseCaseError>> {
+    let queryBuilder: HasuraMutationUpdateBuilder = new HasuraMutationUpdateBuilder('update_species_by_pk')
+
+    queryBuilder.addParam('$uuid', 'uuid!', uuid)
+    queryBuilder.addParam('$origin', 'species_origin_enum', origin)
+
+    queryBuilder.addPkColumn('uuid', '$uuid')
+
+    queryBuilder.addInsert('origin', '$origin')
+
+    queryBuilder.addReturn('origin')
+
+    const mutation: string = queryBuilder.getRequest()
+
+    try {
+      const data = await this.client.request(mutation, {
+        uuid: uuid,
+        origin: origin
+      })
+
+      return data.update_species_by_pk.origin
+    } catch (e) {
+      if (e.message.includes("JWTExpired")) {
+        return [new UseCaseError("JWT expired", 401)]
+      }
+      return [new UseCaseError(e.message, 400)]
+    }
+  }
+
+
   async mutationUpdateSpeciesNaming(speciesNaming: SpeciesNaming): Promise<SpeciesNaming | UseCaseError> {
     let queryBuilder: HasuraMutationUpdateBuilder = new HasuraMutationUpdateBuilder('update_species_naming_by_pk')
     queryBuilder.addParam('$uuid', 'uuid!', speciesNaming.uuid)

@@ -64,6 +64,12 @@ export default class Services implements ServicesInterface {
     return await adapter.mutationCreateSpecies(species)
   }
 
+  async updateGeneralInfos(jwt: string, uuid: string, origin: string): Promise<string | Array<UseCaseError>> {
+    const adapter: AdapterInterface = new HasuraAdapter(jwt)
+
+    return await adapter.mutationUpdateOrigin(uuid, origin)
+  }
+
   async createSpeciesFamily(jwt: string, speciesFamily: SpeciesFamily): Promise<string | UseCaseError> {
     const adapter: AdapterInterface = new HasuraAdapter(jwt)
 
