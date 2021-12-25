@@ -1,0 +1,29 @@
+import BaseButtonModel from "../../../atoms/button/BaseButtonModel";
+import BaseLabelModel from "../../../atoms/input/BaseLabelModel";
+import BaseFileInputModel from "../../../atoms/input/file/BaseFileInputModel";
+import BaseTextInputModel from "../../../atoms/input/text/BaseTextInputModel";
+
+const newFileToUploadLabel: BaseLabelModel = new BaseLabelModel("Image", 'newFileToUpload')
+const newFileToUploadInput: BaseFileInputModel = new BaseFileInputModel('newFileToUpload')
+newFileToUploadInput.required = true
+newFileToUploadInput.accept = ['image/png', 'image/jpeg', 'image/jpg']
+
+const newFileTitleLabel: BaseLabelModel = new BaseLabelModel("Titre", 'newFileTitle')
+const newFileTitleInput: BaseTextInputModel = new BaseTextInputModel('newFileTitle')
+newFileTitleInput.required = true
+
+const newFileSourceLabel: BaseLabelModel = new BaseLabelModel("Source", 'newFileSource')
+const newFileSourceInput: BaseTextInputModel = new BaseTextInputModel('newFileSource')
+newFileSourceInput.required = true
+
+let submitButton: BaseButtonModel = new BaseButtonModel('Ajouter')
+
+export const formElements: object = {
+    newFileToUploadLabel: newFileToUploadLabel,
+    newFileToUploadInput: newFileToUploadInput,
+    newFileTitleLabel: newFileTitleLabel,
+    newFileTitleInput: newFileTitleInput,
+    newFileSourceLabel: newFileSourceLabel,
+    newFileSourceInput: newFileSourceInput,
+    submitButton: submitButton
+}

@@ -1,13 +1,18 @@
 import type ServiceInterface from "./ServiceInterface";
-
 import UseCaseError from "../../utils/useCasesResult/types/UseCaseError";
 
 import Image from "../entities/Image";
 
-import AdapterInterface from "../adapters/AdapterInterface";
+import type AdapterInterface from "../adapters/AdapterInterface";
 import FirebaseAdapter from "../adapters/FirebaseAdapter";
 
 export default class Service implements ServiceInterface{
+
+  async getListOfFiles(path: string): Promise<Array<Image> | Array<UseCaseError>> {
+    const adapter: AdapterInterface = new FirebaseAdapter()
+
+    return await adapter.getListOfFiles(path)
+  }
 
   getComputedFileName(fileName: string): string {
     return fileName.replace(' ', '_')

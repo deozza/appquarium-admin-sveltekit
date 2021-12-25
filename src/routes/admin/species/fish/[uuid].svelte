@@ -18,8 +18,7 @@
 
         if(fish.isFailed()){
             return {
-                redirect: '/admin/species',
-                status: 302
+                error: new Error(`Could not load fish ${page.params.uuid}`)
             }
         }
 
@@ -93,6 +92,7 @@
     import AnimalSpecsForm from "../../../../components/molecules/species/animalSpecsForm/AnimalSpecsForm.svelte";
     import PublicationStateSwitcher
         from "../../../../components/molecules/species/publicationStateSwitcher/PublicationStateSwitcher.svelte";
+    import ImagesForm from "../../../../components/molecules/species/imagesForm/ImagesForm.svelte";
 
     export let fish: Species = new Species([])
     export let speciesOrigins: Array<string> = []
@@ -120,6 +120,10 @@
         .setSizeOrTrowError('h2')
 
     const animalSpecsFormHeader: BaseHeaderModel = new BaseHeaderModel("Caractéristiques animales")
+        .setDisplaySizeOrTrowError('xxl')
+        .setSizeOrTrowError('h2')
+
+    const imageFormHeader: BaseHeaderModel = new BaseHeaderModel("Images")
         .setDisplaySizeOrTrowError('xxl')
         .setSizeOrTrowError('h2')
 </script>
@@ -150,6 +154,12 @@
         <BaseHeader baseHeaderModel={animalSpecsFormHeader} />
         <AnimalSpecsForm species={fish} user={user} />
     </section>
+
+    <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
+        <BaseHeader baseHeaderModel={imageFormHeader} />
+        <ImagesForm species={fish} />
+    </section>
+
 
     <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
         <PublicationStateSwitcher species={fish} user={user}/>

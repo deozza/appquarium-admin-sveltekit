@@ -9,6 +9,8 @@ import SpeciesNaming from "../entities/SpeciesNaming";
 import AnimalSpecs from "../entities/AnimalSpecs";
 
 import Services from "../services/Services";
+import {default as FileServices} from "../../../file/services/Service"
+import Image from "../../../file/entities/Image";
 
 export default class SpeciesUseCase implements UseCaseInterface {
 
@@ -32,7 +34,7 @@ export default class SpeciesUseCase implements UseCaseInterface {
     let result: Result = new Result()
     const speciesService: Services = new Services()
 
-    const species: Species | UseCaseError = await speciesService.queryGetSpecies(jwt, uuid)
+    let species: Species | UseCaseError = await speciesService.queryGetSpecies(jwt, uuid)
 
     if (species instanceof UseCaseError) {
       if (species.code === 400) {
@@ -44,6 +46,26 @@ export default class SpeciesUseCase implements UseCaseInterface {
         result.addError('Species not found', species.code)
         return result
       }
+    }
+
+    if(species instanceof Species){
+
+      const fileServices: FileServices = new FileServices()
+      const listOfFiles: Array<Image> | Array<UseCaseError> = await fileServices.getListOfFiles('species/'+species.uuid)
+
+      console.log(listOfFiles)
+
+      listOfFiles.forEach(file => {
+        if(file instanceof UseCaseError){
+          result.addError(file.type, file.code)
+        }else{
+          species.images = [...species.images, file]
+        }
+      })
+    }
+
+    if(result.isFailed()){
+      return result
     }
 
     result.content = species
@@ -296,5 +318,4 @@ export default class SpeciesUseCase implements UseCaseInterface {
     result.addSuccess('Resource is deleted', 204)
     return result
   }
-
 }
