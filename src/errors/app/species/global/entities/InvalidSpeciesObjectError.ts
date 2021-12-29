@@ -1,5 +1,5 @@
 export default class InvalidSpeciesObjectError extends Error {
-  constructor() {
-    super('Invalid species object');
-  }
+    constructor() {
+        super('Invalid species object');
+    }
 }
