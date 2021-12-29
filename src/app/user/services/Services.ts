@@ -9,36 +9,36 @@ import Cookies from 'js-cookie';
 
 export default class Services implements ServicesInterface {
 
-  async authenticateUser(email: string, password: string): Promise<User | null> {
+    async authenticateUser(email: string, password: string): Promise<User | null> {
 
-    const adapter: AdapterInterface | null = new FirebaseAdapter()
+        const adapter: AdapterInterface | null = new FirebaseAdapter()
 
-    return await adapter.authenticateWithEmailAndPassword(email, password)
-  }
+        return await adapter.authenticateWithEmailAndPassword(email, password)
+    }
 
-  async getRefreshedToken(): Promise<string | null> {
-    const adapter: AdapterInterface | null = new FirebaseAdapter()
+    async getRefreshedToken(): Promise<string | null> {
+        const adapter: AdapterInterface | null = new FirebaseAdapter()
 
-    return await adapter.getRefreshedToken()
-  }
+        return await adapter.getRefreshedToken()
+    }
 
-  async queryTotalUsers(jwt: string): Promise<number | null> {
-    const adapter: AdapterInterface | null = new HasuraAdapter(jwt)
+    async queryTotalUsers(jwt: string): Promise<number | null> {
+        const adapter: AdapterInterface | null = new HasuraAdapter(jwt)
 
-    return await adapter.queryTotalUsers()
-  }
+        return await adapter.queryTotalUsers()
+    }
 
-  setCookie(user: User): User | null{
-    Cookies.set('appquarium-jwt', user.jwt, {sameSite: "strict"})
+    setCookie(user: User): User | null {
+        Cookies.set('appquarium-jwt', user.jwt, {sameSite: "strict"})
 
-    return user
-  }
+        return user
+    }
 
-  removeCookie(): null {
-    Cookies.remove('appquarium-jwt')
-  }
+    removeCookie(): null {
+        Cookies.remove('appquarium-jwt')
+    }
 
-  getCookie(): string | undefined{
-    return Cookies.get('appquarium-jwt')
-  }
+    getCookie(): string | undefined {
+        return Cookies.get('appquarium-jwt')
+    }
 }

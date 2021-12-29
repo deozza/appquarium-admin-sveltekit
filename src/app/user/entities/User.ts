@@ -1,27 +1,27 @@
 import jwt_decode from "jwt-decode";
 
 export default class User {
-  uid: string = ''
-  email: string = ''
-  jwt: string
-  lastSignInTime: string = ''
+    uid: string = ''
+    email: string = ''
+    jwt: string
+    lastSignInTime: string = ''
 
 
-  constructor(jwt: string) {
-    this.jwt = jwt;
-  }
-
-  extractUserInfoFromJwt(): object {
-
-    if (this.jwt === '') {
-      return
+    constructor(jwt: string) {
+        this.jwt = jwt;
     }
 
-    const decoded = jwt_decode(this.jwt)
+    extractUserInfoFromJwt(): object {
 
-      this.uid = decoded.user_id
-      this.email = decoded.email
+        if (this.jwt === '') {
+            return
+        }
 
-    return decoded
-  }
+        const decoded = jwt_decode(this.jwt)
+
+        this.uid = decoded.user_id
+        this.email = decoded.email
+
+        return decoded
+    }
 }
