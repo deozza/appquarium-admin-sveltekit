@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script context="module" lang="ts">
     import Result from "../../../../app/utils/useCasesResult/Result";
     import UserUseCase from "../../../../app/user/useCases/UseCase";
     import InvertebrateUseCase from "../../../../app/species/invertebrate/useCases/UseCase";
@@ -6,7 +6,7 @@
     /**
      * @type {import('@sveltejs/kit').Load}
      */
-    export async function load(){
+    export async function load() {
         const userUseCase: UserUseCase = new UserUseCase()
 
         const jwt: Result = userUseCase.getToken()
@@ -15,12 +15,12 @@
 
         const listOfInvertebrates: Result = await invertebrateUseCase.getListOfInvertebrates(jwt.content)
 
-        if (listOfInvertebrates.isFailed()){
-            for(const error of listOfInvertebrates.errors){
-                if(error.code === 401){
+        if (listOfInvertebrates.isFailed()) {
+            for (const error of listOfInvertebrates.errors) {
+                if (error.code === 401) {
                     userUseCase.logout()
                     return {
-                        redirect : '/login',
+                        redirect: '/login',
                         status: 302
                     }
                 }
@@ -71,7 +71,9 @@
                 <tr>
                     <td>{i + 1}</td>
                     <td>
-                        <a class="font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300" href={invertebrate.computeLinkToSpecies()} sveltekit:prefetch>{invertebrate.computeName()}</a>
+                        <a class="font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300"
+                           href={invertebrate.computeLinkToSpecies()}
+                           sveltekit:prefetch>{invertebrate.computeName()}</a>
                     </td>
                     <td>{invertebrate.getPublicationStateContent()}</td>
                     <td>{invertebrate.created_at.getDate() + '/' + invertebrate.created_at.getMonth() + '/' + invertebrate.created_at.getFullYear() + ' ' + invertebrate.created_at.getHours() + ':' + invertebrate.created_at.getMinutes()}</td>

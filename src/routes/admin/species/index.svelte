@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script context="module" lang="ts">
     import Result from "../../../app/utils/useCasesResult/Result";
     import UserUseCase from "../../../app/user/useCases/UseCase";
     import SpeciesUseCase from "../../../app/species/global/useCases/UseCase";
@@ -6,16 +6,16 @@
     /**
      * @type {import('@sveltejs/kit').Load}
      */
-    export async function load(){
+    export async function load() {
         const userUseCase: UserUseCase = new UserUseCase()
         const jwt: Result = userUseCase.getToken()
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
         const listOfSpecies: Result = await speciesUseCase.getListOfSpecies(jwt.content)
 
-        if(listOfSpecies.isFailed()){
-            for(const error of listOfSpecies.errors){
-                if(error.code === 401){
+        if (listOfSpecies.isFailed()) {
+            for (const error of listOfSpecies.errors) {
+                if (error.code === 401) {
                     userUseCase.logout()
                     return {
                         redirect: '/login',
@@ -41,13 +41,13 @@
 
 <script lang="ts">
 
-import {buttonsAdd, header} from "../../../components/pages/admin/index/Modeles";
+    import {buttonsAdd, header} from "../../../components/pages/admin/index/Modeles";
 
-import BaseHeader from "../../../components/atoms/typography/header/BaseHeader.svelte";
-import BaseButton from "../../../components/atoms/button/BaseButton.svelte";
-import Species from "../../../app/species/global/entities/Species";
+    import BaseHeader from "../../../components/atoms/typography/header/BaseHeader.svelte";
+    import BaseButton from "../../../components/atoms/button/BaseButton.svelte";
+    import Species from "../../../app/species/global/entities/Species";
 
-export let listOfSpecies: Array<Species> = []
+    export let listOfSpecies: Array<Species> = []
 
 </script>
 
@@ -72,7 +72,8 @@ export let listOfSpecies: Array<Species> = []
                 <tr>
                     <td>{i + 1}</td>
                     <td>
-                        <a class="font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300" href={species.computeLinkToSpecies()} sveltekit:prefetch>{species.computeName()}</a>
+                        <a class="font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300"
+                           href={species.computeLinkToSpecies()} sveltekit:prefetch>{species.computeName()}</a>
                     </td>
                     <td>{species.category}</td>
                     <td>{species.getPublicationStateContent()}</td>

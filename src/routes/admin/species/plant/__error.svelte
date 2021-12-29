@@ -13,7 +13,7 @@
     let href: string = '/admin/species/plant'
 
     const userUseCase: UserUseCase = new UserUseCase()
-    if(userUseCase.getToken().isFailed()){
+    if (userUseCase.getToken().isFailed()) {
         href = "/login"
     }
 
@@ -21,8 +21,8 @@
 
 <div class="flex-c h-screen">
     <span class="text-red-500 font-bold">404</span>
-    <BaseHeader baseHeaderModel={header} />
-    <a {href} class="pt-6">
-        <BaseButton baseButtonModel={linkButton} />
+    <BaseHeader baseHeaderModel={header}/>
+    <a class="pt-6" {href}>
+        <BaseButton baseButtonModel={linkButton}/>
     </a>
 </div>

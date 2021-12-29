@@ -1,7 +1,7 @@
 <script lang="ts">
     import {goto} from '$app/navigation';
 
-    import {formElements, header, errorParagraph, pageStates} from "../components/pages/login/Modeles";
+    import {errorParagraph, formElements, header, pageStates} from "../components/pages/login/Modeles";
 
     import BaseHeader from "../components/atoms/typography/header/BaseHeader.svelte";
     import BaseParagraph from "../components/atoms/typography/paragraph/BaseParagraph.svelte";
@@ -46,25 +46,25 @@
 
 <div class="flex-c h-screen">
     <section class="min-w-[50%] min-h-[33%] flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
-        <BaseHeader baseHeaderModel={header} />
+        <BaseHeader baseHeaderModel={header}/>
         <form class="min-w-full" on:submit|preventDefault={login}>
             <ul class="space-y-6">
                 <li class="flex-c">
                     <div class="flex-r">
-                        <BaseLabel baseLabelModel={formElements.emailLabel} />
-                        <BaseTextInput baseTextInputModel={formElements.emailInput} />
+                        <BaseLabel baseLabelModel={formElements.emailLabel}/>
+                        <BaseTextInput baseTextInputModel={formElements.emailInput}/>
                     </div>
                 </li>
                 <li class="flex-c">
                     <div class="flex-r">
-                        <BaseLabel baseLabelModel={formElements.passwordLabel} />
-                        <BaseTextInput baseTextInputModel={formElements.passwordInput} />
+                        <BaseLabel baseLabelModel={formElements.passwordLabel}/>
+                        <BaseTextInput baseTextInputModel={formElements.passwordInput}/>
                     </div>
                 </li>
                 <li class="flex-c space-y-2">
-                    <BaseButton baseButtonModel={formElements.loginButton} />
+                    <BaseButton baseButtonModel={formElements.loginButton}/>
                     {#if currentPageState !== pageStates.normal }
-                        <BaseParagraph baseParagraphModel={errorParagraph} />
+                        <BaseParagraph baseParagraphModel={errorParagraph}/>
                     {/if}
                 </li>
             </ul>

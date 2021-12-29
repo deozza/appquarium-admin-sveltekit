@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script context="module" lang="ts">
     import Result from "../../../../app/utils/useCasesResult/Result";
     import UserUseCase from "../../../../app/user/useCases/UseCase";
     import SpeciesUseCase from "../../../../app/species/global/useCases/UseCase";
@@ -8,7 +8,7 @@
     /**
      * @type {import('@sveltejs/kit').Load}
      */
-    export async function load({page}){
+    export async function load({page}) {
         const userUseCase: UserUseCase = new UserUseCase()
         const jwt: Result = userUseCase.getToken()
         const user: User = new User(jwt.content)
@@ -16,7 +16,7 @@
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
         const fish: Result = await speciesUseCase.getSpecies(jwt.content, page.params.uuid)
 
-        if(fish.isFailed()){
+        if (fish.isFailed()) {
             return {
                 error: new Error(`Could not load fish ${page.params.uuid}`)
             }
@@ -130,34 +130,34 @@
 
 <div class="flex-c space-y-6">
     <section>
-        <BaseHeader baseHeaderModel={header} >
-            <BasePill basePillModel={statusPill} />
+        <BaseHeader baseHeaderModel={header}>
+            <BasePill basePillModel={statusPill}/>
         </BaseHeader>
     </section>
 
     <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
-        <BaseHeader baseHeaderModel={generalFormHeader} />
+        <BaseHeader baseHeaderModel={generalFormHeader}/>
         <GeneralForm species={fish} speciesOrigins={speciesOrigins} user={user}/>
     </section>
 
     <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
-        <BaseHeader baseHeaderModel={namingFormHeader} />
+        <BaseHeader baseHeaderModel={namingFormHeader}/>
         <NamingForm species={fish} speciesFamilies={speciesFamilies} speciesGenres={speciesGenres} user={user}/>
     </section>
 
     <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
-        <BaseHeader baseHeaderModel={waterConstraintsFormHeader} />
+        <BaseHeader baseHeaderModel={waterConstraintsFormHeader}/>
         <WaterConstraintsForm species={fish} user={user}/>
     </section>
 
     <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
-        <BaseHeader baseHeaderModel={animalSpecsFormHeader} />
-        <AnimalSpecsForm species={fish} user={user} />
+        <BaseHeader baseHeaderModel={animalSpecsFormHeader}/>
+        <AnimalSpecsForm species={fish} user={user}/>
     </section>
 
     <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
-        <BaseHeader baseHeaderModel={imageFormHeader} />
-        <ImagesForm species={fish} />
+        <BaseHeader baseHeaderModel={imageFormHeader}/>
+        <ImagesForm species={fish}/>
     </section>
 
 

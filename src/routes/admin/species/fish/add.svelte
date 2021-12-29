@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script context="module" lang="ts">
     import FishUseCase from "../../../../app/species/fish/useCases/UseCase";
     import UserUseCase from "../../../../app/user/useCases/UseCase";
     import User from "../../../../app/user/entities/User";
@@ -7,7 +7,7 @@
     /**
      * @type {import('@sveltejs/kit').Load}
      */
-    export async function load(){
+    export async function load() {
         const userUseCase: UserUseCase = new UserUseCase()
         const cookie: Result = userUseCase.getToken()
 
@@ -71,7 +71,7 @@
 </script>
 
 <section class="flex-c pb-12">
-    <BaseHeader baseHeaderModel="{header}" />
+    <BaseHeader baseHeaderModel="{header}"/>
 </section>
 
 <div class="flex-c">
