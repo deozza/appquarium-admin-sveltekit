@@ -4,10 +4,10 @@ import UseCaseError from "../../utils/useCasesResult/types/UseCaseError";
 
 import Image from "../entities/Image";
 
-import  { getStorage, ref, getDownloadURL, updateMetadata, uploadBytes, deleteObject, listAll, getMetadata } from 'firebase/storage'
+import {deleteObject, getDownloadURL, getStorage, ref, uploadBytes} from 'firebase/storage'
 import firebaseInit from "../../adapters/firebase/initFirebase";
 
-export default class FirebaseAdapter implements AdapterInterface{
+export default class FirebaseAdapter implements AdapterInterface {
     private storage
 
     constructor() {
@@ -15,7 +15,7 @@ export default class FirebaseAdapter implements AdapterInterface{
         this.storage = getStorage()
     }
 
-    getListOfFiles(path: string): Promise<Array<Image> | Array<UseCaseError>>{
+    getListOfFiles(path: string): Promise<Array<Image> | Array<UseCaseError>> {
         return Promise.resolve(undefined);
     }
 

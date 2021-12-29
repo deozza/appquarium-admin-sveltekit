@@ -48,7 +48,7 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
         return Promise.resolve(undefined);
     }
 
-    async postMetadata(image: Image): Promise<Image | Array<UseCaseError>>{
+    async postMetadata(image: Image): Promise<Image | Array<UseCaseError>> {
         let queryBuilder: HasuraMutationInsertBuilder = new HasuraMutationInsertBuilder('insert_media_one')
 
         queryBuilder.addParam('$url', 'String!', image.url)

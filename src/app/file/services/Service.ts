@@ -7,51 +7,51 @@ import type AdapterInterface from "../adapters/AdapterInterface";
 import FirebaseAdapter from "../adapters/FirebaseAdapter";
 import HasuraAdapter from "../adapters/HasuraAdapter";
 
-export default class Service implements ServiceInterface{
+export default class Service implements ServiceInterface {
 
-  getComputedFileName(fileName: string): string {
-    return fileName.replace(' ', '_')
-      .replace("'", '_')
-      .toLowerCase();
-  }
-
-  getMetadata(fileName: string, fileSource: string): object {
-    return {
-      customMetadata: {
-        alt: fileName,
-        source: fileSource
-      }
+    getComputedFileName(fileName: string): string {
+        return fileName.replace(' ', '_')
+            .replace("'", '_')
+            .toLowerCase();
     }
-  }
 
-  async uploadFile(path: string, file: File): Promise<Image | Array<UseCaseError>> {
-    const adapter: AdapterInterface = new FirebaseAdapter()
+    getMetadata(fileName: string, fileSource: string): object {
+        return {
+            customMetadata: {
+                alt: fileName,
+                source: fileSource
+            }
+        }
+    }
 
-    return await adapter.uploadFile(path, file)
-  }
+    async uploadFile(path: string, file: File): Promise<Image | Array<UseCaseError>> {
+        const adapter: AdapterInterface = new FirebaseAdapter()
 
-  async postMetadata(jwt: string,image: Image): Promise< Image | Array<UseCaseError>> {
-    const adapter: AdapterInterface = new HasuraAdapter(jwt)
+        return await adapter.uploadFile(path, file)
+    }
 
-    return await adapter.postMetadata(image)
-  }
+    async postMetadata(jwt: string, image: Image): Promise<Image | Array<UseCaseError>> {
+        const adapter: AdapterInterface = new HasuraAdapter(jwt)
+
+        return await adapter.postMetadata(image)
+    }
 
 
-  async editFileMetadata(jwt: string, image: Image): Promise<boolean | Array<UseCaseError>> {
-    const adapter: AdapterInterface = new HasuraAdapter(jwt)
+    async editFileMetadata(jwt: string, image: Image): Promise<boolean | Array<UseCaseError>> {
+        const adapter: AdapterInterface = new HasuraAdapter(jwt)
 
-    return await adapter.editFileMetadata(image)
-  }
+        return await adapter.editFileMetadata(image)
+    }
 
-  async deleteFile(image: Image): Promise<boolean | Array<UseCaseError>> {
-    const adapter: AdapterInterface = new FirebaseAdapter()
+    async deleteFile(image: Image): Promise<boolean | Array<UseCaseError>> {
+        const adapter: AdapterInterface = new FirebaseAdapter()
 
-    return await adapter.deleteFile(image)
-  }
+        return await adapter.deleteFile(image)
+    }
 
-  async deleteFileMetadata(jwt: string, image: Image): Promise<boolean | Array<UseCaseError>> {
-    const adapter: AdapterInterface = new HasuraAdapter(jwt)
+    async deleteFileMetadata(jwt: string, image: Image): Promise<boolean | Array<UseCaseError>> {
+        const adapter: AdapterInterface = new HasuraAdapter(jwt)
 
-    return await adapter.deleteFileMetadata(image)
-  }
+        return await adapter.deleteFileMetadata(image)
+    }
 }

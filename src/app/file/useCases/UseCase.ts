@@ -9,60 +9,60 @@ import Service from "../services/Service";
 
 export default class UseCase implements UseCaseInterface {
 
-  async  uploadFile(fileName: string, fileSource: string, basePath: string, file: File | null): Promise<Result> {
-    const result: Result = new Result()
-    const fileService: Service = new Service()
+    async uploadFile(fileName: string, fileSource: string, basePath: string, file: File | null): Promise<Result> {
+        const result: Result = new Result()
+        const fileService: Service = new Service()
 
-    if(file === null){
-      result.addError('File should not be empty', 400)
-      return result
+        if (file === null) {
+            result.addError('File should not be empty', 400)
+            return result
+        }
+
+        const computedFileName: string = fileService.getComputedFileName(fileName)
+        const completeRemotePath: string = basePath + '/' + computedFileName
+
+        const image: Image | Array<UseCaseError> = await fileService.uploadFile(completeRemotePath, file)
+        if (!(image instanceof Image)) {
+            result.errors = image
+            return result
+        }
+
+        result.addSuccess('Query is OK', 201)
+        result.content = image
+        return result
     }
 
-    const computedFileName: string = fileService.getComputedFileName(fileName)
-    const completeRemotePath: string = basePath + '/' + computedFileName
+    async editFileMetadata(jwt: string, image: Image): Promise<Result> {
+        const result: Result = new Result()
+        const fileService: Service = new Service()
 
-    const image: Image | Array<UseCaseError> = await fileService.uploadFile(completeRemotePath, file)
-    if (!(image instanceof Image)) {
-      result.errors = image
-      return result
+        const isEdited: boolean | Array<UseCaseError> = await fileService.editFileMetadata(jwt, image)
+        if (typeof isEdited !== 'boolean') {
+            result.errors = isEdited
+            return result
+        }
+
+        result.addSuccess('Query is OK', 200)
+        return result
     }
 
-    result.addSuccess('Query is OK', 201)
-    result.content = image
-    return result
-  }
+    async deleteFile(jwt: string, image: Image): Promise<Result> {
+        const result: Result = new Result()
+        const fileService: Service = new Service()
+        let isDeleted: boolean | Array<UseCaseError> = await fileService.deleteFile(image)
+        if (typeof isDeleted !== 'boolean') {
+            result.errors = isDeleted
+            return result
+        }
 
-  async editFileMetadata(jwt: string, image: Image): Promise<Result> {
-    const result: Result = new Result()
-    const fileService: Service = new Service()
+        isDeleted = await fileService.deleteFileMetadata(jwt, image)
+        if (typeof isDeleted !== 'boolean') {
+            result.errors = isDeleted
+            return result
+        }
 
-    const isEdited: boolean | Array<UseCaseError> = await fileService.editFileMetadata(jwt, image)
-    if(typeof isEdited !== 'boolean'){
-      result.errors = isEdited
-      return result
+        result.addSuccess('Query is OK', 204)
+        return result
     }
-
-    result.addSuccess('Query is OK', 200)
-    return result
-  }
-
-  async deleteFile(jwt: string, image: Image): Promise<Result> {
-    const result: Result = new Result()
-    const fileService: Service = new Service()
-    let isDeleted: boolean | Array<UseCaseError> = await fileService.deleteFile(image)
-    if(typeof isDeleted !== 'boolean'){
-      result.errors = isDeleted
-      return result
-    }
-
-    isDeleted = await fileService.deleteFileMetadata(jwt, image)
-    if(typeof isDeleted !== 'boolean'){
-      result.errors = isDeleted
-      return result
-    }
-
-    result.addSuccess('Query is OK', 204)
-    return result
-  }
 
 }
