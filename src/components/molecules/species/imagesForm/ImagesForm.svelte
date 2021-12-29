@@ -113,43 +113,61 @@
 <div class="min-w-full flex-r justify-start space-x-6 space-y-3">
     {#each species.images as image, index}
         <div class="flex-c">
-            <img class="max-w-full h-48" src={image.url} alt={image.title}>
-            <input type="text" bind:value={image.title}>
-            <input type="checkbox" bind:checked={image.thumbnail} on:change={thumbnailHasBeenUpdated = true}>
+            <ul>
+                <li class="flex-c">
+                    <div class="flex-r">
+                        <img class="max-w-full h-48" src={image.url} alt={image.title}>
+                    </div>
+                </li>
+                <li class="flex-c">
+                    <div class="flex-r">
+                        <BaseLabel baseLabelModel={formElements.updateFileTitleLabel}/>
+                        <input type="text" bind:value={image.title}>
+                    </div>
+                </li>
 
-            <div class="w-full flex-r justify-around">
-                <BaseButton baseButtonModel={formElements.updateButton} on:click={editFileMetadata(image)}/>
-                <BaseButton baseButtonModel={formElements.deleteButton} on:click={deleteFile(image)}/>
+                <li class="flex-c">
+                    <div class="flex-r">
+                        <BaseLabel baseLabelModel={formElements.updateFileThumbnailLabel}/>
+                        <input type="checkbox" bind:checked={image.thumbnail} on:change={thumbnailHasBeenUpdated = true}>
+                    </div>
+                </li>
+                <li class="flex-c">
+                    <div class="w-full flex-r justify-around">
+                        <BaseButton baseButtonModel={formElements.updateButton} on:click={editFileMetadata(image)}/>
+                        <BaseButton baseButtonModel={formElements.deleteButton} on:click={deleteFile(image)}/>
 
-            </div>
+                    </div>
+                </li>
+            </ul>
         </div>
     {/each}
 
     <div>
         <form on:submit|preventDefault={uploadFile}>
-            <div class="flex-column">
+            <div class="flex-c">
                 <ul>
-                    <li class="flex-column">
-                        <div class="flex-row input-row">
+                    <li class="flex-c">
+                        <div class="flex-r">
                             <BaseLabel baseLabelModel={formElements.newFileToUploadLabel}/>
                             <BaseFileInput baseFileInputModel={formElements.newFileToUploadInput}/>
                         </div>
                     </li>
 
-                    <li class="flex-column">
-                        <div class="flex-row input-row">
+                    <li class="flex-c">
+                        <div class="flex-r">
                             <BaseLabel baseLabelModel={formElements.newFileTitleLabel}/>
                             <BaseTextInput baseTextInputModel={formElements.newFileTitleInput}/>
                         </div>
                     </li>
 
-                    <li class="flex-column">
-                        <div class="flex-row input-row">
+                    <li class="flex-c">
+                        <div class="flex-r">
                             <BaseLabel baseLabelModel={formElements.newFileSourceLabel}/>
                             <BaseTextInput baseTextInputModel={formElements.newFileSourceInput}/>
                         </div>
                     </li>
-                    <li class="flex-column">
+                    <li class="flex-c">
                         <BaseButton baseButtonModel={formElements.submitButton}/>
                     </li>
                 </ul>
