@@ -9,6 +9,8 @@ export default interface AdapterInterface {
 
     postMetadata(image: Image): Promise<Image | Array<UseCaseError>>
 
+    removeThumbnailStatus(image: Image): Promise<boolean | Array<UseCaseError>>
+
     editFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>>
 
     deleteFile(image: Image): Promise<boolean | Array<UseCaseError>>

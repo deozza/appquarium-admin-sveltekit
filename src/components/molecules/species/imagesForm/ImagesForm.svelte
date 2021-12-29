@@ -15,6 +15,8 @@
 
     export let species: Species = new Species([])
 
+    export let thumbnailHasBeenUpdated: boolean = false
+
     async function uploadFile() {
         formElements.submitButton.setLoading(true)
         const userUseCase: UserUseCase = new UserUseCase()
@@ -88,7 +90,7 @@
         const jwt: string = userUseCase.getToken().content
 
         const fileUseCase: UseCase = new UseCase()
-        const result: Result = await fileUseCase.editFileMetadata(jwt, image)
+        const result: Result = await fileUseCase.editFileMetadata(jwt, image, thumbnailHasBeenUpdated)
 
         if (result.isFailed()) {
             for (const error of result.errors) {
@@ -113,6 +115,7 @@
         <div class="flex-c">
             <img class="max-w-full h-48" src={image.url} alt={image.title}>
             <input type="text" bind:value={image.title}>
+            <input type="checkbox" bind:checked={image.thumbnail} on:change={thumbnailHasBeenUpdated = true}>
 
             <div class="w-full flex-r justify-around">
                 <BaseButton baseButtonModel={formElements.updateButton} on:click={editFileMetadata(image)}/>

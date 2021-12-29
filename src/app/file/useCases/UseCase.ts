@@ -32,9 +32,17 @@ export default class UseCase implements UseCaseInterface {
         return result
     }
 
-    async editFileMetadata(jwt: string, image: Image): Promise<Result> {
+    async editFileMetadata(jwt: string, image: Image, thumbnailHasBeenUpdated: boolean): Promise<Result> {
         const result: Result = new Result()
         const fileService: Service = new Service()
+
+        if(thumbnailHasBeenUpdated === true && image.thumbnail === true){
+            const cleanThumbnailBeforeEdit: boolean | Array<UseCaseError> = await fileService.cleanThumbnailBeforeEdit(jwt, image)
+            if (typeof cleanThumbnailBeforeEdit !== 'boolean') {
+                result.errors = cleanThumbnailBeforeEdit
+                return result
+            }
+        }
 
         const isEdited: boolean | Array<UseCaseError> = await fileService.editFileMetadata(jwt, image)
         if (typeof isEdited !== 'boolean') {

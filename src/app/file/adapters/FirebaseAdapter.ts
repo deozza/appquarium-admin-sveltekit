@@ -37,6 +37,10 @@ export default class FirebaseAdapter implements AdapterInterface {
         return Promise.resolve(undefined);
     }
 
+    removeThumbnailStatus(image: Image): Promise<boolean | Array<UseCaseError>> {
+        return Promise.resolve(undefined);
+    }
+
     editFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>> {
         return Promise.resolve(undefined);
     }

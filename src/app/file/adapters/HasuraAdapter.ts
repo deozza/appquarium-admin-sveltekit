@@ -11,6 +11,29 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
         return Promise.resolve(undefined);
     }
 
+    async removeThumbnailStatus(image: Image): Promise<boolean | Array<UseCaseError>> {
+        const mutation: string = "mutation {\n" +
+            "  update_media($associated_to: uuid!)(where: {thumbnail: {_eq: true}, associated_to: {_eq: $associated_to}}, _set: {thumbnail: false}) {\n" +
+            "    returning {\n" +
+            "      url\n" +
+            "    }\n" +
+            "  }\n" +
+            "}"
+
+        try{
+            await this.client.request(mutation, {
+                associated_to: image.associated_to
+            })
+
+            return true
+        }catch (e){
+            if (e.message.includes("JWTExpired")) {
+                return [new UseCaseError("JWT expired", 401)]
+            }
+            return [new UseCaseError(e.message, 400)]
+        }
+    }
+
     async editFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>> {
         let queryBuilder: HasuraMutationUpdateBuilder = new HasuraMutationUpdateBuilder('update_media_by_pk')
 

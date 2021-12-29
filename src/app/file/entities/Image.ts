@@ -4,6 +4,7 @@ export default class Image {
     source: string
     file: File | null
     user: string
+    thumbnail: boolean
     associated_to: string
 
     constructor(image: Array<string>) {
@@ -11,6 +12,7 @@ export default class Image {
         this.title = image.hasOwnProperty('title') ? image['title'] : ''
         this.source = image.hasOwnProperty('source') ? image['source'] : ''
         this.user = image.hasOwnProperty('user') ? image['user'] : ''
+        this.thumbnail = image.hasOwnProperty('thumbnail') ? image['thumbnail'] : false
         this.associated_to = image.hasOwnProperty('associated_to') ? image['associated_to'] : ''
         this.file = null
     }

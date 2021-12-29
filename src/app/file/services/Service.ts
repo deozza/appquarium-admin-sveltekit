@@ -36,6 +36,11 @@ export default class Service implements ServiceInterface {
         return await adapter.postMetadata(image)
     }
 
+    async cleanThumbnailBeforeEdit(jwt: string, image: Image): Promise<boolean | Array<UseCaseError>> {
+        const adapter: AdapterInterface = new HasuraAdapter(jwt)
+
+        return await adapter.removeThumbnailStatus(image)
+    }
 
     async editFileMetadata(jwt: string, image: Image): Promise<boolean | Array<UseCaseError>> {
         const adapter: AdapterInterface = new HasuraAdapter(jwt)
