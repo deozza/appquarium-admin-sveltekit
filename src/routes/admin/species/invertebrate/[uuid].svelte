@@ -18,8 +18,7 @@
 
         if(invertebrate.isFailed()){
             return {
-                redirect: '/admin/species',
-                status: 302
+                error: new Error(`Could not load fish ${page.params.uuid}`)
             }
         }
 
