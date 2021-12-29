@@ -1,5 +1,6 @@
 <script lang="ts">
     import BaseTextInputModel from "./BaseTextInputModel";
+
     export let baseTextInputModel: BaseTextInputModel
 
     function handleInput(e) {
@@ -12,19 +13,19 @@
             class="w-full py-2 px-3 border rounded-md border-black px-2"
             class:border-red-500={baseTextInputModel.error === true}
             class:text-red-500={baseTextInputModel.error === true}
-            type={baseTextInputModel.type}
             id={baseTextInputModel.id}
-            name={baseTextInputModel.name}
-            value={baseTextInputModel.value}
-            placeholder={baseTextInputModel.placeholder}
-            minlength={baseTextInputModel.minlength}
-            maxlength={baseTextInputModel.maxlength}
-            required={baseTextInputModel.required === true ? 'required' : ''}
-            readonly={baseTextInputModel.readonly === true ? 'readonly' : ''}
             list={baseTextInputModel.datalist !== null ? baseTextInputModel.datalist : null}
-            on:input={handleInput}
+            maxlength={baseTextInputModel.maxlength}
+            minlength={baseTextInputModel.minlength}
+            name={baseTextInputModel.name}
             on:change
             on:focusout
+            on:input={handleInput}
+            placeholder={baseTextInputModel.placeholder}
+            readonly={baseTextInputModel.readonly === true ? 'readonly' : ''}
+            required={baseTextInputModel.required === true ? 'required' : ''}
+            type={baseTextInputModel.type}
+            value={baseTextInputModel.value}
     >
 
     {#if baseTextInputModel.error}
@@ -33,7 +34,7 @@
 </div>
 
 <style>
-div  {
-    flex: 2
-}
+    div {
+        flex: 2
+    }
 </style>

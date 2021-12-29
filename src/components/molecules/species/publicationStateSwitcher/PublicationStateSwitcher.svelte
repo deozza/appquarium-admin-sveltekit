@@ -11,14 +11,14 @@
     export let user: User = new User('')
     let isLoading: boolean = false
 
-    async function editPublicationState(newState: string){
+    async function editPublicationState(newState: string) {
         isLoading = true
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
         const result: Result = await speciesUseCase.updatePublicationState(user.jwt, species, newState)
         if (result.isFailed()) {
 
-            for(const error of result.errors){
+            for (const error of result.errors) {
                 console.log(error)
 
                 if (error.code === 401) {

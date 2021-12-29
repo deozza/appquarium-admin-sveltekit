@@ -57,7 +57,7 @@
         formElements.submitButton.setLoading(false)
     }
 
-    async function deleteFile(image: Image){
+    async function deleteFile(image: Image) {
         const userUseCase: UserUseCase = new UserUseCase()
 
         const jwt: string = userUseCase.getToken().content
@@ -65,7 +65,7 @@
         const fileUseCase: UseCase = new UseCase()
         const result: Result = await fileUseCase.deleteFile(jwt, image)
 
-        if(result.isFailed()){
+        if (result.isFailed()) {
             for (const error of result.errors) {
                 if (error.code === 401) {
                     userUseCase.logout()
@@ -83,14 +83,14 @@
         species.images = species.images.filter((speciesImage: Image) => speciesImage.url !== image.url)
     }
 
-    async function editFileMetadata(image: Image){
+    async function editFileMetadata(image: Image) {
         const userUseCase: UserUseCase = new UserUseCase()
         const jwt: string = userUseCase.getToken().content
 
         const fileUseCase: UseCase = new UseCase()
         const result: Result = await fileUseCase.editFileMetadata(jwt, image)
 
-        if(result.isFailed()){
+        if (result.isFailed()) {
             for (const error of result.errors) {
                 if (error.code === 401) {
                     userUseCase.logout()
@@ -111,12 +111,12 @@
 <div class="min-w-full flex-r justify-start space-x-6 space-y-3">
     {#each species.images as image, index}
         <div class="flex-c">
-            <img class="max-w-full h-48"  src={image.url} alt={image.title}>
-            <input type="text" bind:value={image.title} >
+            <img class="max-w-full h-48" src={image.url} alt={image.title}>
+            <input type="text" bind:value={image.title}>
 
             <div class="w-full flex-r justify-around">
-                <BaseButton baseButtonModel={formElements.updateButton} on:click={editFileMetadata(image)} />
-                <BaseButton baseButtonModel={formElements.deleteButton} on:click={deleteFile(image)} />
+                <BaseButton baseButtonModel={formElements.updateButton} on:click={editFileMetadata(image)}/>
+                <BaseButton baseButtonModel={formElements.deleteButton} on:click={deleteFile(image)}/>
 
             </div>
         </div>
@@ -128,22 +128,22 @@
                 <ul>
                     <li class="flex-column">
                         <div class="flex-row input-row">
-                            <BaseLabel baseLabelModel={formElements.newFileToUploadLabel} />
-                            <BaseFileInput baseFileInputModel={formElements.newFileToUploadInput} />
+                            <BaseLabel baseLabelModel={formElements.newFileToUploadLabel}/>
+                            <BaseFileInput baseFileInputModel={formElements.newFileToUploadInput}/>
                         </div>
                     </li>
 
                     <li class="flex-column">
                         <div class="flex-row input-row">
-                            <BaseLabel baseLabelModel={formElements.newFileTitleLabel} />
-                            <BaseTextInput baseTextInputModel={formElements.newFileTitleInput} />
+                            <BaseLabel baseLabelModel={formElements.newFileTitleLabel}/>
+                            <BaseTextInput baseTextInputModel={formElements.newFileTitleInput}/>
                         </div>
                     </li>
 
                     <li class="flex-column">
                         <div class="flex-row input-row">
-                            <BaseLabel baseLabelModel={formElements.newFileSourceLabel} />
-                            <BaseTextInput baseTextInputModel={formElements.newFileSourceInput} />
+                            <BaseLabel baseLabelModel={formElements.newFileSourceLabel}/>
+                            <BaseTextInput baseTextInputModel={formElements.newFileSourceInput}/>
                         </div>
                     </li>
                     <li class="flex-column">

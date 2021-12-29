@@ -2,6 +2,7 @@
     import BaseFileInputModel from "./BaseFileInputModel";
 
     export let baseFileInputModel: BaseFileInputModel
+
     function handleInput(e) {
         baseFileInputModel.value = e.target.files[0];
     }
@@ -9,16 +10,16 @@
 
 <div>
     <input
+            accept={baseFileInputModel.accept.join(',')}
             class="w-full py-2 px-3"
             class:border-red-500={baseFileInputModel.error === true}
             class:text-red-500={baseFileInputModel.error === true}
-            type="file"
             id={baseFileInputModel.id}
             name={baseFileInputModel.name}
-            required={baseFileInputModel.required === true ? 'required' : ''}
-            readonly={baseFileInputModel.readonly === true ? 'readonly' : ''}
-            accept={baseFileInputModel.accept.join(',')}
             on:change={handleInput}
+            readonly={baseFileInputModel.readonly === true ? 'readonly' : ''}
+            required={baseFileInputModel.required === true ? 'required' : ''}
+            type="file"
     >
 
     {#if baseFileInputModel.error}
@@ -27,7 +28,7 @@
 </div>
 
 <style>
-div  {
-    flex: 2
-}
+    div {
+        flex: 2
+    }
 </style>
