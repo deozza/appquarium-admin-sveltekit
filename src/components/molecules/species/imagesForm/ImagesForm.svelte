@@ -2,28 +2,41 @@
     import {formElements} from "./Modeles";
 
     import BaseButton from "../../../atoms/button/BaseButton.svelte";
-    import UseCase from "../../../../app/file/useCases/UseCase";
+    import SpeciesUseCase from "../../../../app/species/global/useCases/UseCase";
     import Result from "../../../../app/utils/useCasesResult/Result";
     import Species from "../../../../app/species/global/entities/Species";
     import UserUseCase from "../../../../app/user/useCases/UseCase";
     import BaseFileInput from "../../../atoms/input/file/BaseFileInput.svelte";
     import BaseLabel from "../../../atoms/input/BaseLabel.svelte";
     import BaseTextInput from "../../../atoms/input/text/BaseTextInput.svelte";
+    import Image from "../../../../app/file/entities/Image";
+    import User from "../../../../app/user/entities/User";
 
     export let species: Species = new Species([])
 
     async function uploadFile() {
         formElements.submitButton.setLoading(true)
+        const userUseCase: UserUseCase = new UserUseCase()
 
-        const fileUseCase: UseCase = new UseCase()
-        const result: Result = await fileUseCase.uploadFile(formElements.newFileTitleInput.value, formElements.newFileSourceInput.value, '/species/' + species.uuid, formElements.newFileToUploadInput.value)
+        const jwt: string = userUseCase.getToken().content
+        const user: User = new User(jwt)
+        user.extractUserInfoFromJwt()
+
+        const image: Image = new Image()
+        image.title = formElements.newFileTitleInput.value
+        image.source = formElements.newFileSourceInput.value
+        image.file = formElements.newFileToUploadInput.value
+        image.user = user.uid
+        image.associated_to = species.uuid
+
+        const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
+        const result: Result = await speciesUseCase.addFile(jwt, species, image)
 
         if (result.isFailed()) {
             formElements.submitButton.setLoading(false)
 
             for (const error of result.errors) {
                 if (error.code === 401) {
-                    const userUseCase: UserUseCase = new UserUseCase()
                     userUseCase.logout()
                     return {
                         redirect: "/login",

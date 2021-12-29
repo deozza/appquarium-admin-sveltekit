@@ -5,6 +5,7 @@ import Image from "../entities/Image";
 
 import type AdapterInterface from "../adapters/AdapterInterface";
 import FirebaseAdapter from "../adapters/FirebaseAdapter";
+import HasuraAdapter from "../adapters/HasuraAdapter";
 
 export default class Service implements ServiceInterface{
 
@@ -29,11 +30,18 @@ export default class Service implements ServiceInterface{
     }
   }
 
-  async uploadFile(path: string, file: File, metadata: object): Promise<Image | Array<UseCaseError>> {
+  async uploadFile(path: string, file: File): Promise<Image | Array<UseCaseError>> {
     const adapter: AdapterInterface = new FirebaseAdapter()
 
-    return await adapter.uploadFile(path, file, metadata)
+    return await adapter.uploadFile(path, file)
   }
+
+  async postMetadata(jwt: string,image: Image): Promise< Image | Array<UseCaseError>> {
+    const adapter: AdapterInterface = new HasuraAdapter(jwt)
+
+    return await adapter.postMetadata(image)
+  }
+
 
   async editFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>> {
     const adapter: AdapterInterface = new FirebaseAdapter()

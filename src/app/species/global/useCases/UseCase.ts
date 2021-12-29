@@ -281,6 +281,41 @@ export default class SpeciesUseCase implements UseCaseInterface {
     return result
   }
 
+  async addFile(jwt: string, species: Species, image: Image){
+    const result: Result = new Result()
+    const fileService: FileServices = new FileServices()
+
+    if(image.file === null){
+      result.addError('File should not be empty', 400)
+      return result
+    }
+
+    const computedFileName: string = fileService.getComputedFileName(image.title)
+    const completeRemotePath: string = 'species/' + species.uuid + '/' + computedFileName
+
+    const uploaded: Image | Array<UseCaseError> = await fileService.uploadFile(completeRemotePath, image.file)
+    if (!(uploaded instanceof Image)) {
+      result.errors = uploaded
+      return result
+    }
+
+    uploaded.title = image.title
+    uploaded.source = image.source
+    uploaded.associated_to = image.associated_to
+
+    const fileMetadata: Image | Array<UseCaseError> = await fileService.postMetadata(jwt, uploaded)
+
+    if(!(fileMetadata instanceof Image)) {
+      result.errors = fileMetadata
+      return result
+    }
+
+    result.content = fileMetadata
+    result.addSuccess("Query is OK", 201)
+
+    return result
+  }
+
   async updatePublicationState(jwt: string, species: Species, nextState: string): Promise<Result> {
     let result: Result = new Result()
     const speciesService: Services = new Services()

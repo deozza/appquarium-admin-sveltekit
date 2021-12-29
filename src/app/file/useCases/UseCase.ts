@@ -22,7 +22,7 @@ export default class UseCase implements UseCaseInterface {
     const metadata: object = fileService.getMetadata(fileName, fileSource)
     const completeRemotePath: string = basePath + '/' + computedFileName
 
-    const image: Image | Array<UseCaseError> = await fileService.uploadFile(completeRemotePath, file, metadata)
+    const image: Image | Array<UseCaseError> = await fileService.uploadFile(completeRemotePath, file)
     if (!(image instanceof Image)) {
       result.errors = image
       return result

@@ -41,12 +41,10 @@ export default class FirebaseAdapter implements AdapterInterface{
             })
     }
 
-    async uploadFile(path: string, file: File, metadata: object): Promise<Image | Array<UseCaseError>> {
-        return await uploadBytes(ref(this.storage, path), file, metadata)
+    async uploadFile(path: string, file: File): Promise<Image | Array<UseCaseError>> {
+        return await uploadBytes(ref(this.storage, path), file)
             .then(async () => {
                 const newImage: Image = new Image()
-                newImage.alt = metadata['customMetadata']['alt']
-                newImage.origin = metadata['customMetadata']['origin']
                 newImage.url = await getDownloadURL(ref(this.storage, path))
                 return newImage
 
@@ -55,6 +53,10 @@ export default class FirebaseAdapter implements AdapterInterface{
                 const useCaseError: UseCaseError = new UseCaseError(error.message, 400)
                 return [useCaseError]
             })
+    }
+
+    postMetadata(image: Image): Promise<Image | Array<UseCaseError>> {
+        return Promise.resolve(undefined);
     }
 
     async editFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>> {
