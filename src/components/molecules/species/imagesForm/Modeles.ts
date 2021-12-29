@@ -16,10 +16,15 @@ const newFileSourceLabel: BaseLabelModel = new BaseLabelModel("Source", 'newFile
 const newFileSourceInput: BaseTextInputModel = new BaseTextInputModel('newFileSource')
 newFileSourceInput.required = true
 
+const updateFileTitleLabel: BaseLabelModel = new BaseLabelModel("Titre", 'updateFileTitleLabel')
+const updateFileThumbnailLabel: BaseLabelModel = new BaseLabelModel("Thumbnail", 'updateFileThumbnailLabel')
+
 let submitButton: BaseButtonModel = new BaseButtonModel('Ajouter')
+
 let updateButton: BaseButtonModel = new BaseButtonModel('Modifier')
 updateButton.setTypeOrThrowError('button')
 updateButton.setStyleOrThrowError('warning')
+
 let deleteButton: BaseButtonModel = new BaseButtonModel('Supprimer')
 deleteButton.setTypeOrThrowError('button')
 deleteButton.setStyleOrThrowError('danger')
@@ -31,6 +36,8 @@ export const formElements: object = {
     newFileTitleInput: newFileTitleInput,
     newFileSourceLabel: newFileSourceLabel,
     newFileSourceInput: newFileSourceInput,
+    updateFileTitleLabel: updateFileTitleLabel,
+    updateFileThumbnailLabel: updateFileThumbnailLabel,
     submitButton: submitButton,
     updateButton: updateButton,
     deleteButton: deleteButton,

@@ -122,14 +122,14 @@
                 <li class="flex-c">
                     <div class="flex-r">
                         <BaseLabel baseLabelModel={formElements.updateFileTitleLabel}/>
-                        <input type="text" bind:value={image.title}>
+                        <input type="text" bind:value={image.title} id="updateFileTitleLabel">
                     </div>
                 </li>
 
                 <li class="flex-c">
                     <div class="flex-r">
                         <BaseLabel baseLabelModel={formElements.updateFileThumbnailLabel}/>
-                        <input type="checkbox" bind:checked={image.thumbnail} on:change={thumbnailHasBeenUpdated = true}>
+                        <input type="checkbox" bind:checked={image.thumbnail} on:change={thumbnailHasBeenUpdated = true} id="updateFileThumbnailLabel">
                     </div>
                 </li>
                 <li class="flex-c">
