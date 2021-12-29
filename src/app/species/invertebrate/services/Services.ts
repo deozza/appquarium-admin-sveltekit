@@ -9,21 +9,21 @@ import SpeciesGenre from "../../global/entities/SpeciesGenre";
 import SpeciesHasuraAdapter from "../../global/adapters/HasuraAdapter";
 
 export default class Services implements ServicesInterface {
-  async queryGetListOfInvertebrates(jwt: string): Promise<Array<Species> | UseCaseError> {
-    const adapter: SpeciesHasuraAdapter = new SpeciesHasuraAdapter(jwt)
+    async queryGetListOfInvertebrates(jwt: string): Promise<Array<Species> | UseCaseError> {
+        const adapter: SpeciesHasuraAdapter = new SpeciesHasuraAdapter(jwt)
 
-    return await adapter.queryListOfSpeciesByCategory("invertebrate")
-  }
+        return await adapter.queryListOfSpeciesByCategory("invertebrate")
+    }
 
-  async queryInvertebrateFamilies(jwt: string): Promise<Array<SpeciesFamily> | UseCaseError> {
-    const adapter: SpeciesHasuraAdapter = new SpeciesHasuraAdapter(jwt)
+    async queryInvertebrateFamilies(jwt: string): Promise<Array<SpeciesFamily> | UseCaseError> {
+        const adapter: SpeciesHasuraAdapter = new SpeciesHasuraAdapter(jwt)
 
-    return await adapter.queryListOfSpeciesFamiliesByCategory('invertebrate')
-  }
+        return await adapter.queryListOfSpeciesFamiliesByCategory('invertebrate')
+    }
 
-  async queryInvertebrateGenres(jwt: string): Promise<Array<SpeciesGenre> | UseCaseError> {
-    const adapter: SpeciesHasuraAdapter = new SpeciesHasuraAdapter(jwt)
+    async queryInvertebrateGenres(jwt: string): Promise<Array<SpeciesGenre> | UseCaseError> {
+        const adapter: SpeciesHasuraAdapter = new SpeciesHasuraAdapter(jwt)
 
-    return await adapter.queryListOfSpeciesGenresByCategory('invertebrate')
-  }
+        return await adapter.queryListOfSpeciesGenresByCategory('invertebrate')
+    }
 }

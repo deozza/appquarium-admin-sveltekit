@@ -10,21 +10,21 @@ import SpeciesHasuraAdapter from "../../global/adapters/HasuraAdapter";
 
 export default class Services implements ServicesInterface {
 
-  async queryGetListOfFishes(jwt: string): Promise<Array<Species> | Error> {
-    const adapter: SpeciesHasuraAdapter = new SpeciesHasuraAdapter(jwt)
+    async queryGetListOfFishes(jwt: string): Promise<Array<Species> | Error> {
+        const adapter: SpeciesHasuraAdapter = new SpeciesHasuraAdapter(jwt)
 
-    return await adapter.queryListOfSpeciesByCategory("fish")
-  }
+        return await adapter.queryListOfSpeciesByCategory("fish")
+    }
 
-  async queryFishFamilies(jwt: string): Promise<Array<SpeciesFamily> | Error> {
-    const adapter: SpeciesHasuraAdapter = new SpeciesHasuraAdapter(jwt)
+    async queryFishFamilies(jwt: string): Promise<Array<SpeciesFamily> | Error> {
+        const adapter: SpeciesHasuraAdapter = new SpeciesHasuraAdapter(jwt)
 
-    return await adapter.queryListOfSpeciesFamiliesByCategory('fish')
-  }
+        return await adapter.queryListOfSpeciesFamiliesByCategory('fish')
+    }
 
-  async queryFishGenres(jwt: string): Promise<Array<SpeciesGenre> | Error> {
-    const adapter: SpeciesHasuraAdapter = new SpeciesHasuraAdapter(jwt)
+    async queryFishGenres(jwt: string): Promise<Array<SpeciesGenre> | Error> {
+        const adapter: SpeciesHasuraAdapter = new SpeciesHasuraAdapter(jwt)
 
-    return await adapter.queryListOfSpeciesGenresByCategory('fish')
-  }
+        return await adapter.queryListOfSpeciesGenresByCategory('fish')
+    }
 }
