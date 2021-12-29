@@ -82,16 +82,40 @@
 
         species.images = species.images.filter((speciesImage: Image) => speciesImage.url !== image.url)
     }
+
+    async function editFileMetadata(image: Image){
+        const userUseCase: UserUseCase = new UserUseCase()
+        const jwt: string = userUseCase.getToken().content
+
+        const fileUseCase: UseCase = new UseCase()
+        const result: Result = await fileUseCase.editFileMetadata(jwt, image)
+
+        if(result.isFailed()){
+            for (const error of result.errors) {
+                if (error.code === 401) {
+                    userUseCase.logout()
+                    return {
+                        redirect: "/login",
+                        status: 302
+                    }
+                }
+
+                console.log(error)
+            }
+            return
+        }
+
+    }
 </script>
 
 <div class="min-w-full flex-r justify-start space-x-6 space-y-3">
     {#each species.images as image, index}
         <div class="flex-c">
             <img class="max-w-full h-48"  src={image.url} alt={image.title}>
-            <input type="text" value={image.title} >
+            <input type="text" bind:value={image.title} >
 
             <div class="w-full flex-r justify-around">
-                <BaseButton baseButtonModel={formElements.updateButton} />
+                <BaseButton baseButtonModel={formElements.updateButton} on:click={editFileMetadata(image)} />
                 <BaseButton baseButtonModel={formElements.deleteButton} on:click={deleteFile(image)} />
 
             </div>

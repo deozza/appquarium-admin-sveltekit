@@ -15,36 +15,14 @@ export default class FirebaseAdapter implements AdapterInterface{
         this.storage = getStorage()
     }
 
-    async getListOfFiles(path: string): Promise<Array<Image> | Array<UseCaseError>>{
-        return await listAll(ref(this.storage, path))
-            .then((files) => {
-                let images: Array<Image> = []
-                files.items.forEach((file) => {
-                    const image: Image = new Image()
-                    getMetadata(file)
-                        .then((metadata)=>{
-                            image.alt = metadata.customMetadata.alt
-                            image.origin = metadata.customMetadata.origin
-                        })
-                    getDownloadURL(file)
-                        .then((url) => {
-                            image.url = url
-                        })
-
-                    images.push(image)
-                })
-                return images
-            })
-            .catch((error) => {
-                const useCaseError: UseCaseError = new UseCaseError(error.message, 400)
-                return [useCaseError]
-            })
+    getListOfFiles(path: string): Promise<Array<Image> | Array<UseCaseError>>{
+        return Promise.resolve(undefined);
     }
 
     async uploadFile(path: string, file: File): Promise<Image | Array<UseCaseError>> {
         return await uploadBytes(ref(this.storage, path), file)
             .then(async () => {
-                const newImage: Image = new Image()
+                const newImage: Image = new Image([])
                 newImage.url = await getDownloadURL(ref(this.storage, path))
                 return newImage
 
@@ -59,17 +37,8 @@ export default class FirebaseAdapter implements AdapterInterface{
         return Promise.resolve(undefined);
     }
 
-    async editFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>> {
-
-
-        return await updateMetadata(ref(this.storage, image.url), {customMetadata: {alt: image.alt, origin: image.origin}})
-            .then(() => {
-                return true
-            })
-            .catch((error) => {
-                const useCaseError: UseCaseError = new UseCaseError(error.message, 400)
-                return [useCaseError]
-            })
+    editFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>> {
+        return Promise.resolve(undefined);
     }
 
     async deleteFile(image: Image): Promise<boolean | Array<UseCaseError>> {

@@ -19,7 +19,6 @@ export default class UseCase implements UseCaseInterface {
     }
 
     const computedFileName: string = fileService.getComputedFileName(fileName)
-    const metadata: object = fileService.getMetadata(fileName, fileSource)
     const completeRemotePath: string = basePath + '/' + computedFileName
 
     const image: Image | Array<UseCaseError> = await fileService.uploadFile(completeRemotePath, file)
@@ -33,11 +32,11 @@ export default class UseCase implements UseCaseInterface {
     return result
   }
 
-  async editFileMetadata(image: Image): Promise<Result> {
+  async editFileMetadata(jwt: string, image: Image): Promise<Result> {
     const result: Result = new Result()
     const fileService: Service = new Service()
 
-    const isEdited: boolean | Array<UseCaseError> = await fileService.editFileMetadata(image)
+    const isEdited: boolean | Array<UseCaseError> = await fileService.editFileMetadata(jwt, image)
     if(typeof isEdited !== 'boolean'){
       result.errors = isEdited
       return result

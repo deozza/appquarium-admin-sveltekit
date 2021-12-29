@@ -9,12 +9,6 @@ import HasuraAdapter from "../adapters/HasuraAdapter";
 
 export default class Service implements ServiceInterface{
 
-  async getListOfFiles(path: string): Promise<Array<Image> | Array<UseCaseError>> {
-    const adapter: AdapterInterface = new FirebaseAdapter()
-
-    return await adapter.getListOfFiles(path)
-  }
-
   getComputedFileName(fileName: string): string {
     return fileName.replace(' ', '_')
       .replace("'", '_')
@@ -43,8 +37,8 @@ export default class Service implements ServiceInterface{
   }
 
 
-  async editFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>> {
-    const adapter: AdapterInterface = new FirebaseAdapter()
+  async editFileMetadata(jwt: string, image: Image): Promise<boolean | Array<UseCaseError>> {
+    const adapter: AdapterInterface = new HasuraAdapter(jwt)
 
     return await adapter.editFileMetadata(image)
   }

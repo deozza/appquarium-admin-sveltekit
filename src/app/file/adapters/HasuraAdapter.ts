@@ -4,14 +4,40 @@ import Image from "../entities/Image";
 import UseCaseError from "../../utils/useCasesResult/types/UseCaseError";
 import HasuraMutationInsertBuilder from "../../adapters/hasura/HasuraRequestBuilder/HasuraMutationInsertBuilder";
 import HasuraMutationDeleteBuilder from "../../adapters/hasura/HasuraRequestBuilder/HasuraMutationDeleteBuilder";
+import HasuraMutationUpdateBuilder from "../../adapters/hasura/HasuraRequestBuilder/HasuraMutationUpdateBuilder";
 
 export default class HasuraAdapter extends HasuraClient implements AdapterInterface {
     deleteFile(image: Image): Promise<boolean | Array<UseCaseError>> {
         return Promise.resolve(undefined);
     }
 
-    editFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>> {
-        return Promise.resolve(undefined);
+    async editFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>> {
+        let queryBuilder: HasuraMutationUpdateBuilder = new HasuraMutationUpdateBuilder('update_media_by_pk')
+
+        queryBuilder.addParam('$url', 'String!', image.url)
+        queryBuilder.addParam('$title', 'String!', image.title)
+
+        queryBuilder.addPkColumn('url', '$url')
+
+        queryBuilder.addInsert('title', '$title')
+
+        queryBuilder.addReturn('url')
+
+        const mutation: string = queryBuilder.getRequest()
+
+        try {
+            await this.client.request(mutation, {
+                url: image.url,
+                title: image.title,
+            })
+
+            return true
+        } catch (e) {
+            if (e.message.includes("JWTExpired")) {
+                return [new UseCaseError("JWT expired", 401)]
+            }
+            return [new UseCaseError(e.message, 400)]
+        }
     }
 
     getListOfFiles(path: string): Promise<Array<Image> | Array<UseCaseError>> {
