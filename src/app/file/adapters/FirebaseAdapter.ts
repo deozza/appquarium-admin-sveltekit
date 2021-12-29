@@ -82,4 +82,9 @@ export default class FirebaseAdapter implements AdapterInterface{
                 return [useCaseError]
             })
     }
+
+    deleteFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>> {
+        return Promise.resolve(undefined);
+    }
+
 }

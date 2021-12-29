@@ -54,4 +54,10 @@ export default class Service implements ServiceInterface{
 
     return await adapter.deleteFile(image)
   }
+
+  async deleteFileMetadata(jwt: string, image: Image): Promise<boolean | Array<UseCaseError>> {
+    const adapter: AdapterInterface = new HasuraAdapter(jwt)
+
+    return await adapter.deleteFileMetadata(image)
+  }
 }

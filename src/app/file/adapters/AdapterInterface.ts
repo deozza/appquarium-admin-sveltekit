@@ -12,4 +12,6 @@ export default interface AdapterInterface {
   editFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>>
 
   deleteFile(image: Image): Promise<boolean | Array<UseCaseError>>
+
+  deleteFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>>
 }

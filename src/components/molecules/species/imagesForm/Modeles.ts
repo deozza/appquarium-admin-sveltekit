@@ -17,6 +17,12 @@ const newFileSourceInput: BaseTextInputModel = new BaseTextInputModel('newFileSo
 newFileSourceInput.required = true
 
 let submitButton: BaseButtonModel = new BaseButtonModel('Ajouter')
+let updateButton: BaseButtonModel = new BaseButtonModel('Modifier')
+updateButton.setTypeOrThrowError('button')
+updateButton.setStyleOrThrowError('warning')
+let deleteButton: BaseButtonModel = new BaseButtonModel('Supprimer')
+deleteButton.setTypeOrThrowError('button')
+deleteButton.setStyleOrThrowError('danger')
 
 export const formElements: object = {
     newFileToUploadLabel: newFileToUploadLabel,
@@ -25,5 +31,7 @@ export const formElements: object = {
     newFileTitleInput: newFileTitleInput,
     newFileSourceLabel: newFileSourceLabel,
     newFileSourceInput: newFileSourceInput,
-    submitButton: submitButton
+    submitButton: submitButton,
+    updateButton: updateButton,
+    deleteButton: deleteButton,
 }

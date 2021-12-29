@@ -63,6 +63,7 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
     queryBuilder.addReturn('species_naming {uuid, created_at, updated_at, name, common_names, old_names, species_family {name, uuid}, species_genre {name, uuid}}')
     queryBuilder.addReturn('water_constraint {uuid, created_at, updated_at, ph_min, ph_max, gh_min, gh_max, temp_min ,temp_max}')
     queryBuilder.addReturn('animal_spec {uuid, created_at, updated_at, male_size, female_size, longevity_in_years}')
+    queryBuilder.addReturn('medias {url, title, source, thumbnail}')
 
     const query: string = queryBuilder.getRequest()
 
@@ -70,6 +71,7 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
       const data = await this.client.request(query, {
         uuid: uuid
       })
+
       return new Species(data.species_by_pk)
     } catch (e) {
       if (e.message.includes("JWTExpired")) {

@@ -48,26 +48,6 @@ export default class SpeciesUseCase implements UseCaseInterface {
       }
     }
 
-    if(species instanceof Species){
-
-      const fileServices: FileServices = new FileServices()
-      const listOfFiles: Array<Image> | Array<UseCaseError> = await fileServices.getListOfFiles('species/'+species.uuid)
-
-      console.log(listOfFiles)
-
-      listOfFiles.forEach(file => {
-        if(file instanceof UseCaseError){
-          result.addError(file.type, file.code)
-        }else{
-          species.images = [...species.images, file]
-        }
-      })
-    }
-
-    if(result.isFailed()){
-      return result
-    }
-
     result.content = species
     result.addSuccess("Query is ok", 200)
     return result

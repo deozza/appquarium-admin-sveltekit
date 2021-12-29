@@ -10,4 +10,5 @@ export default interface ServiceInterface {
   postMetadata(jwt: string,image: Image): Promise< Image | Array<UseCaseError>>
   editFileMetadata(image: Image): Promise< boolean | Array<UseCaseError>>
   deleteFile(image: Image): Promise< boolean | Array<UseCaseError>>
+  deleteFileMetadata(jwt: string, image: Image): Promise< boolean | Array<UseCaseError>>
 }

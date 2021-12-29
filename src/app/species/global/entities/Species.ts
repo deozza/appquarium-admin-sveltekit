@@ -31,6 +31,13 @@ export default class Species {
     this.publication_state = species.hasOwnProperty('publication_state') ? species['publication_state'] : ''
     this.category = species.hasOwnProperty('category') ? species['category'] : ''
     this.images = []
+
+    if(species.hasOwnProperty('medias')){
+      species['medias'].forEach((media: Array<string>) => {
+        const image: Image = new Image(media)
+        this.images = [...this.images, image]
+      })
+    }
   }
 
   toJSON() {

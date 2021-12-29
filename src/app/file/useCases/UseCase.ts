@@ -47,11 +47,16 @@ export default class UseCase implements UseCaseInterface {
     return result
   }
 
-  async deleteFile(image: Image): Promise<Result> {
+  async deleteFile(jwt: string, image: Image): Promise<Result> {
     const result: Result = new Result()
     const fileService: Service = new Service()
+    let isDeleted: boolean | Array<UseCaseError> = await fileService.deleteFile(image)
+    if(typeof isDeleted !== 'boolean'){
+      result.errors = isDeleted
+      return result
+    }
 
-    const isDeleted: boolean | Array<UseCaseError> = await fileService.deleteFile(image)
+    isDeleted = await fileService.deleteFileMetadata(jwt, image)
     if(typeof isDeleted !== 'boolean'){
       result.errors = isDeleted
       return result
