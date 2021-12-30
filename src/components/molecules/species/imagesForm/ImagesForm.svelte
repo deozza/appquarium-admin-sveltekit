@@ -108,45 +108,65 @@
         }
 
     }
+
+    function handleThumbnailClick(e, image: Image){
+        image.thumbnail = true
+        thumbnailHasBeenUpdated = true
+
+        let images: Array<Image> = []
+
+        species.images.forEach((speciesImage: Image) => {
+            if(speciesImage.url !== image.url && speciesImage.thumbnail === true){
+                speciesImage.thumbnail = false
+            }
+
+            images = [...images, speciesImage]
+        })
+
+        species.images = [...images]
+    }
 </script>
 
-<div class="min-w-full flex-r justify-start space-x-6 space-y-3">
+<div class="min-w-full flex-r justify-start">
     {#each species.images as image, index}
-        <div class="flex-c">
-            <ul>
+        <div class="flex-c card">
+            <ul class="space-y-2">
                 <li class="flex-c">
-                    <div class="flex-r">
+                    <div class="w-full flex-r">
                         <img class="max-w-full h-48" src={image.url} alt={image.title}>
                     </div>
                 </li>
                 <li class="flex-c">
-                    <div class="flex-r">
+                    <div class="w-full flex-r">
                         <BaseLabel baseLabelModel={formElements.updateFileTitleLabel}/>
-                        <input type="text" bind:value={image.title} id="updateFileTitleLabel">
+                        <div style="flex: 2">
+                            <input class="w-full py-2 px-3 border rounded-md border-black px-2" type="text" bind:value={image.title} id="updateFileTitleLabel">
+                        </div>
                     </div>
                 </li>
 
                 <li class="flex-c">
-                    <div class="flex-r">
+                    <div class="w-full flex-r">
                         <BaseLabel baseLabelModel={formElements.updateFileThumbnailLabel}/>
-                        <input type="checkbox" bind:checked={image.thumbnail} on:change={thumbnailHasBeenUpdated = true} id="updateFileThumbnailLabel">
+                        <div style="flex: 2">
+                            <input class="w-full py-2 px-3 border rounded-md border-black px-2" type="checkbox" bind:checked={image.thumbnail} on:change={e => handleThumbnailClick(e, image)} id="updateFileThumbnailLabel">
+                        </div>
                     </div>
                 </li>
                 <li class="flex-c">
                     <div class="w-full flex-r justify-around">
                         <BaseButton baseButtonModel={formElements.updateButton} on:click={editFileMetadata(image)}/>
                         <BaseButton baseButtonModel={formElements.deleteButton} on:click={deleteFile(image)}/>
-
                     </div>
                 </li>
             </ul>
         </div>
     {/each}
 
-    <div>
+    <div class="flex-c card">
         <form on:submit|preventDefault={uploadFile}>
-            <div class="flex-c">
-                <ul>
+            <div class="flex-c max-w-xs">
+                <ul class="space-y-2">
                     <li class="flex-c">
                         <div class="flex-r">
                             <BaseLabel baseLabelModel={formElements.newFileToUploadLabel}/>
@@ -176,3 +196,9 @@
         </form>
     </div>
 </div>
+
+<style>
+    .card{
+        @apply max-w-xs border-black border-2 p-2 rounded-md bg-gray-200 m-2;
+    }
+</style>

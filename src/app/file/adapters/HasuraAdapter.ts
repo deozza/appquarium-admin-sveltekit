@@ -12,13 +12,7 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
     }
 
     async removeThumbnailStatus(image: Image): Promise<boolean | Array<UseCaseError>> {
-        const mutation: string = "mutation {\n" +
-            "  update_media($associated_to: uuid!)(where: {thumbnail: {_eq: true}, associated_to: {_eq: $associated_to}}, _set: {thumbnail: false}) {\n" +
-            "    returning {\n" +
-            "      url\n" +
-            "    }\n" +
-            "  }\n" +
-            "}"
+        const mutation: string = "mutation($associated_to: uuid) { update_media(where: {thumbnail: {_eq: true}, _and: {associated_to: {_eq: $associated_to}}}, _set: {thumbnail: false}) {returning {url}}}"
 
         try{
             await this.client.request(mutation, {
@@ -39,10 +33,12 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
 
         queryBuilder.addParam('$url', 'String!', image.url)
         queryBuilder.addParam('$title', 'String!', image.title)
+        queryBuilder.addParam('$thumbnail', 'Boolean', image.thumbnail)
 
         queryBuilder.addPkColumn('url', '$url')
 
         queryBuilder.addInsert('title', '$title')
+        queryBuilder.addInsert('thumbnail', '$thumbnail')
 
         queryBuilder.addReturn('url')
 
@@ -52,6 +48,7 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
             await this.client.request(mutation, {
                 url: image.url,
                 title: image.title,
+                thumbnail: image.thumbnail,
             })
 
             return true

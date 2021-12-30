@@ -11,7 +11,7 @@ export default class HasuraRequestBuilder {
         this.name = name
     }
 
-    public addParam(name: string, type: string, value: string | number | Array<string>) {
+    public addParam(name: string, type: string, value: string | number | Array<string> | boolean) {
         if (this.params.find((param: Param) => param.name === name) === undefined) {
             this.params.push(new Param(name, type, value))
         }

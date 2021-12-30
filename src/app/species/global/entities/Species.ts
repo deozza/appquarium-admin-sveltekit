@@ -34,7 +34,7 @@ export default class Species {
 
         if (species.hasOwnProperty('medias')) {
             species['medias'].forEach((media: Array<string>) => {
-                const image: Image = new Image(media)
+                const image: Image = new Image(media, this.uuid)
                 this.images = [...this.images, image]
             })
         }

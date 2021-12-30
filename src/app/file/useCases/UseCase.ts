@@ -39,6 +39,7 @@ export default class UseCase implements UseCaseInterface {
         if(thumbnailHasBeenUpdated === true && image.thumbnail === true){
             const cleanThumbnailBeforeEdit: boolean | Array<UseCaseError> = await fileService.cleanThumbnailBeforeEdit(jwt, image)
             if (typeof cleanThumbnailBeforeEdit !== 'boolean') {
+                console.log(cleanThumbnailBeforeEdit)
                 result.errors = cleanThumbnailBeforeEdit
                 return result
             }
