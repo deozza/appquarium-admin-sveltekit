@@ -9,7 +9,7 @@
     }
 
     .flex-r {
-        @apply flex flex-row justify-center justify-items-center items-center
+        @apply flex flex-row justify-center justify-items-center items-center flex-wrap
     }
 
     .btn {

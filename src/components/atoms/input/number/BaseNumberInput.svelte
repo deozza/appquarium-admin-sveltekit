@@ -13,19 +13,19 @@
             class="w-full py-2 px-3 border rounded-md border-black px-2"
             class:border-red-500={baseNumberInputModel.error === true}
             class:text-red-500={baseNumberInputModel.error === true}
-            type="number"
             id={baseNumberInputModel.id}
-            name={baseNumberInputModel.name}
-            value={baseNumberInputModel.value}
-            placeholder={baseNumberInputModel.placeholder}
-            min={baseNumberInputModel.min}
             max={baseNumberInputModel.max}
-            step={baseNumberInputModel.step}
-            required={baseNumberInputModel.required === true ? 'required' : ''}
-            readonly={baseNumberInputModel.readonly === true ? 'readonly' : ''}
-            on:input={handleInput}
+            min={baseNumberInputModel.min}
+            name={baseNumberInputModel.name}
             on:change
             on:focusout
+            on:input={handleInput}
+            placeholder={baseNumberInputModel.placeholder}
+            readonly={baseNumberInputModel.readonly === true ? 'readonly' : ''}
+            required={baseNumberInputModel.required === true ? 'required' : ''}
+            step={baseNumberInputModel.step}
+            type="number"
+            value={baseNumberInputModel.value}
     >
 
     {#if baseNumberInputModel.error}
@@ -34,7 +34,7 @@
 </div>
 
 <style>
-div  {
-    flex: 2
-}
+    div {
+        flex: 2
+    }
 </style>

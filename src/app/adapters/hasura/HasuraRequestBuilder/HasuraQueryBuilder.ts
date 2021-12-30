@@ -4,105 +4,105 @@ import Order from "./Order";
 import PkColumns from "./PkColumns";
 
 export default class HasuraQueryBuilder extends HasuraRequestBuilder {
-  wheres: Array<Where> = []
-  orders: Array<Order> = []
-  byPk: PkColumns | null = null
+    wheres: Array<Where> = []
+    orders: Array<Order> = []
+    byPk: PkColumns | null = null
 
-  constructor(name: string) {
-    super('query', name);
-  }
-
-  public getRequest(): string {
-    let request: string = this.type
-
-    request += this.computeParams()
-
-    request += "{"
-
-    request += this.name
-
-    if (this.wheres.length > 0 || this.orders.length > 0) {
-      request += '('
-
-      request += this.computeWhere()
-
-      if (this.wheres.length > 0 && this.orders.length > 0) {
-        request += ','
-      }
-
-      request += this.computeOrder()
-
-      request += ')'
+    constructor(name: string) {
+        super('query', name);
     }
 
-    if (this.byPk !== null) {
-      request += this.computeByPk()
+    public getRequest(): string {
+        let request: string = this.type
+
+        request += this.computeParams()
+
+        request += "{"
+
+        request += this.name
+
+        if (this.wheres.length > 0 || this.orders.length > 0) {
+            request += '('
+
+            request += this.computeWhere()
+
+            if (this.wheres.length > 0 && this.orders.length > 0) {
+                request += ','
+            }
+
+            request += this.computeOrder()
+
+            request += ')'
+        }
+
+        if (this.byPk !== null) {
+            request += this.computeByPk()
+        }
+
+        request += this.computeReturn()
+
+        request += '}'
+        return request
     }
 
-    request += this.computeReturn()
+    public addWhere(property: string, compareMode: string, value: string | number) {
+        if (this.wheres.find((where: Where) => where.property === property) === undefined) {
 
-    request += '}'
-    return request
-  }
+            let whereConstraint = new Where(property, compareMode, value)
 
-  public addWhere(property: string, compareMode: string, value: string | number) {
-    if (this.wheres.find((where: Where) => where.property === property) === undefined) {
-
-      let whereConstraint = new Where(property, compareMode, value)
-
-      this.wheres.push(whereConstraint)
-    }
-  }
-
-  public addOrderBy(property: string, order: string = 'asc') {
-    if (this.orders.find((order: Order) => order.property === property) === undefined) {
-      this.orders.push(new Order(property, order))
-    }
-  }
-
-  public addByPk(property: string, value: string) {
-    this.byPk = new PkColumns(property, value)
-  }
-
-  private computeWhere(): string {
-    if (this.wheres.length === 0) {
-      return ''
+            this.wheres.push(whereConstraint)
+        }
     }
 
-    let computedWhere: string = 'where: {'
-
-    for (let where in this.wheres) {
-      computedWhere += this.wheres[where].property + ': {' + this.wheres[where].compareMode + ': ' + this.wheres[where].value + '}'
-      if (~~where < (this.wheres.length - 1)) {
-        computedWhere += ', '
-      }
+    public addOrderBy(property: string, order: string = 'asc') {
+        if (this.orders.find((order: Order) => order.property === property) === undefined) {
+            this.orders.push(new Order(property, order))
+        }
     }
 
-    computedWhere += '}'
-    return computedWhere
-  }
-
-  private computeOrder(): string {
-    if (this.orders.length === 0) {
-      return ''
+    public addByPk(property: string, value: string) {
+        this.byPk = new PkColumns(property, value)
     }
 
-    let computedOrders: string = 'order_by: {'
-    for (let order in this.orders) {
-      computedOrders += this.orders[order].property + ': ' + this.orders[order].order
+    private computeWhere(): string {
+        if (this.wheres.length === 0) {
+            return ''
+        }
 
-      if (~~order < (this.orders.length - 1)) {
-        computedOrders += ', '
-      }
+        let computedWhere: string = 'where: {'
+
+        for (let where in this.wheres) {
+            computedWhere += this.wheres[where].property + ': {' + this.wheres[where].compareMode + ': ' + this.wheres[where].value + '}'
+            if (~~where < (this.wheres.length - 1)) {
+                computedWhere += ', '
+            }
+        }
+
+        computedWhere += '}'
+        return computedWhere
     }
 
-    computedOrders += '}'
+    private computeOrder(): string {
+        if (this.orders.length === 0) {
+            return ''
+        }
 
-    return computedOrders
-  }
+        let computedOrders: string = 'order_by: {'
+        for (let order in this.orders) {
+            computedOrders += this.orders[order].property + ': ' + this.orders[order].order
 
-  private computeByPk(): string {
-    return '(' + this.byPk?.name + ': ' + this.byPk?.value + ')'
-  }
+            if (~~order < (this.orders.length - 1)) {
+                computedOrders += ', '
+            }
+        }
+
+        computedOrders += '}'
+
+        return computedOrders
+    }
+
+    private computeByPk(): string {
+        return '(' + this.byPk?.name + ': ' + this.byPk?.value + ')'
+    }
 
 }

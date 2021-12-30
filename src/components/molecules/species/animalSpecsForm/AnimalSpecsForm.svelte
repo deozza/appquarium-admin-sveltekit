@@ -18,19 +18,19 @@
     formElements.femaleSizeInput.value = species.animal_specs.female_size
     formElements.longevityInput.value = species.animal_specs.longevity_in_years
 
-    if(species.animal_specs.uuid !== ''){
+    if (species.animal_specs.uuid !== '') {
         formElements.submitButton.setStyleOrThrowError('warning')
         formElements.submitButton.content = 'Modifier'
     }
 
-    if(species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED'){
+    if (species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED') {
         formElements.submitButton.isDisabled = true
         formElements.maleSizeInput.readonly = true
         formElements.femaleSizeInput.readonly = true
         formElements.longevityInput.readonly = true
     }
 
-    async function submitAnimalSpecsForm(){
+    async function submitAnimalSpecsForm() {
 
         formElements.submitButton.setLoading(true)
 
@@ -49,7 +49,7 @@
         if (result.isFailed()) {
             formElements.submitButton.setLoading(false)
 
-            for(const error of result.errors){
+            for (const error of result.errors) {
                 if (error.code === 401) {
                     const userUseCase: UserUseCase = new UserUseCase()
                     userUseCase.logout()
@@ -76,24 +76,24 @@
         <li class="flex-c">
             <div class="flex-r ">
                 <BaseLabel baseLabelModel={formElements.maleSizeLabel}/>
-                <BaseNumberInput baseNumberInputModel={formElements.maleSizeInput} />
+                <BaseNumberInput baseNumberInputModel={formElements.maleSizeInput}/>
             </div>
         </li>
         <li class="flex-c">
             <div class="flex-r ">
                 <BaseLabel baseLabelModel={formElements.femaleSizeLabel}/>
-                <BaseNumberInput baseNumberInputModel={formElements.femaleSizeInput} />
+                <BaseNumberInput baseNumberInputModel={formElements.femaleSizeInput}/>
             </div>
         </li>
         <li class="flex-c">
             <div class="flex-r ">
                 <BaseLabel baseLabelModel={formElements.longevityLabel}/>
-                <BaseNumberInput baseNumberInputModel={formElements.longevityInput} />
+                <BaseNumberInput baseNumberInputModel={formElements.longevityInput}/>
             </div>
         </li>
 
         <li class="flex-c space-y-2">
-            <BaseButton baseButtonModel="{formElements.submitButton}" />
+            <BaseButton baseButtonModel="{formElements.submitButton}"/>
         </li>
     </ul>
 </form>

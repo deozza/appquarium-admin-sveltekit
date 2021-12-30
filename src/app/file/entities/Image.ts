@@ -1,27 +1,20 @@
 export default class Image {
-  url: string = ''
-  alt: string = ''
-  origin: string = ''
+    url: string
+    title: string
+    source: string
+    file: File | null
+    user: string
+    thumbnail: boolean
+    associated_to: string
 
-  setFromFirebase(file) {
-    this.url = ''
-    this.alt = ''
-    this.origin = ''
+    constructor(image: Array<string>, associated_to: string) {
+        this.url = image.hasOwnProperty('url') ? image['url'] : ''
+        this.title = image.hasOwnProperty('title') ? image['title'] : ''
+        this.source = image.hasOwnProperty('source') ? image['source'] : ''
+        this.user = image.hasOwnProperty('user') ? image['user'] : ''
+        this.thumbnail = image.hasOwnProperty('thumbnail') ? image['thumbnail'] : false
+        this.associated_to = associated_to
+        this.file = null
+    }
 
-    file.getMetadata().then(metadata => {
-      if(metadata.customMetadata === undefined || metadata.customMetadata === null){
-        return
-      }
-
-      if(metadata.customMetadata.alt !== undefined && metadata.customMetadata.alt !== null){
-        this.alt = metadata.customMetadata.alt
-      }
-
-      if(metadata.customMetadata.origin !== undefined && metadata.customMetadata.origin !== null){
-        this.origin = metadata.customMetadata.origin
-      }
-    })
-
-    file.getDownloadURL().then(url => this.url =  url)
-  }
 }

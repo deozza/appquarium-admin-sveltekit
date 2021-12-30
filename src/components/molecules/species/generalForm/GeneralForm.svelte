@@ -66,8 +66,8 @@
     <ul class="space-y-6">
         <li class="flex-c">
             <div class="flex-r">
-                <BaseLabel baseLabelModel="{formElements.originLabel}" />
-                <BaseTextInput baseTextInputModel="{formElements.originInput}" />
+                <BaseLabel baseLabelModel="{formElements.originLabel}"/>
+                <BaseTextInput baseTextInputModel="{formElements.originInput}"/>
                 <datalist id={formElements.originInput.datalist}>
                     {#each speciesOrigins as origin, index}
                         <option value={origin.name}>
@@ -79,7 +79,7 @@
         </li>
 
         <li class="flex-c space-y-2">
-            <BaseButton baseButtonModel="{formElements.submitButton}" />
+            <BaseButton baseButtonModel="{formElements.submitButton}"/>
         </li>
     </ul>
 </form>

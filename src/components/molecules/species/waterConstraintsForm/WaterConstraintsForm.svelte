@@ -21,12 +21,12 @@
     formElements.tempMinInput.value = species.water_constraint.temp_min
     formElements.tempMaxInput.value = species.water_constraint.temp_max
 
-    if(species.water_constraint.uuid !== ''){
+    if (species.water_constraint.uuid !== '') {
         formElements.submitButton.setStyleOrThrowError('warning')
         formElements.submitButton.content = 'Modifier'
     }
 
-    if(species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED'){
+    if (species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED') {
         formElements.submitButton.isDisabled = true
         formElements.phMinInput.readonly = true
         formElements.phMaxInput.readonly = true
@@ -36,7 +36,7 @@
         formElements.tempMaxInput.readonly = true
     }
 
-    async function submitWaterConstraintsForm(){
+    async function submitWaterConstraintsForm() {
 
         formElements.submitButton.setLoading(true)
         species.water_constraint.ph_min = formElements.phMinInput.value
@@ -57,7 +57,7 @@
         if (result.isFailed()) {
             formElements.submitButton.setLoading(false)
 
-            for(const error of result.errors){
+            for (const error of result.errors) {
 
                 if (error.code === 401) {
                     const userUseCase: UserUseCase = new UserUseCase()
@@ -69,9 +69,18 @@
                 }
 
                 switch (error.type) {
-                    case 'ph_min': formElements.phMinInput.error = true;formElements.phMaxInput.error = true;break
-                    case 'gh_min': formElements.ghMinInput.error = true;formElements.ghMaxInput.error = true;break;
-                    case 'temp_min': formElements.tempMinInput.error = true;formElements.tempMaxInput.error = true;break;
+                    case 'ph_min':
+                        formElements.phMinInput.error = true;
+                        formElements.phMaxInput.error = true;
+                        break
+                    case 'gh_min':
+                        formElements.ghMinInput.error = true;
+                        formElements.ghMaxInput.error = true;
+                        break;
+                    case 'temp_min':
+                        formElements.tempMinInput.error = true;
+                        formElements.tempMaxInput.error = true;
+                        break;
                 }
             }
 
@@ -91,44 +100,44 @@
         <li class="flex-c">
             <div class="flex-r ">
                 <BaseLabel baseLabelModel={formElements.phMinLabel}/>
-                <BaseNumberInput baseNumberInputModel={formElements.phMinInput} />
+                <BaseNumberInput baseNumberInputModel={formElements.phMinInput}/>
             </div>
         </li>
         <li class="flex-c">
             <div class="flex-r ">
                 <BaseLabel baseLabelModel={formElements.phMaxLabel}/>
-                <BaseNumberInput baseNumberInputModel={formElements.phMaxInput} />
+                <BaseNumberInput baseNumberInputModel={formElements.phMaxInput}/>
             </div>
         </li>
         <li class="flex-c">
             <div class="flex-r ">
                 <BaseLabel baseLabelModel={formElements.ghMinLabel}/>
-                <BaseNumberInput baseNumberInputModel={formElements.ghMinInput} />
+                <BaseNumberInput baseNumberInputModel={formElements.ghMinInput}/>
             </div>
         </li>
         <li class="flex-c">
             <div class="flex-r ">
                 <BaseLabel baseLabelModel={formElements.ghMaxLabel}/>
-                <BaseNumberInput baseNumberInputModel={formElements.ghMaxInput} />
+                <BaseNumberInput baseNumberInputModel={formElements.ghMaxInput}/>
             </div>
         </li>
 
         <li class="flex-c">
             <div class="flex-r ">
                 <BaseLabel baseLabelModel={formElements.tempMinLabel}/>
-                <BaseNumberInput baseNumberInputModel={formElements.tempMinInput} />
+                <BaseNumberInput baseNumberInputModel={formElements.tempMinInput}/>
             </div>
         </li>
         <li class="flex-c">
             <div class="flex-r ">
                 <BaseLabel baseLabelModel={formElements.tempMaxLabel}/>
-                <BaseNumberInput baseNumberInputModel={formElements.tempMaxInput} />
+                <BaseNumberInput baseNumberInputModel={formElements.tempMaxInput}/>
             </div>
         </li>
 
 
         <li class="flex-c space-y-2">
-            <BaseButton baseButtonModel="{formElements.submitButton}" />
+            <BaseButton baseButtonModel="{formElements.submitButton}"/>
         </li>
     </ul>
 </form>

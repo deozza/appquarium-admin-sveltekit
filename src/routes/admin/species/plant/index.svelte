@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script context="module" lang="ts">
     import Result from "../../../../app/utils/useCasesResult/Result";
     import UserUseCase from "../../../../app/user/useCases/UseCase";
     import PlantUseCase from "../../../../app/species/plant/useCases/UseCase";
@@ -6,7 +6,7 @@
     /**
      * @type {import('@sveltejs/kit').Load}
      */
-    export async function load(){
+    export async function load() {
         const userUseCase: UserUseCase = new UserUseCase()
 
         const jwt: Result = userUseCase.getToken()
@@ -15,12 +15,12 @@
 
         const listOfPlants: Result = await plantUseCase.getListOfPlants(jwt.content)
 
-        if (listOfPlants.isFailed()){
-            for(const error of listOfPlants.errors){
-                if(error.code === 401){
+        if (listOfPlants.isFailed()) {
+            for (const error of listOfPlants.errors) {
+                if (error.code === 401) {
                     userUseCase.logout()
                     return {
-                        redirect : '/login',
+                        redirect: '/login',
                         status: 302
                     }
                 }
@@ -71,7 +71,8 @@
                 <tr>
                     <td>{i + 1}</td>
                     <td>
-                        <a class="font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300" href={plant.computeLinkToSpecies()} sveltekit:prefetch>{plant.computeName()}</a>
+                        <a class="font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300"
+                           href={plant.computeLinkToSpecies()} sveltekit:prefetch>{plant.computeName()}</a>
                     </td>
                     <td>{plant.getPublicationStateContent()}</td>
                     <td>{plant.created_at.getDate() + '/' + plant.created_at.getMonth() + '/' + plant.created_at.getFullYear() + ' ' + plant.created_at.getHours() + ':' + plant.created_at.getMinutes()}</td>

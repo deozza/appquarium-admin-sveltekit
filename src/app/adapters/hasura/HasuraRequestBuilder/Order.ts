@@ -1,23 +1,23 @@
 export default class Order {
-  property: string
-  order: string
+    property: string
+    order: string
 
-  constructor(property: string, order: string) {
-    this.property = property
+    constructor(property: string, order: string) {
+        this.property = property
 
-    if (Order.expectedOrders().includes(order) === false) {
-      throw Error('Unexpected order for OrderBy in a query')
+        if (Order.expectedOrders().includes(order) === false) {
+            throw Error('Unexpected order for OrderBy in a query')
+        }
+
+        this.order = order
     }
 
-    this.order = order
-  }
-
-  static expectedOrders(): Array<string> {
-    return [
-      'asc',
-      'desc'
-    ]
-  }
+    static expectedOrders(): Array<string> {
+        return [
+            'asc',
+            'desc'
+        ]
+    }
 
 
 }

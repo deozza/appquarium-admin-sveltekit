@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script context="module" lang="ts">
     import Result from "../../../../app/utils/useCasesResult/Result";
     import UserUseCase from "../../../../app/user/useCases/UseCase";
     import FishUseCase from "../../../../app/species/fish/useCases/UseCase";
@@ -6,19 +6,19 @@
     /**
      * @type {import('@sveltejs/kit').Load}
      */
-    export async function load(){
+    export async function load() {
         const userUseCase: UserUseCase = new UserUseCase()
         const jwt: Result = userUseCase.getToken()
 
         const fishUseCase: FishUseCase = new FishUseCase()
         const listOfFishes: Result = await fishUseCase.getListOfFishes(jwt.content)
 
-        if (listOfFishes.isFailed()){
-            for(const error of listOfFishes.errors){
-                if(error.code === 401){
+        if (listOfFishes.isFailed()) {
+            for (const error of listOfFishes.errors) {
+                if (error.code === 401) {
                     userUseCase.logout()
                     return {
-                        redirect : '/login',
+                        redirect: '/login',
                         status: 302
                     }
                 }
@@ -51,7 +51,7 @@
 
 
 <div class="flex-c" id="content">
-    <BaseHeader baseHeaderModel={header} />
+    <BaseHeader baseHeaderModel={header}/>
 
     <template slot="body">
         <table class="table-auto">
@@ -69,7 +69,8 @@
                 <tr>
                     <td>{i + 1}</td>
                     <td>
-                        <a class="font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300" href={fish.computeLinkToSpecies()} sveltekit:prefetch>{fish.computeName()}</a>
+                        <a class="font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300"
+                           href={fish.computeLinkToSpecies()} sveltekit:prefetch>{fish.computeName()}</a>
                     </td>
                     <td>{fish.getPublicationStateContent()}</td>
                     <td>{fish.created_at.getDate() + '/' + fish.created_at.getMonth() + '/' + fish.created_at.getFullYear() + ' ' + fish.created_at.getHours() + ':' + fish.created_at.getMinutes()}</td>

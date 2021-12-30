@@ -1,4 +1,4 @@
 export default interface UseCaseResultTypeInterface {
-  type: string
-  code: number
+    type: string
+    code: number
 }

@@ -26,12 +26,12 @@
     formElements.speciesGenreInput.value = species.species_naming.species_genre.name
     formElements.speciesFamilyInput.value = species.species_naming.species_family.name
 
-    if(species.species_naming.uuid !== ''){
+    if (species.species_naming.uuid !== '') {
         formElements.submitButton.setStyleOrThrowError('warning')
         formElements.submitButton.content = 'Modifier'
     }
 
-    if(species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED'){
+    if (species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED') {
         formElements.submitButton.isDisabled = true
         formElements.speciesGenreInput.readonly = true
         formElements.speciesFamilyInput.readonly = true
@@ -58,8 +58,8 @@
         }
     }
 
-    function newCommonName(){
-        if(formElements.speciesCommonNamesInput.value === ''){
+    function newCommonName() {
+        if (formElements.speciesCommonNamesInput.value === '') {
             return
         }
 
@@ -68,8 +68,8 @@
         formElements.speciesCommonNamesInput.value = ''
     }
 
-    function newOldName(){
-        if(formElements.speciesOldNamesInput.value === ''){
+    function newOldName() {
+        if (formElements.speciesOldNamesInput.value === '') {
             return
         }
 
@@ -78,7 +78,7 @@
         formElements.speciesOldNamesInput.value = ''
     }
 
-    async function submitNamingForm(){
+    async function submitNamingForm() {
 
         formElements.submitButton.setLoading(true)
 
@@ -95,7 +95,7 @@
         if (result.isFailed()) {
             formElements.submitButton.setLoading(false)
 
-            for(const error of result.errors){
+            for (const error of result.errors) {
 
                 if (error.code === 401) {
                     const userUseCase: UserUseCase = new UserUseCase()
@@ -120,12 +120,13 @@
 </script>
 
 
-<form class="min-w-full"  on:submit|preventDefault={submitNamingForm}>
+<form class="min-w-full" on:submit|preventDefault={submitNamingForm}>
     <ul class="space-y-6">
         <li class="flex-c">
             <div class="flex-r">
-                <BaseLabel baseLabelModel="{formElements.speciesGenreLabel}" />
-                <BaseTextInput baseTextInputModel="{formElements.speciesGenreInput}" on:change={linkUuidWithSpeciesGenre(formElements.speciesGenreInput.value)} />
+                <BaseLabel baseLabelModel="{formElements.speciesGenreLabel}"/>
+                <BaseTextInput baseTextInputModel="{formElements.speciesGenreInput}"
+                               on:change={linkUuidWithSpeciesGenre(formElements.speciesGenreInput.value)}/>
                 <datalist id={formElements.speciesGenreInput.datalist}>
                     {#each speciesGenres as genre, index}
                         <option value={genre.name}>
@@ -138,8 +139,9 @@
 
         <li class="flex-c">
             <div class="flex-r">
-                <BaseLabel baseLabelModel="{formElements.speciesFamilyLabel}" />
-                <BaseTextInput baseTextInputModel="{formElements.speciesFamilyInput}" on:change={linkUuidWithSpeciesFamily(formElements.speciesFamilyInput.value)}  />
+                <BaseLabel baseLabelModel="{formElements.speciesFamilyLabel}"/>
+                <BaseTextInput baseTextInputModel="{formElements.speciesFamilyInput}"
+                               on:change={linkUuidWithSpeciesFamily(formElements.speciesFamilyInput.value)}/>
                 <datalist id={formElements.speciesFamilyInput.datalist}>
                     {#each speciesFamilies as family, index}
                         <option value={family.name}>
@@ -152,25 +154,27 @@
 
         <li class="flex-c">
             <div class="flex-r">
-                <BaseLabel baseLabelModel="{formElements.speciesNameLabel}" />
-                <BaseTextInput baseTextInputModel="{formElements.speciesNameInput}" />
+                <BaseLabel baseLabelModel="{formElements.speciesNameLabel}"/>
+                <BaseTextInput baseTextInputModel="{formElements.speciesNameInput}"/>
             </div>
         </li>
 
         <li class="flex-c">
             <div class="flex-r">
-                <BaseLabel baseLabelModel="{formElements.speciesCommonNamesLabel}" />
+                <BaseLabel baseLabelModel="{formElements.speciesCommonNamesLabel}"/>
                 <div class="flex-c">
                     <ul>
                         {#each species.species_naming.common_names as name, index}
                             <li class="flex-c">
                                 <div class="flex-r">
-                                    <input class="w-full py-2 px-3 border rounded-md border-black px-2" type="text" value={name}>
+                                    <input class="w-full py-2 px-3 border rounded-md border-black px-2" type="text"
+                                           value={name}>
                                 </div>
                             </li>
                         {/each}
                     </ul>
-                    <BaseTextInput baseTextInputModel="{formElements.speciesCommonNamesInput}" on:focusout={newCommonName} />
+                    <BaseTextInput baseTextInputModel="{formElements.speciesCommonNamesInput}"
+                                   on:focusout={newCommonName}/>
 
                 </div>
             </div>
@@ -178,25 +182,26 @@
 
         <li class="flex-c">
             <div class="flex-r">
-                <BaseLabel baseLabelModel="{formElements.speciesOldNamesLabel}" />
+                <BaseLabel baseLabelModel="{formElements.speciesOldNamesLabel}"/>
                 <div class="flex-c">
                     <ul>
                         {#each species.species_naming.old_names as name, index}
                             <li class="flex-c">
                                 <div class="flex-r">
-                                    <input class="w-full py-2 px-3 border rounded-md border-black px-2" type="text" value={name}>
+                                    <input class="w-full py-2 px-3 border rounded-md border-black px-2" type="text"
+                                           value={name}>
                                 </div>
                             </li>
                         {/each}
                     </ul>
-                    <BaseTextInput baseTextInputModel="{formElements.speciesOldNamesInput}" on:focusout={newOldName} />
+                    <BaseTextInput baseTextInputModel="{formElements.speciesOldNamesInput}" on:focusout={newOldName}/>
 
                 </div>
             </div>
         </li>
 
         <li class="flex-c space-y-2">
-            <BaseButton baseButtonModel="{formElements.submitButton}" />
+            <BaseButton baseButtonModel="{formElements.submitButton}"/>
         </li>
     </ul>
 </form>
