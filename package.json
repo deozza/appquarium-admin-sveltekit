@@ -1,6 +1,7 @@
 {
   "name": "appquarium-admin",
-  "version": "0.1.0",
+  "description": "Admin platform for appquarium",
+  "version": "0.2.0",
   "scripts": {
     "dev": "svelte-kit dev --host 0.0.0.0",
     "build": "svelte-kit build",
