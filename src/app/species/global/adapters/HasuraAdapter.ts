@@ -402,7 +402,7 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
         queryBuilder.addParam('$gh_max', 'Int', waterConstraints.gh_max)
         queryBuilder.addParam('$temp_min', 'Int', waterConstraints.temp_min)
         queryBuilder.addParam('$temp_max', 'Int', waterConstraints.temp_max)
-        queryBuilder.addParam('$species_uuid', 'uuid', waterConstraints.species_uid)
+        queryBuilder.addParam('$species_uuid', 'uuid', waterConstraints.species_uuid)
 
         queryBuilder.addInsert('ph_min', '$ph_min')
         queryBuilder.addInsert('ph_max', '$ph_max')
@@ -423,7 +423,7 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
                 gh_max: waterConstraints.gh_max,
                 temp_min: waterConstraints.temp_min,
                 temp_max: waterConstraints.temp_max,
-                species_uuid: waterConstraints.species_uid
+                species_uuid: waterConstraints.species_uuid
             })
             return data.insert_water_constraints_one.uuid
         } catch (e) {
@@ -442,12 +442,12 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
 
         let queryBuilder: HasuraMutationUpdateBuilder = new HasuraMutationUpdateBuilder('update_species_by_pk')
 
-        queryBuilder.addParam('$speciesUuid', 'uuid!', waterConstraints.species_uid)
+        queryBuilder.addParam('$speciesUuid', 'uuid!', waterConstraints.species_uuid)
         queryBuilder.addParam('$waterConstraintsUuid', 'uuid', waterConstraints.uuid)
 
         queryBuilder.addPkColumn('uuid', '$speciesUuid')
 
-        queryBuilder.addInsert('water_constraints', '$waterConstraintsUuid')
+        queryBuilder.addInsert('water_constraints_uuid', '$waterConstraintsUuid')
 
         queryBuilder.addReturn('uuid')
 
@@ -456,7 +456,7 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
         try {
             await this.client.request(mutation, {
                 waterConstraintsUuid: waterConstraints.uuid,
-                speciesUuid: waterConstraints.species_uid,
+                speciesUuid: waterConstraints.species_uuid,
             })
             return waterConstraints
         } catch (e) {

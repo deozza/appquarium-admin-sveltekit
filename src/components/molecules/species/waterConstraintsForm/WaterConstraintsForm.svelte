@@ -45,10 +45,11 @@
         species.water_constraints.gh_max = formElements.ghMaxInput.value
         species.water_constraints.temp_min = formElements.tempMinInput.value
         species.water_constraints.temp_max = formElements.tempMaxInput.value
+        species.water_constraints.species_uuid = species.uuid
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
         let result: Result
-        if (species.uuid !== '') {
+        if (species.water_constraints.uuid !== '') {
             result = await speciesUseCase.updateWaterConstraints(user.jwt, species)
         } else {
             result = await speciesUseCase.addWaterConstraints(user.jwt, species)
@@ -89,8 +90,7 @@
         formElements.submitButton.setLoading(false)
 
         if (result.success?.code === 201) {
-            species.uuid = result.content
-            return goto(species.computeLinkToSpecies())
+            species.water_constraints.uuid = result.content
         }
     }
 </script>

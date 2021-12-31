@@ -37,6 +37,7 @@
         species.animal_specs.male_size = formElements.maleSizeInput.value
         species.animal_specs.female_size = formElements.femaleSizeInput.value
         species.animal_specs.longevity_in_years = formElements.longevityInput.value
+        species.animal_specs.species_uuid = species.uuid
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
         let result: Result
