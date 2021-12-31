@@ -1,72 +1,66 @@
-<script context="module" lang="ts">
-    import FishUseCase from "../../../../app/species/fish/useCases/UseCase";
-    import UserUseCase from "../../../../app/user/useCases/UseCase";
-    import User from "../../../../app/user/entities/User";
-    import Result from "../../../../app/utils/useCasesResult/Result";
-
-    /**
-     * @type {import('@sveltejs/kit').Load}
-     */
-    export async function load() {
-        const userUseCase: UserUseCase = new UserUseCase()
-        const cookie: Result = userUseCase.getToken()
-
-        const user: User = new User(cookie.content)
-        const fishUseCase: FishUseCase = new FishUseCase()
-
-        const speciesGenres: Result = await fishUseCase.getFishGenres(cookie.content)
-        if (speciesGenres.isFailed()) {
-            for (const error of speciesGenres.errors) {
-                if (error.code === 401) {
-                    userUseCase.logout()
-                    return {
-                        redirect: "/login",
-                        status: 302
-                    }
-                }
-            }
-            return {}
-        }
-
-        const speciesFamilies: Result = await fishUseCase.getFishFamilies(cookie.content)
-        if (speciesFamilies.isFailed()) {
-            for (const error of speciesFamilies.errors) {
-                if (error.code === 401) {
-                    userUseCase.logout()
-                    return {
-                        redirect: "/login",
-                        status: 302
-                    }
-                }
-            }
-            return {}
-        }
-
-        return {
-            props: {
-                speciesFamilies: speciesFamilies.content,
-                speciesGenres: speciesGenres.content,
-                user: user
-            }
-        }
-    }
-</script>
-
 <script lang="ts">
     import {header} from "../../../../components/pages/admin/fish/add/Modeles";
     import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
+    import NamingForm from "../../../../components/molecules/species/namingForm/NamingForm.svelte";
+
+    import User from '../../../../app/user/entities/User';
+    import Species from "../../../../app/species/global/entities/Species";
     import SpeciesGenre from "../../../../app/species/global/entities/SpeciesGenre";
     import SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";
-    import Species from "../../../../app/species/global/entities/Species";
-    import NamingForm from "../../../../components/molecules/species/namingForm/NamingForm.svelte";
+
+    import UserUseCase from '../../../../app/user/useCases/UseCase';
+    import FishUseCase from '../../../../app/species/fish/useCases/UseCase';
+
+    import Result from '../../../../app/utils/useCasesResult/Result';
+    import UseCaseError from '../../../../app/utils/useCasesResult/types/UseCaseError';
+
+    import {goto} from '$app/navigation';
 
     export let speciesGenres: Array<SpeciesGenre> = []
     export let speciesFamilies: Array<SpeciesFamily> = []
-    export let user: User = new User('')
+    const userUseCase: UserUseCase = new UserUseCase()
+    const jwt: Result = userUseCase.getToken()
+    const user: User = new User(jwt.content)
     user.extractUserInfoFromJwt()
 
     const fishUseCase: FishUseCase = new FishUseCase()
     let fish: Species = fishUseCase.initNewFish(user)
+
+    async function loadSpeciesNaming(): Promise<Species | Array<UseCaseError>>{
+        const speciesGenresResult: Result = await fishUseCase.getFishGenres(jwt.content)
+        if (speciesGenresResult.isFailed()) {
+            console.log('speciesGenresResult.errors')
+            console.log(speciesGenresResult.errors)
+            for (const error of speciesGenresResult.errors) {
+                if (error.code === 401) {
+                    userUseCase.logout()
+                    return goto('/admin')
+
+                }
+            }
+            return speciesGenresResult.errors
+        }
+
+        speciesGenres = speciesGenresResult.content
+
+        const speciesFamiliesResult: Result = await fishUseCase.getFishFamilies(jwt.content)
+        if (speciesFamiliesResult.isFailed()) {
+            console.log('speciesFamiliesResult.errors')
+            console.log(speciesFamiliesResult.errors)
+
+            for (const error of speciesFamiliesResult.errors) {
+                if (error.code === 401) {
+                    userUseCase.logout()
+                    return goto('/admin')
+
+                }
+            }
+            return speciesFamiliesResult.errors
+        }
+
+        speciesFamilies = speciesFamiliesResult.content
+    }
+
 
 </script>
 
@@ -76,6 +70,14 @@
 
 <div class="flex-c">
     <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
-        <NamingForm species={fish} speciesFamilies={speciesFamilies} speciesGenres={speciesGenres} user={user}/>
+        {#await loadSpeciesNaming()}
+            <p>Chargement...</p>
+        {:then {}}
+            <NamingForm species={fish} speciesFamilies={speciesFamilies} speciesGenres={speciesGenres} user={user}/>
+        {:catch errors}
+            {#each errors as error}
+                <p>{error.type}</p>
+            {/each}
+        {/await}
     </section>
 </div>

@@ -10,9 +10,9 @@ export default class Species {
     uuid: string
     created_at: Date
     updated_at: Date
-    user: string
-    species_naming: SpeciesNaming
-    water_constraint: WaterConstraints
+    user_uid: string
+    naming: SpeciesNaming
+    water_constraints: WaterConstraints
     animal_specs: AnimalSpecs
     origin: string
     publication_state: string
@@ -23,9 +23,9 @@ export default class Species {
         this.uuid = species.hasOwnProperty('uuid') ? species['uuid'] : ''
         this.created_at = species.hasOwnProperty('created_at') ? new Date(species['created_at']) : new Date()
         this.updated_at = species.hasOwnProperty('updated_at') ? new Date(species['updated_at']) : new Date()
-        this.user = species.hasOwnProperty('user') ? species['user'] : ''
-        this.species_naming = species.hasOwnProperty('species_naming') && species['species_naming'] !== null ? new SpeciesNaming(species['species_naming']) : new SpeciesNaming([])
-        this.water_constraint = species.hasOwnProperty('water_constraint') && species['water_constraint'] !== null ? new WaterConstraints(species['water_constraint']) : new WaterConstraints([])
+        this.user_uid = species.hasOwnProperty('user_uid') ? species['user_uid'] : ''
+        this.naming = species.hasOwnProperty('naming') && species['naming'] !== null ? new SpeciesNaming(species['naming']) : new SpeciesNaming([])
+        this.water_constraints = species.hasOwnProperty('water_constraints') && species['water_constraints'] !== null ? new WaterConstraints(species['water_constraints']) : new WaterConstraints([])
         this.animal_specs = species.hasOwnProperty('animal_specs') && species['animal_specs'] !== null ? new AnimalSpecs(species['animal_specs']) : new AnimalSpecs([])
         this.origin = species.hasOwnProperty('origin') ? species['origin'] : ''
         this.publication_state = species.hasOwnProperty('publication_state') ? species['publication_state'] : ''
@@ -40,10 +40,6 @@ export default class Species {
         }
     }
 
-    toJSON() {
-        return {...this} // here I make a POJO's copy of the class instance
-    }
-
     public computeLinkToSpecies(): string {
         if (this.category === '' || this.uuid === '') {
             throw new InvalidSpeciesObjectError()
@@ -53,11 +49,11 @@ export default class Species {
     }
 
     public computeName(): string {
-        if (this.species_naming.species_genre.name === '' || this.species_naming.name === '') {
+        if (this.naming.species_genre.name === '' || this.naming.name === '') {
             return 'NA'
         }
 
-        return this.species_naming.species_genre?.name + " " + this.species_naming.name
+        return this.naming.species_genre?.name + " " + this.naming.name
     }
 
     public getPublicationStateStyle(): string {

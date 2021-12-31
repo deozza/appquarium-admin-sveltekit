@@ -1,11 +1,15 @@
 <script lang="ts">
     import {possibleNextStates} from "./Modele";
     import BaseButton from "../../../atoms/button/BaseButton.svelte";
+
     import Species from "../../../../app/species/global/entities/Species";
     import User from "../../../../app/user/entities/User";
+
     import SpeciesUseCase from "../../../../app/species/global/useCases/UseCase";
     import UserUseCase from "../../../../app/user/useCases/UseCase";
     import Result from "../../../../app/utils/useCasesResult/Result";
+
+    import {goto} from '$app/navigation';
 
     export let species: Species = new Species([])
     export let user: User = new User('')
@@ -15,7 +19,15 @@
         isLoading = true
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
-        const result: Result = await speciesUseCase.updatePublicationState(user.jwt, species, newState)
+
+        let result: Result
+
+        if(newState !== 'DELETE'){
+            result = await speciesUseCase.updatePublicationState(user.jwt, species, newState)
+        }else{
+            result = await speciesUseCase.deleteSpecies(user.jwt, species)
+        }
+
         if (result.isFailed()) {
 
             for (const error of result.errors) {
@@ -24,14 +36,16 @@
                 if (error.code === 401) {
                     const userUseCase: UserUseCase = new UserUseCase()
                     userUseCase.logout()
-                    return {
-                        redirect: "/login",
-                        status: 302
-                    }
+                    return goto('/admin')
+
                 }
             }
             isLoading = false
             return
+        }
+
+        if(newState === 'DELETE'){
+            return goto('/admin/species/'+species.category)
         }
 
         isLoading = false

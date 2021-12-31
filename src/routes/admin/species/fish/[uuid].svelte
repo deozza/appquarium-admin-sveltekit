@@ -1,167 +1,181 @@
-<script context="module" lang="ts">
-    import Result from "../../../../app/utils/useCasesResult/Result";
-    import UserUseCase from "../../../../app/user/useCases/UseCase";
-    import SpeciesUseCase from "../../../../app/species/global/useCases/UseCase";
-    import FishUseCase from "../../../../app/species/fish/useCases/UseCase";
-    import User from "../../../../app/user/entities/User";
-
-    /**
-     * @type {import('@sveltejs/kit').Load}
-     */
-    export async function load({page}) {
-        const userUseCase: UserUseCase = new UserUseCase()
-        const jwt: Result = userUseCase.getToken()
-        const user: User = new User(jwt.content)
-
-        const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
-        const fish: Result = await speciesUseCase.getSpecies(jwt.content, page.params.uuid)
-
-        if (fish.isFailed()) {
-            return {
-                error: new Error(`Could not load fish ${page.params.uuid}`)
-            }
-        }
-
-        const fishUseCase: FishUseCase = new FishUseCase()
-        const speciesGenres: Result = await fishUseCase.getFishGenres(jwt.content)
-        if (speciesGenres.isFailed()) {
-            for (const error of speciesGenres.errors) {
-                if (error.code === 401) {
-                    userUseCase.logout()
-                    return {
-                        redirect: "/login",
-                        status: 302
-                    }
-                }
-            }
-            return {}
-        }
-
-        const speciesFamilies: Result = await fishUseCase.getFishFamilies(jwt.content)
-        if (speciesFamilies.isFailed()) {
-            for (const error of speciesFamilies.errors) {
-                if (error.code === 401) {
-                    userUseCase.logout()
-                    return {
-                        redirect: "/login",
-                        status: 302
-                    }
-                }
-            }
-            return {}
-        }
-
-        const speciesOrigins: Result = await speciesUseCase.getSpeciesOrigins(jwt.content)
-        if (speciesOrigins.isFailed()) {
-            for (const error of speciesOrigins.errors) {
-                if (error.code === 401) {
-                    userUseCase.logout()
-                    return {
-                        redirect: "/login",
-                        status: 302
-                    }
-                }
-            }
-            return {}
-        }
-
-        return {
-            props: {
-                fish: fish.content,
-                speciesGenres: speciesGenres.content,
-                speciesFamilies: speciesFamilies.content,
-                speciesOrigins: speciesOrigins.content,
-                user: user
-            }
-        }
-    }
-</script>
-
 <script lang="ts">
-    import Species from "../../../../app/species/global/entities/Species";
     import BaseHeaderModel from "../../../../components/atoms/typography/header/BaseHeaderModel";
     import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
     import BasePillModel from "../../../../components/atoms/pill/BasePillModel";
     import BasePill from "../../../../components/atoms/pill/BasePill.svelte";
-    import SpeciesGenre from "../../../../app/species/global/entities/SpeciesGenre";
-    import SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";
     import GeneralForm from "../../../../components/molecules/species/generalForm/GeneralForm.svelte";
     import NamingForm from "../../../../components/molecules/species/namingForm/NamingForm.svelte";
     import WaterConstraintsForm
         from "../../../../components/molecules/species/waterConstraintsForm/WaterConstraintsForm.svelte";
     import AnimalSpecsForm from "../../../../components/molecules/species/animalSpecsForm/AnimalSpecsForm.svelte";
+    import ImagesForm from "../../../../components/molecules/species/imagesForm/ImagesForm.svelte";
     import PublicationStateSwitcher
         from "../../../../components/molecules/species/publicationStateSwitcher/PublicationStateSwitcher.svelte";
-    import ImagesForm from "../../../../components/molecules/species/imagesForm/ImagesForm.svelte";
+
+    import User from '../../../../app/user/entities/User';
+    import Species from "../../../../app/species/global/entities/Species";
+    import SpeciesGenre from "../../../../app/species/global/entities/SpeciesGenre";
+    import SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";
+
+    import UserUseCase from '../../../../app/user/useCases/UseCase';
+    import SpeciesUseCase from '../../../../app/species/global/useCases/UseCase';
+    import FishUseCase from '../../../../app/species/fish/useCases/UseCase';
+    import Result from '../../../../app/utils/useCasesResult/Result';
+    import UseCaseError from '../../../../app/utils/useCasesResult/types/UseCaseError';
+
+    import {page} from "$app/stores";
+    import {goto} from '$app/navigation';
 
     export let fish: Species = new Species([])
     export let speciesOrigins: Array<string> = []
     export let speciesGenres: Array<SpeciesGenre> = []
     export let speciesFamilies: Array<SpeciesFamily> = []
-    export let user: User = new User('')
 
-    const header: BaseHeaderModel = new BaseHeaderModel(fish.computeName())
-        .setDisplaySizeOrTrowError('xxxl')
-        .setSizeOrTrowError('h1')
+    const userUseCase: UserUseCase = new UserUseCase()
+    const jwt: Result = userUseCase.getToken()
+    const user: User = new User(jwt.content)
 
-    const statusPill: BasePillModel = new BasePillModel(fish.getPublicationStateContent())
-    statusPill.setStyleOrThrowError(fish.getPublicationStateStyle())
+    const header: BaseHeaderModel = new BaseHeaderModel('Chargement ...')
+      .setDisplaySizeOrTrowError('xxxl')
+      .setSizeOrTrowError('h1')
+
+    const statusPill: BasePillModel = new BasePillModel('')
 
     const generalFormHeader: BaseHeaderModel = new BaseHeaderModel('Infos générales')
-        .setDisplaySizeOrTrowError('xxl')
-        .setSizeOrTrowError('h2')
+      .setDisplaySizeOrTrowError('xxl')
+      .setSizeOrTrowError('h2')
 
     const namingFormHeader: BaseHeaderModel = new BaseHeaderModel('Nom')
-        .setDisplaySizeOrTrowError('xxl')
-        .setSizeOrTrowError('h2')
+      .setDisplaySizeOrTrowError('xxl')
+      .setSizeOrTrowError('h2')
 
     const waterConstraintsFormHeader: BaseHeaderModel = new BaseHeaderModel("Contraintes d'eau")
-        .setDisplaySizeOrTrowError('xxl')
-        .setSizeOrTrowError('h2')
+      .setDisplaySizeOrTrowError('xxl')
+      .setSizeOrTrowError('h2')
 
     const animalSpecsFormHeader: BaseHeaderModel = new BaseHeaderModel("Caractéristiques animales")
-        .setDisplaySizeOrTrowError('xxl')
-        .setSizeOrTrowError('h2')
+      .setDisplaySizeOrTrowError('xxl')
+      .setSizeOrTrowError('h2')
 
     const imageFormHeader: BaseHeaderModel = new BaseHeaderModel("Images")
-        .setDisplaySizeOrTrowError('xxl')
-        .setSizeOrTrowError('h2')
+      .setDisplaySizeOrTrowError('xxl')
+      .setSizeOrTrowError('h2')
+
+    async function loadSpecies(): Promise<Species | Array<UseCaseError>>{
+        const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
+        const fishResult: Result = await speciesUseCase.getSpecies(jwt.content, $page.params.uuid)
+
+        if (fishResult.isFailed()) {
+            for (const error of fishResult.errors) {
+                if (error.code === 401) {
+                    userUseCase.logout()
+                    return goto('/admin')
+                }
+            }
+            return fishResult.errors
+        }
+
+        fish = fishResult.content
+        header.setContent(fish.computeName())
+        statusPill.setStyleOrThrowError(fish.getPublicationStateStyle())
+        statusPill.content = fish.getPublicationStateContent()
+
+        const fishUseCase: FishUseCase = new FishUseCase()
+        const speciesGenresResult: Result = await fishUseCase.getFishGenres(jwt.content)
+        if (speciesGenresResult.isFailed()) {
+            for (const error of speciesGenresResult.errors) {
+                if (error.code === 401) {
+                    userUseCase.logout()
+                    return goto('/admin')
+
+                }
+            }
+            return speciesGenresResult.errors
+        }
+
+        speciesGenres = speciesGenresResult.content
+
+        const speciesFamiliesResult: Result = await fishUseCase.getFishFamilies(jwt.content)
+        if (speciesFamiliesResult.isFailed()) {
+            for (const error of speciesFamiliesResult.errors) {
+                if (error.code === 401) {
+                    userUseCase.logout()
+                    return goto('/admin')
+
+                }
+            }
+            return speciesFamiliesResult.errors
+        }
+
+        speciesFamilies = speciesFamiliesResult.content
+
+        const speciesOriginsResult: Result = await speciesUseCase.getSpeciesOrigins(jwt.content)
+        if (speciesOriginsResult.isFailed()) {
+            for (const error of speciesOriginsResult.errors) {
+                if (error.code === 401) {
+                    userUseCase.logout()
+                    return goto('/admin')
+
+                }
+            }
+            return speciesOriginsResult.errors
+        }
+
+        speciesOrigins = speciesOriginsResult.content
+
+        return fish
+    }
+
 </script>
 
 <div class="flex-c space-y-6">
-    <section>
-        <BaseHeader baseHeaderModel={header}>
-            <BasePill basePillModel={statusPill}/>
-        </BaseHeader>
-    </section>
+    {#await loadSpecies()}
 
-    <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
-        <BaseHeader baseHeaderModel={generalFormHeader}/>
-        <GeneralForm species={fish} speciesOrigins={speciesOrigins} user={user}/>
-    </section>
+        <section>
+            <BaseHeader baseHeaderModel={header}>
+                <BasePill basePillModel={statusPill}/>
+            </BaseHeader>
+        </section>
 
-    <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
-        <BaseHeader baseHeaderModel={namingFormHeader}/>
-        <NamingForm species={fish} speciesFamilies={speciesFamilies} speciesGenres={speciesGenres} user={user}/>
-    </section>
+    {:then species}
+        <section>
+            <BaseHeader baseHeaderModel={header}>
+                <BasePill basePillModel={statusPill}/>
+            </BaseHeader>
+        </section>
 
-    <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
-        <BaseHeader baseHeaderModel={waterConstraintsFormHeader}/>
-        <WaterConstraintsForm species={fish} user={user}/>
-    </section>
+        <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
+            <BaseHeader baseHeaderModel={generalFormHeader}/>
+            <GeneralForm species={fish} speciesOrigins={speciesOrigins} user={user}/>
+        </section>
 
-    <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
-        <BaseHeader baseHeaderModel={animalSpecsFormHeader}/>
-        <AnimalSpecsForm species={fish} user={user}/>
-    </section>
+        <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
+            <BaseHeader baseHeaderModel={namingFormHeader}/>
+            <NamingForm species={fish} speciesFamilies={speciesFamilies} speciesGenres={speciesGenres} user={user}/>
+        </section>
 
-    <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
-        <BaseHeader baseHeaderModel={imageFormHeader}/>
-        <ImagesForm species={fish}/>
-    </section>
+        <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
+            <BaseHeader baseHeaderModel={waterConstraintsFormHeader}/>
+            <WaterConstraintsForm species={fish} user={user}/>
+        </section>
 
+        <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
+            <BaseHeader baseHeaderModel={animalSpecsFormHeader}/>
+            <AnimalSpecsForm species={fish} user={user}/>
+        </section>
 
-    <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
-        <PublicationStateSwitcher species={fish} user={user}/>
-    </section>
+        <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
+            <BaseHeader baseHeaderModel={imageFormHeader}/>
+            <ImagesForm species={fish}/>
+        </section>
+
+        <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
+            <PublicationStateSwitcher species={fish} user={user}/>
+        </section>
+
+    {:catch errors}
+        {#each errors as error}
+            <p>{error.type}</p>
+        {/each}
+    {/await}
 </div>

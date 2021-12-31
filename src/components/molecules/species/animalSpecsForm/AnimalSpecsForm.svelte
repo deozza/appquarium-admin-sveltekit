@@ -37,10 +37,11 @@
         species.animal_specs.male_size = formElements.maleSizeInput.value
         species.animal_specs.female_size = formElements.femaleSizeInput.value
         species.animal_specs.longevity_in_years = formElements.longevityInput.value
+        species.animal_specs.species_uuid = species.uuid
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
         let result: Result
-        if (species.uuid !== '') {
+        if (species.animal_specs.uuid !== '') {
             result = await speciesUseCase.updateAnimalSpecs(user.jwt, species)
         } else {
             result = await speciesUseCase.addAnimalSpecs(user.jwt, species)
@@ -64,8 +65,7 @@
         formElements.submitButton.setLoading(false)
 
         if (result.success?.code === 201) {
-            species.uuid = result.content
-            return goto(species.computeLinkToSpecies())
+            species.animal_specs.uuid = result.content
         }
 
     }
