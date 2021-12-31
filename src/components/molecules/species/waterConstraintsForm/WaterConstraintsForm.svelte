@@ -14,14 +14,14 @@
     export let species: Species = new Species([])
     export let user: User = new User('')
 
-    formElements.phMinInput.value = species.water_constraint.ph_min
-    formElements.phMaxInput.value = species.water_constraint.ph_max
-    formElements.ghMinInput.value = species.water_constraint.gh_min
-    formElements.ghMaxInput.value = species.water_constraint.gh_max
-    formElements.tempMinInput.value = species.water_constraint.temp_min
-    formElements.tempMaxInput.value = species.water_constraint.temp_max
+    formElements.phMinInput.value = species.water_constraints.ph_min
+    formElements.phMaxInput.value = species.water_constraints.ph_max
+    formElements.ghMinInput.value = species.water_constraints.gh_min
+    formElements.ghMaxInput.value = species.water_constraints.gh_max
+    formElements.tempMinInput.value = species.water_constraints.temp_min
+    formElements.tempMaxInput.value = species.water_constraints.temp_max
 
-    if (species.water_constraint.uuid !== '') {
+    if (species.water_constraints.uuid !== '') {
         formElements.submitButton.setStyleOrThrowError('warning')
         formElements.submitButton.content = 'Modifier'
     }
@@ -39,12 +39,12 @@
     async function submitWaterConstraintsForm() {
 
         formElements.submitButton.setLoading(true)
-        species.water_constraint.ph_min = formElements.phMinInput.value
-        species.water_constraint.ph_max = formElements.phMaxInput.value
-        species.water_constraint.gh_min = formElements.ghMinInput.value
-        species.water_constraint.gh_max = formElements.ghMaxInput.value
-        species.water_constraint.temp_min = formElements.tempMinInput.value
-        species.water_constraint.temp_max = formElements.tempMaxInput.value
+        species.water_constraints.ph_min = formElements.phMinInput.value
+        species.water_constraints.ph_max = formElements.phMaxInput.value
+        species.water_constraints.gh_min = formElements.ghMinInput.value
+        species.water_constraints.gh_max = formElements.ghMaxInput.value
+        species.water_constraints.temp_min = formElements.tempMinInput.value
+        species.water_constraints.temp_max = formElements.tempMaxInput.value
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
         let result: Result

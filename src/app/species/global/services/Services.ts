@@ -66,12 +66,13 @@ export default class Services implements ServicesInterface {
     initNewSpecies(user: User, category: string): Species {
         let newSpecies = new Species([])
         newSpecies.category = category
-        newSpecies.user = user.uid
+        newSpecies.user_uid = user.uid
         newSpecies.publication_state = 'DRAFT'
-        newSpecies.species_naming.species_family.category = category
-        newSpecies.species_naming.species_family.user = user.uid
-        newSpecies.species_naming.species_genre.category = category
-        newSpecies.species_naming.species_genre.user = user.uid
+        newSpecies.naming.user_uid = user.uid
+        newSpecies.naming.species_family.category = category
+        newSpecies.naming.species_family.user_uid = user.uid
+        newSpecies.naming.species_genre.category = category
+        newSpecies.naming.species_genre.user_uid = user.uid
 
         return newSpecies
     }
@@ -100,13 +101,25 @@ export default class Services implements ServicesInterface {
         return await adapter.mutationCreateSpeciesGenre(speciesGenre)
     }
 
-    async updateSpeciesNaming(jwt: string, speciesNaming: SpeciesNaming): Promise<SpeciesNaming | UseCaseError> {
+    async createSpeciesNaming(jwt: string, speciesNaming: SpeciesNaming): Promise<string | UseCaseError> {
+        const adapter: AdapterInterface = new HasuraAdapter(jwt)
+
+        return await adapter.mutationCreateNaming(speciesNaming)
+    }
+
+    async addNamingToSpecies(jwt: string, speciesNaming: SpeciesNaming): Promise<SpeciesNaming | UseCaseError> {
+        const adapter: AdapterInterface = new HasuraAdapter(jwt)
+
+        return await adapter.mutationAddNamingToSpecies(speciesNaming)
+    }
+
+    async updateSpeciesNaming(jwt: string, speciesNaming: SpeciesNaming): Promise<string | UseCaseError> {
         const adapter: AdapterInterface = new HasuraAdapter(jwt)
 
         return await adapter.mutationUpdateSpeciesNaming(speciesNaming)
     }
 
-    async createWaterConstraints(jwt: string, uuid: string, waterConstraints: WaterConstraints): Promise<string | Array<UseCaseError>> {
+    async createWaterConstraints(jwt: string, waterConstraints: WaterConstraints): Promise<string | Array<UseCaseError>> {
         const areConstraintsValid: Result = Services.checkWaterConstraintsAreValid(waterConstraints)
 
         if (areConstraintsValid.isFailed()) {
@@ -115,13 +128,13 @@ export default class Services implements ServicesInterface {
 
         const adapter: AdapterInterface = new HasuraAdapter(jwt)
 
-        return await adapter.mutationCreateWaterConstraints(uuid, waterConstraints)
+        return await adapter.mutationCreateWaterConstraints(waterConstraints)
     }
 
-    async addWaterConstraintsToSpecies(jwt: string, speciesUuid: string, waterConstraints: WaterConstraints): Promise<WaterConstraints | UseCaseError> {
+    async addWaterConstraintsToSpecies(jwt: string, waterConstraints: WaterConstraints): Promise<WaterConstraints | UseCaseError> {
         const adapter: AdapterInterface = new HasuraAdapter(jwt)
 
-        return await adapter.mutationAddWaterConstraintsToSpecies(waterConstraints, speciesUuid)
+        return await adapter.mutationAddWaterConstraintsToSpecies(waterConstraints)
     }
 
     async updateWaterConstraints(jwt: string, waterConstraints: WaterConstraints): Promise<WaterConstraints | Array<UseCaseError>> {
@@ -136,16 +149,16 @@ export default class Services implements ServicesInterface {
         return await adapter.mutationEditWaterConstraints(waterConstraints)
     }
 
-    async createAnimalSpecs(jwt: string, uuid: string, animalSpecs: AnimalSpecs): Promise<string | Array<UseCaseError>> {
+    async createAnimalSpecs(jwt: string, animalSpecs: AnimalSpecs): Promise<string | Array<UseCaseError>> {
         const adapter: AdapterInterface = new HasuraAdapter(jwt)
 
-        return await adapter.mutationCreateAnimalSpecs(uuid, animalSpecs)
+        return await adapter.mutationCreateAnimalSpecs(animalSpecs)
     }
 
-    async addAnimalSpecsToSpecies(jwt: string, speciesUuid: string, animalSpecs: AnimalSpecs): Promise<AnimalSpecs | UseCaseError> {
+    async addAnimalSpecsToSpecies(jwt: string, animalSpecs: AnimalSpecs): Promise<AnimalSpecs | UseCaseError> {
         const adapter: AdapterInterface = new HasuraAdapter(jwt)
 
-        return await adapter.mutationAddAnimalSpecsToSpecies(animalSpecs, speciesUuid)
+        return await adapter.mutationAddAnimalSpecsToSpecies(animalSpecs)
     }
 
     async updateAnimalSpecs(jwt: string, animalSpecs: AnimalSpecs): Promise<AnimalSpecs | Array<UseCaseError>> {

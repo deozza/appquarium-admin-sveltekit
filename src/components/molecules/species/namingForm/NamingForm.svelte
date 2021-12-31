@@ -19,14 +19,14 @@
     export let speciesFamilies: Array<SpeciesFamily> = []
     export let user: User = new User('')
 
-    let commonNames: Array<string> = species.species_naming.common_names
-    let oldNames: Array<string> = species.species_naming.old_names
+    let commonNames: Array<string> = species.naming.common_names
+    let oldNames: Array<string> = species.naming.old_names
 
-    formElements.speciesNameInput.value = species.species_naming.name
-    formElements.speciesGenreInput.value = species.species_naming.species_genre.name
-    formElements.speciesFamilyInput.value = species.species_naming.species_family.name
+    formElements.speciesNameInput.value = species.naming.name
+    formElements.speciesGenreInput.value = species.naming.species_genre.name
+    formElements.speciesFamilyInput.value = species.naming.species_family.name
 
-    if (species.species_naming.uuid !== '') {
+    if (species.naming.uuid !== '') {
         formElements.submitButton.setStyleOrThrowError('warning')
         formElements.submitButton.content = 'Modifier'
     }
@@ -44,7 +44,7 @@
         const speciesGenre = speciesGenres.find((genre: SpeciesGenre) => genre.name === speciesGenreName)
 
         if (speciesGenre !== undefined) {
-            species.species_naming.species_genre = speciesGenre
+            species.naming.species_genre = speciesGenre
             return
         }
     }
@@ -53,7 +53,7 @@
         const speciesFamily = speciesFamilies.find((genre: SpeciesFamily) => genre.name === speciesFamilyName)
 
         if (speciesFamily !== undefined) {
-            species.species_naming.species_family = speciesFamily
+            species.naming.species_family = speciesFamily
             return
         }
     }
@@ -64,7 +64,7 @@
         }
 
         commonNames = [...commonNames, formElements.speciesCommonNamesInput.value]
-        species.species_naming.common_names = commonNames
+        species.naming.common_names = commonNames
         formElements.speciesCommonNamesInput.value = ''
     }
 
@@ -74,15 +74,17 @@
         }
 
         oldNames = [...oldNames, formElements.speciesOldNamesInput.value]
-        species.species_naming.old_names = oldNames
+        species.naming.old_names = oldNames
         formElements.speciesOldNamesInput.value = ''
     }
 
     async function submitNamingForm() {
-
         formElements.submitButton.setLoading(true)
 
-        species.species_naming.name = formElements.speciesNameInput.value
+        species.naming.name = formElements.speciesNameInput.value
+
+
+        console.log(species)
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
         let result: Result
@@ -95,15 +97,15 @@
         if (result.isFailed()) {
             formElements.submitButton.setLoading(false)
 
+            console.log(result.errors)
+
             for (const error of result.errors) {
 
                 if (error.code === 401) {
                     const userUseCase: UserUseCase = new UserUseCase()
                     userUseCase.logout()
-                    return {
-                        redirect: "/login",
-                        status: 302
-                    }
+                    return goto('/login')
+
                 }
             }
 
@@ -164,7 +166,7 @@
                 <BaseLabel baseLabelModel="{formElements.speciesCommonNamesLabel}"/>
                 <div class="flex-c">
                     <ul>
-                        {#each species.species_naming.common_names as name, index}
+                        {#each species.naming.common_names as name, index}
                             <li class="flex-c">
                                 <div class="flex-r">
                                     <input class="w-full py-2 px-3 border rounded-md border-black px-2" type="text"
@@ -185,7 +187,7 @@
                 <BaseLabel baseLabelModel="{formElements.speciesOldNamesLabel}"/>
                 <div class="flex-c">
                     <ul>
-                        {#each species.species_naming.old_names as name, index}
+                        {#each species.naming.old_names as name, index}
                             <li class="flex-c">
                                 <div class="flex-r">
                                     <input class="w-full py-2 px-3 border rounded-md border-black px-2" type="text"

@@ -29,6 +29,8 @@
     async function loadSpeciesNaming(): Promise<Species | Array<UseCaseError>>{
         const speciesGenresResult: Result = await fishUseCase.getFishGenres(jwt.content)
         if (speciesGenresResult.isFailed()) {
+            console.log('speciesGenresResult.errors')
+            console.log(speciesGenresResult.errors)
             for (const error of speciesGenresResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout()
@@ -43,6 +45,9 @@
 
         const speciesFamiliesResult: Result = await fishUseCase.getFishFamilies(jwt.content)
         if (speciesFamiliesResult.isFailed()) {
+            console.log('speciesFamiliesResult.errors')
+            console.log(speciesFamiliesResult.errors)
+
             for (const error of speciesFamiliesResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout()

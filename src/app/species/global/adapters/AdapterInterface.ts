@@ -31,19 +31,23 @@ export default interface AdapterInterface {
 
     mutationUpdateOrigin(uuid: string, origin: string): Promise<string | Array<UseCaseError>>
 
-    mutationUpdateSpeciesNaming(speciesNaming: SpeciesNaming): Promise<SpeciesNaming | UseCaseError>
+    mutationCreateNaming(speciesNaming: SpeciesNaming): Promise<string | UseCaseError>
 
-    mutationCreateWaterConstraints(uuid: string, waterConstraints: WaterConstraints): Promise<string | Array<UseCaseError>>
+    mutationAddNamingToSpecies(speciesNaming: SpeciesNaming): Promise<SpeciesNaming | UseCaseError>
+
+    mutationUpdateSpeciesNaming(speciesNaming: SpeciesNaming): Promise<string | UseCaseError>
+
+    mutationCreateWaterConstraints(waterConstraints: WaterConstraints): Promise<string | Array<UseCaseError>>
 
     mutationEditWaterConstraints(waterConstraints: WaterConstraints): Promise<WaterConstraints | Array<UseCaseError>>
 
-    mutationAddWaterConstraintsToSpecies(waterConstraint: WaterConstraints, speciesUuid: string): Promise<WaterConstraints | UseCaseError>
+    mutationAddWaterConstraintsToSpecies(waterConstraint: WaterConstraints): Promise<WaterConstraints | UseCaseError>
 
-    mutationCreateAnimalSpecs(uuid: string, animalSpecs: AnimalSpecs): Promise<string | Array<UseCaseError>>
+    mutationCreateAnimalSpecs(animalSpecs: AnimalSpecs): Promise<string | Array<UseCaseError>>
 
     mutationEditAnimalSpecs(animalSpecs: AnimalSpecs): Promise<AnimalSpecs | Array<UseCaseError>>
 
-    mutationAddAnimalSpecsToSpecies(animalSpecs: AnimalSpecs, speciesUuid: string): Promise<AnimalSpecs | UseCaseError>
+    mutationAddAnimalSpecsToSpecies(animalSpecs: AnimalSpecs): Promise<AnimalSpecs | UseCaseError>
 
     mutationUpdatePublicationState(uuid: string, nextState: string): Promise<string | Array<UseCaseError>>
 
