@@ -17,7 +17,7 @@
 
     formElements.originInput.value = species.origin
 
-    if (species.origin !== '') {
+    if (species.origin !== null) {
         formElements.submitButton.setStyleOrThrowError('warning')
         formElements.submitButton.content = 'Modifier'
     }
@@ -28,9 +28,6 @@
     }
 
     async function submitGeneralForm() {
-
-        console.log('coucou')
-
         formElements.submitButton.setLoading(true)
         species.origin = formElements.originInput.value
 
