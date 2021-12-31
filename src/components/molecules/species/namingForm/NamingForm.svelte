@@ -47,6 +47,8 @@
             species.naming.species_genre = speciesGenre
             return
         }
+        species.naming.species_genre.name = speciesGenreName
+
     }
 
     function linkUuidWithSpeciesFamily(speciesFamilyName: string) {
@@ -56,6 +58,8 @@
             species.naming.species_family = speciesFamily
             return
         }
+
+        species.naming.species_family.name = speciesFamilyName
     }
 
     function newCommonName() {
@@ -82,9 +86,6 @@
         formElements.submitButton.setLoading(true)
 
         species.naming.name = formElements.speciesNameInput.value
-
-
-        console.log(species)
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
         let result: Result
