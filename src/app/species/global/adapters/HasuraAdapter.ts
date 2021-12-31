@@ -557,7 +557,7 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
 
         queryBuilder.addPkColumn('uuid', '$speciesUuid')
 
-        queryBuilder.addInsert('animal_specs', '$animalSpecsUuid')
+        queryBuilder.addInsert('animal_specs_uuid', '$animalSpecsUuid')
 
         queryBuilder.addReturn('uuid')
 

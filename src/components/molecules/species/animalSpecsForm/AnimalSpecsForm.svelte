@@ -41,7 +41,7 @@
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
         let result: Result
-        if (species.uuid !== '') {
+        if (species.animal_specs.uuid !== '') {
             result = await speciesUseCase.updateAnimalSpecs(user.jwt, species)
         } else {
             result = await speciesUseCase.addAnimalSpecs(user.jwt, species)
@@ -65,8 +65,7 @@
         formElements.submitButton.setLoading(false)
 
         if (result.success?.code === 201) {
-            species.uuid = result.content
-            return goto(species.computeLinkToSpecies())
+            species.animal_specs.uuid = result.content
         }
 
     }

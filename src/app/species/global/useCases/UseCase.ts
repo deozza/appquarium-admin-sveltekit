@@ -262,8 +262,8 @@ export default class SpeciesUseCase implements UseCaseInterface {
     async addAnimalSpecs(jwt: string, species: Species): Promise<Result> {
         let result: Result = new Result()
         const speciesService: Services = new Services()
-        const animalSpecsUuid: string | Array<UseCaseError> = await speciesService.createAnimalSpecs(jwt, species.animal_specs)
 
+        const animalSpecsUuid: string | Array<UseCaseError> = await speciesService.createAnimalSpecs(jwt, species.animal_specs)
         if (typeof animalSpecsUuid !== 'string') {
             result.errors = animalSpecsUuid
             return result
@@ -272,7 +272,6 @@ export default class SpeciesUseCase implements UseCaseInterface {
         species.animal_specs.uuid = animalSpecsUuid
 
         const updatedSpecies: AnimalSpecs | UseCaseError = await speciesService.addAnimalSpecsToSpecies(jwt, species.animal_specs)
-
         if (updatedSpecies instanceof UseCaseError) {
             result.errors.push(updatedSpecies)
             return result
