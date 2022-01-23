@@ -1,10 +1,12 @@
-import HasuraClient from "../../adapters/hasura/HasuraClient";
 import type AdapterInterface from "./AdapterInterface";
+
+import HasuraClient from "../../adapters/hasura/HasuraClient";
 import Image from "../entities/Image";
 import UseCaseError from "../../utils/useCasesResult/types/UseCaseError";
-import HasuraMutationInsertBuilder from "../../adapters/hasura/HasuraRequestBuilder/HasuraMutationInsertBuilder";
-import HasuraMutationDeleteBuilder from "../../adapters/hasura/HasuraRequestBuilder/HasuraMutationDeleteBuilder";
-import HasuraMutationUpdateBuilder from "../../adapters/hasura/HasuraRequestBuilder/HasuraMutationUpdateBuilder";
+
+import Query from '../../adapters/hasura/HasuraRequestBuilderV2/Query';
+import Constraints from '../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
+import ConstraintPart from '../../adapters/hasura/HasuraRequestBuilderV2/ConstraintPart';
 
 export default class HasuraAdapter extends HasuraClient implements AdapterInterface {
     deleteFile(image: Image): Promise<boolean | Array<UseCaseError>> {
@@ -12,12 +14,35 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
     }
 
     async removeThumbnailStatus(image: Image): Promise<boolean | Array<UseCaseError>> {
-        const mutation: string = "mutation($associated_to: uuid) { update_media(where: {thumbnail: {_eq: true}, _and: {associated_to: {_eq: $associated_to}}}, _set: {thumbnail: false}) {returning {url}}}"
+
+        const queryBuilder: Query = new Query('mutation')
+
+        const updateMediaSubQuery: Query = new Query('update_media')
+          .addReturnToQuery(new Query('returning')
+            .addReturnToQuery('url')
+          )
+
+        updateMediaSubQuery.constraints = new Constraints()
+
+        updateMediaSubQuery.constraints.where = new ConstraintPart('where')
+          .addConstraint([
+              new ConstraintPart('thumbnail').addConstraint([new ConstraintPart('_eq').addConstraint('true')]),
+              new ConstraintPart('_and').addConstraint([
+                  new ConstraintPart('associated_to').addConstraint([new ConstraintPart('_eq').addConstraint('"' + image.associated_to + '"')])
+              ]),
+          ])
+
+        updateMediaSubQuery.constraints.set = new ConstraintPart('_set')
+          .addConstraint([
+              new ConstraintPart('thumbnail').addConstraint('false')
+          ])
+
+        queryBuilder.addReturnToQuery(updateMediaSubQuery)
+
+        const mutation: string = queryBuilder.buildQuery()
 
         try{
-            await this.client.request(mutation, {
-                associated_to: image.associated_to
-            })
+            await this.client.request(mutation)
 
             return true
         }catch (e){
@@ -29,27 +54,28 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
     }
 
     async editFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>> {
-        let queryBuilder: HasuraMutationUpdateBuilder = new HasuraMutationUpdateBuilder('update_media_by_pk')
 
-        queryBuilder.addParam('$url', 'String!', image.url)
-        queryBuilder.addParam('$title', 'String!', image.title)
-        queryBuilder.addParam('$thumbnail', 'Boolean', image.thumbnail)
+        const queryBuilder: Query = new Query('mutation')
 
-        queryBuilder.addPkColumn('url', '$url')
+        const updateMediaByPkSubQuery : Query = new Query('update_media_by_pk')
+          .addReturnToQuery('url')
 
-        queryBuilder.addInsert('title', '$title')
-        queryBuilder.addInsert('thumbnail', '$thumbnail')
+        updateMediaByPkSubQuery.constraints = new Constraints()
+        updateMediaByPkSubQuery.constraints.where = new ConstraintPart('pk_columns')
+          .addConstraint([new ConstraintPart('url').addConstraint('"' + image.url + '"')])
 
-        queryBuilder.addReturn('url')
+        updateMediaByPkSubQuery.constraints.set = new ConstraintPart('_set')
+          .addConstraint([
+            new ConstraintPart('title').addConstraint('"' + image.title + '"'),
+            new ConstraintPart('thumbnail').addConstraint(image.thumbnail.toString()),
+          ])
 
-        const mutation: string = queryBuilder.getRequest()
+        queryBuilder.addReturnToQuery(updateMediaByPkSubQuery)
+
+        const mutation: string = queryBuilder.buildQuery()
 
         try {
-            await this.client.request(mutation, {
-                url: image.url,
-                title: image.title,
-                thumbnail: image.thumbnail,
-            })
+            await this.client.request(mutation)
 
             return true
         } catch (e) {
@@ -69,29 +95,26 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
     }
 
     async postMetadata(image: Image): Promise<Image | Array<UseCaseError>> {
-        let queryBuilder: HasuraMutationInsertBuilder = new HasuraMutationInsertBuilder('insert_media_one')
+        const queryBuilder: Query = new Query('mutation')
 
-        queryBuilder.addParam('$url', 'String!', image.url)
-        queryBuilder.addParam('$title', 'String!', image.title)
-        queryBuilder.addParam('$source', 'String!', image.source)
-        queryBuilder.addParam('$associated_to', 'uuid!', image.associated_to)
+        const insertMediaOneSubQuery: Query = new Query('insert_media_one')
+          .addReturnToQuery('url')
 
-        queryBuilder.addInsert('url', '$url')
-        queryBuilder.addInsert('title', '$title')
-        queryBuilder.addInsert('source', '$source')
-        queryBuilder.addInsert('associated_to', '$associated_to')
+        insertMediaOneSubQuery.constraints = new Constraints()
+        insertMediaOneSubQuery.constraints.set = new ConstraintPart('object')
+          .addConstraint([
+            new ConstraintPart('url').addConstraint('"' + image.url + '"'),
+            new ConstraintPart('title').addConstraint('"' + image.title + '"'),
+            new ConstraintPart('source').addConstraint('"' + image.source + '"'),
+            new ConstraintPart('associated_to').addConstraint('"' + image.associated_to + '"'),
+          ])
 
-        queryBuilder.addReturn('url')
+        queryBuilder.addReturnToQuery(insertMediaOneSubQuery)
 
-        const mutation: string = queryBuilder.getRequest()
+        const mutation: string = queryBuilder.buildQuery()
 
         try {
-            await this.client.request(mutation, {
-                url: image.url,
-                title: image.title,
-                source: image.source,
-                associated_to: image.associated_to
-            })
+            await this.client.request(mutation)
 
             return image
         } catch (e) {
@@ -103,20 +126,21 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
     }
 
     async deleteFileMetadata(image: Image): Promise<boolean | Array<UseCaseError>> {
-        let queryBuilder: HasuraMutationDeleteBuilder = new HasuraMutationDeleteBuilder('delete_media_by_pk')
+        const queryBuilder: Query = new Query('mutation')
 
-        queryBuilder.addParam('$url', 'String!', image.url)
+        const deleteMediaByPkSubQuery: Query = new Query('delete_media_by_pk')
+          .addReturnToQuery('url')
 
-        queryBuilder.addPkColumn('url', '$url')
+        deleteMediaByPkSubQuery.constraints = new Constraints()
+        deleteMediaByPkSubQuery.constraints.where = new ConstraintPart('pk_columns')
+          .addConstraint([new ConstraintPart('url').addConstraint('"' + image.url + '"')])
 
-        queryBuilder.addReturn('url')
+        queryBuilder.addReturnToQuery(deleteMediaByPkSubQuery)
 
-        const mutation: string = queryBuilder.getRequest()
+        const mutation: string = queryBuilder.buildQuery()
 
         try {
-            await this.client.request(mutation, {
-                url: image.url
-            })
+            await this.client.request(mutation)
 
             return true
         } catch (e) {
@@ -126,5 +150,4 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
             return [new UseCaseError(e.message, 400)]
         }
     }
-
 }
