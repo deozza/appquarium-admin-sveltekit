@@ -105,7 +105,7 @@
                 if (error.code === 401) {
                     const userUseCase: UserUseCase = new UserUseCase()
                     userUseCase.logout()
-                    return goto('/login')
+                    return goto('/')
 
                 }
             }
