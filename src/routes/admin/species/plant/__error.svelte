@@ -14,7 +14,7 @@
 
     const userUseCase: UserUseCase = new UserUseCase()
     if (userUseCase.getToken().isFailed()) {
-        href = "/login"
+        href = "/"
     }
 
 </script>

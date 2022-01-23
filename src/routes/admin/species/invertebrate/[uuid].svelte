@@ -70,8 +70,7 @@
             for (const error of invertebrateResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout();
-                    return goto('/admin')
-
+                    return goto('/')
                 }
             }
             return invertebrateResult.errors;
@@ -88,8 +87,7 @@
             for (const error of speciesGenresResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout();
-                    return goto('/admin')
-
+                    return goto('/')
                 }
             }
             return speciesGenresResult.errors;
@@ -102,8 +100,7 @@
             for (const error of speciesFamiliesResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout();
-                    return goto('/admin')
-
+                    return goto('/')
                 }
             }
             return speciesFamiliesResult.errors;
@@ -116,8 +113,7 @@
             for (const error of speciesOriginsResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout();
-                    return goto('/admin')
-
+                    return goto('/')
                 }
             }
             return speciesOriginsResult.errors;

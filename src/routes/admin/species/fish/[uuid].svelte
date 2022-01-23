@@ -69,7 +69,7 @@
             for (const error of fishResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout()
-                    return goto('/admin')
+                    return goto('/')
                 }
             }
             return fishResult.errors
@@ -86,7 +86,7 @@
             for (const error of speciesGenresResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout()
-                    return goto('/admin')
+                    return goto('/')
 
                 }
             }
@@ -100,7 +100,7 @@
             for (const error of speciesFamiliesResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout()
-                    return goto('/admin')
+                    return goto('/')
 
                 }
             }
@@ -114,7 +114,7 @@
             for (const error of speciesOriginsResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout()
-                    return goto('/admin')
+                    return goto('/')
 
                 }
             }

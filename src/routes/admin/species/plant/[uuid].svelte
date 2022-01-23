@@ -62,7 +62,7 @@
             for (const error of plantResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout();
-                    return goto('/admin')
+                    return goto('/index')
 
                 }
             }
@@ -77,7 +77,7 @@
             for (const error of speciesGenresResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout();
-                    return goto('/admin')
+                    return goto('/index')
 
                 }
             }
@@ -91,7 +91,7 @@
             for (const error of speciesFamiliesResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout();
-                    return goto('/admin')
+                    return goto('/index')
 
                 }
             }
@@ -105,8 +105,7 @@
             for (const error of speciesOriginsResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout();
-                    return goto('/admin')
-
+                    return goto('/')
                 }
             }
             return speciesOriginsResult.errors;
