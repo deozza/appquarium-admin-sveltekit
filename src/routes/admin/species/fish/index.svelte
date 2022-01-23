@@ -11,12 +11,20 @@
     import UseCaseError from '../../../../app/utils/useCasesResult/types/UseCaseError';
 
     import {goto} from '$app/navigation';
+    import { onMount } from 'svelte';
 
-    export let listOfFishes: Array<Species> = []
+    let listOfFishes: Array<Species> = []
     const userUseCase: UserUseCase = new UserUseCase()
     const jwt: Result = userUseCase.getToken()
 
-    async function loadFishes(): Promise<Array<Species> | Array<UseCaseError>>{
+    let loadingFishes: boolean = true
+
+    onMount(async () => {
+        listOfFishes = await loadFishes()
+        loadingFishes = false
+    })
+
+    async function loadFishes(): Promise<Array<Species>>{
         const fishUseCase: FishUseCase = new FishUseCase()
         const listOfFishesResult: Result = await fishUseCase.getListOfFishes(jwt.content)
 
@@ -24,58 +32,48 @@
             for (const error of listOfFishesResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout()
-                    return goto('/admin')
-
+                    return goto('/')
                 }
             }
 
-            return listOfFishes
+            return listOfFishesResult.content
         }
 
-        listOfFishes = listOfFishesResult.content
-
-        return listOfFishes
+        return listOfFishesResult.content
     }
 </script>
 
 <div class="flex-c" id="content">
     <BaseHeader baseHeaderModel={header}/>
-    {#await loadFishes()}
+    {#if loadingFishes}
         <p>chargement</p>
-    {:then listOfFishes}
-        <template slot="body">
-            <table class="table-auto">
-                <thead>
+    {:else}
+        <table class="table-auto">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nom scientifique</th>
+                <th scope="col">Etat</th>
+                <th scope="col">Créé le</th>
+                <th scope="col">Modifié le</th>
+            </tr>
+            </thead>
+            <tbody>
+            {#each listOfFishes as fish, i}
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nom scientifique</th>
-                    <th scope="col">Etat</th>
-                    <th scope="col">Créé le</th>
-                    <th scope="col">Modifié le</th>
+                    <td>{i + 1}</td>
+                    <td>
+                        <a class="font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300"
+                           href={fish.computeLinkToSpecies()} sveltekit:prefetch>{fish.computeName()}</a>
+                    </td>
+                    <td>{fish.getPublicationStateContent()}</td>
+                    <td>{fish.created_at.getDate() + '/' + fish.created_at.getMonth() + '/' + fish.created_at.getFullYear() + ' ' + fish.created_at.getHours() + ':' + fish.created_at.getMinutes()}</td>
+                    <td>{fish.updated_at.getDate() + '/' + fish.updated_at.getMonth() + '/' + fish.updated_at.getFullYear() + ' ' + fish.updated_at.getHours() + ':' + fish.updated_at.getMinutes()}</td>
                 </tr>
-                </thead>
-                <tbody>
-                {#each listOfFishes as fish, i}
-                    <tr>
-                        <td>{i + 1}</td>
-                        <td>
-                            <a class="font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300"
-                               href={fish.computeLinkToSpecies()} sveltekit:prefetch>{fish.computeName()}</a>
-                        </td>
-                        <td>{fish.getPublicationStateContent()}</td>
-                        <td>{fish.created_at.getDate() + '/' + fish.created_at.getMonth() + '/' + fish.created_at.getFullYear() + ' ' + fish.created_at.getHours() + ':' + fish.created_at.getMinutes()}</td>
-                        <td>{fish.updated_at.getDate() + '/' + fish.updated_at.getMonth() + '/' + fish.updated_at.getFullYear() + ' ' + fish.updated_at.getHours() + ':' + fish.updated_at.getMinutes()}</td>
-                    </tr>
-                {/each}
-                </tbody>
-            </table>
-        </template>
-
-    {:catch errors}
-        {#each errors as error}
-            <p>{error.type}</p>
-        {/each}
-    {/await}
+            {/each}
+            </tbody>
+        </table>
+    {/if}
     <a href="/admin/species/fish/add">
         <BaseButton baseButtonModel={addFishButton}/>
     </a>

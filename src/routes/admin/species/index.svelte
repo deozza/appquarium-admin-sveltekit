@@ -9,10 +9,17 @@
     import Result from '../../../app/utils/useCasesResult/Result';
     import SpeciesUseCase from '../../../app/species/global/useCases/UseCase';
     import {goto} from '$app/navigation';
+    import { onMount } from 'svelte';
 
-    export let listOfSpecies: Array<Species> = []
+    let listOfSpecies: Array<Species> = []
+    let loadingSpecies: boolean = true
 
-    async function loadSpecies(){
+    onMount(async () => {
+        listOfSpecies = await loadSpecies()
+        loadingSpecies = false
+    })
+
+    async function loadSpecies(): Promise<Array<Species>>{
         const userUseCase: UserUseCase = new UserUseCase()
         const jwt: Result = userUseCase.getToken()
 
@@ -23,60 +30,52 @@
             for (const error of listOfSpeciesFromHasura.errors) {
                 if (error.code === 401) {
                     userUseCase.logout()
-                    return goto('/admin')
-
+                    return goto('/')
                 }
             }
 
-            return listOfSpecies
+            return listOfSpeciesFromHasura.content
         }
 
-        listOfSpecies = listOfSpeciesFromHasura.content
-
-        return listOfSpecies
+        return listOfSpeciesFromHasura.content
     }
-
 </script>
 
 
 <div class="flex-c" id="content">
     <BaseHeader baseHeaderModel={header}/>
-    {#await loadSpecies()}
+    {#if loadingSpecies}
         <p>chargement</p>
-    {:then listOfSpecies}
-        <template slot="body">
-            <table class="table-auto">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nom scientifique</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Etat</th>
-                    <th scope="col">Créé le</th>
-                    <th scope="col">Modifié le</th>
-                </tr>
-                </thead>
-                <tbody>
+    {:else}
+        <table class="table-auto">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nom scientifique</th>
+                <th scope="col">Type</th>
+                <th scope="col">Etat</th>
+                <th scope="col">Créé le</th>
+                <th scope="col">Modifié le</th>
+            </tr>
+            </thead>
+            <tbody>
 
-                {#each listOfSpecies as species, i}
-                    <tr>
-                        <td>{i + 1}</td>
-                        <td>
-                            <a class="font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300"
-                               href={species.computeLinkToSpecies()} sveltekit:prefetch>{species.computeName()}</a>
-                        </td>
-                        <td>{species.category}</td>
-                        <td>{species.getPublicationStateContent()}</td>
-                        <td>{species.created_at.getDate() + '/' + species.created_at.getMonth() + '/' + species.created_at.getFullYear() + ' ' + species.created_at.getHours() + ':' + species.created_at.getMinutes()}</td>
-                        <td>{species.updated_at.getDate() + '/' + species.updated_at.getMonth() + '/' + species.updated_at.getFullYear() + ' ' + species.updated_at.getHours() + ':' + species.updated_at.getMinutes()}</td>
-                    </tr>
-                {/each}
-                </tbody>
-            </table>
-        </template>
-    {:catch error}
-        <p>erreur</p>
-    {/await}
+            {#each listOfSpecies as species, i}
+                <tr>
+                    <td>{i + 1}</td>
+                    <td>
+                        <a class="font-semibold text-blue-500 hover:text-blue-700 transition-colors duration-300"
+                           href={species.computeLinkToSpecies()} sveltekit:prefetch>{species.computeName()}</a>
+                    </td>
+                    <td>{species.category}</td>
+                    <td>{species.getPublicationStateContent()}</td>
+                    <td>{species.created_at.getDate() + '/' + species.created_at.getMonth() + '/' + species.created_at.getFullYear() + ' ' + species.created_at.getHours() + ':' + species.created_at.getMinutes()}</td>
+                    <td>{species.updated_at.getDate() + '/' + species.updated_at.getMonth() + '/' + species.updated_at.getFullYear() + ' ' + species.updated_at.getHours() + ':' + species.updated_at.getMinutes()}</td>
+                </tr>
+            {/each}
+            </tbody>
+        </table>
+    {/if}
 
     <div class="flex-r">
         {#each buttonsAdd as button}
