@@ -123,8 +123,8 @@
 
 </script>
 
-<div class="flex-c">
-    {#await loadPlant()}
+<div class="flex-c space-y-6">
+    {#if loadingPlant}
 
         <section>
             <BaseHeader baseHeaderModel={header}>
@@ -132,7 +132,7 @@
             </BaseHeader>
         </section>
 
-    {:then plant}
+    {:else}
         <section>
             <BaseHeader baseHeaderModel={header}>
                 <BasePill basePillModel={statusPill}/>
@@ -164,9 +164,5 @@
             <PublicationStateSwitcher species={plant} user={user}/>
         </section>
 
-    {:catch errors}
-        {#each errors as error}
-            <p>{error.type}</p>
-        {/each}
-    {/await}
+    {/if}
 </div>
