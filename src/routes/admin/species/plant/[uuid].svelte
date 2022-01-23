@@ -1,13 +1,20 @@
 <script lang="ts">
+    import {
+        header,
+        statusPill,
+        generalFormHeader,
+        namingFormHeader,
+        waterConstraintsFormHeader,
+        imageFormHeader
+    } from '../../../../components/pages/admin/[uuid]/Modeles';
+
     import Species from '../../../../app/species/global/entities/Species';
-    import BaseHeaderModel from '../../../../components/atoms/typography/header/BaseHeaderModel';
     import BaseHeader from '../../../../components/atoms/typography/header/BaseHeader.svelte';
     import NamingForm from '../../../../components/molecules/species/namingForm/NamingForm.svelte';
     import SpeciesGenre from '../../../../app/species/global/entities/SpeciesGenre';
     import SpeciesFamily from '../../../../app/species/global/entities/SpeciesFamily';
     import WaterConstraintsForm
         from '../../../../components/molecules/species/waterConstraintsForm/WaterConstraintsForm.svelte';
-    import BasePillModel from '../../../../components/atoms/pill/BasePillModel';
     import BasePill from '../../../../components/atoms/pill/BasePill.svelte';
     import PublicationStateSwitcher
         from '../../../../components/molecules/species/publicationStateSwitcher/PublicationStateSwitcher.svelte';
@@ -18,9 +25,9 @@
     import SpeciesUseCase from '../../../../app/species/global/useCases/UseCase';
     import PlantUseCase from '../../../../app/species/plant/useCases/UseCase';
     import ImagesForm from '../../../../components/molecules/species/imagesForm/ImagesForm.svelte';
+
     import { page } from '$app/stores';
     import {goto} from '$app/navigation';
-    import UseCaseError from '../../../../app/utils/useCasesResult/types/UseCaseError';
     import { onMount } from 'svelte';
 
     export let plant: Species = new Species([]);
@@ -34,28 +41,6 @@
 
     const jwt: Result = userUseCase.getToken();
     const user: User = new User(jwt.content);
-
-    const header: BaseHeaderModel = new BaseHeaderModel('Chargement ...')
-      .setDisplaySizeOrTrowError('xxxl')
-      .setSizeOrTrowError('h1');
-
-    const statusPill: BasePillModel = new BasePillModel('');
-
-    const generalFormHeader: BaseHeaderModel = new BaseHeaderModel('Infos générales')
-      .setDisplaySizeOrTrowError('xxl')
-      .setSizeOrTrowError('h2');
-
-    const namingFormHeader: BaseHeaderModel = new BaseHeaderModel('Nom')
-      .setDisplaySizeOrTrowError('xxl')
-      .setSizeOrTrowError('h2');
-
-    const waterConstraintsFormHeader: BaseHeaderModel = new BaseHeaderModel('Contraintes d\'eau')
-      .setDisplaySizeOrTrowError('xxl')
-      .setSizeOrTrowError('h2');
-
-    const imageFormHeader: BaseHeaderModel = new BaseHeaderModel("Images")
-      .setDisplaySizeOrTrowError('xxl')
-      .setSizeOrTrowError('h2')
 
     let loadingPlant: boolean = true
 
@@ -71,7 +56,6 @@
         speciesOrigins = await loadOrigins()
 
         loadingPlant = false
-
     })
 
     async function loadPlant(): Promise<Species>{

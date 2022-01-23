@@ -1,12 +1,20 @@
 <script lang="ts">
-    import BaseHeaderModel from '../../../../components/atoms/typography/header/BaseHeaderModel';
+    import {
+        header,
+        statusPill,
+        generalFormHeader,
+        namingFormHeader,
+        waterConstraintsFormHeader,
+        imageFormHeader,
+        animalSpecsFormHeader
+    } from '../../../../components/pages/admin/[uuid]/Modeles';
+
     import BaseHeader from '../../../../components/atoms/typography/header/BaseHeader.svelte';
     import GeneralForm from '../../../../components/molecules/species/generalForm/GeneralForm.svelte';
     import NamingForm from '../../../../components/molecules/species/namingForm/NamingForm.svelte';
     import WaterConstraintsForm
         from '../../../../components/molecules/species/waterConstraintsForm/WaterConstraintsForm.svelte';
     import AnimalSpecsForm from '../../../../components/molecules/species/animalSpecsForm/AnimalSpecsForm.svelte';
-    import BasePillModel from '../../../../components/atoms/pill/BasePillModel';
     import BasePill from '../../../../components/atoms/pill/BasePill.svelte';
     import ImagesForm from '../../../../components/molecules/species/imagesForm/ImagesForm.svelte';
     import PublicationStateSwitcher
@@ -21,7 +29,6 @@
     import SpeciesUseCase from '../../../../app/species/global/useCases/UseCase';
     import InvertebrateUseCase from '../../../../app/species/invertebrate/useCases/UseCase';
     import Result from '../../../../app/utils/useCasesResult/Result';
-    import UseCaseError from '../../../../app/utils/useCasesResult/types/UseCaseError';
 
     import {page} from '$app/stores';
     import {goto} from '$app/navigation';
@@ -39,32 +46,6 @@
     const jwt: Result = userUseCase.getToken();
     const user: User = new User(jwt.content);
 
-    const header: BaseHeaderModel = new BaseHeaderModel('Chargement...')
-      .setDisplaySizeOrTrowError('xxxl')
-      .setSizeOrTrowError('h1');
-
-    const statusPill: BasePillModel = new BasePillModel('');
-
-    const generalFormHeader: BaseHeaderModel = new BaseHeaderModel('Infos générales')
-      .setDisplaySizeOrTrowError('xxl')
-      .setSizeOrTrowError('h2');
-
-    const namingFormHeader: BaseHeaderModel = new BaseHeaderModel('Nom')
-      .setDisplaySizeOrTrowError('xxl')
-      .setSizeOrTrowError('h2');
-
-    const waterConstraintsFormHeader: BaseHeaderModel = new BaseHeaderModel('Contraintes d\'eau')
-      .setDisplaySizeOrTrowError('xxl')
-      .setSizeOrTrowError('h2');
-
-    const animalSpecsFormHeader: BaseHeaderModel = new BaseHeaderModel('Caractéristiques animales')
-      .setDisplaySizeOrTrowError('xxl')
-      .setSizeOrTrowError('h2');
-
-    const imageFormHeader: BaseHeaderModel = new BaseHeaderModel("Images")
-      .setDisplaySizeOrTrowError('xxl')
-      .setSizeOrTrowError('h2')
-
     let loadingInvertebrate: boolean = true
 
     onMount(async () => {
@@ -79,7 +60,6 @@
         speciesOrigins = await loadOrigins()
 
         loadingInvertebrate = false
-
     })
 
     async function loadInvertebrate(): Promise<Species>{
