@@ -16,13 +16,13 @@ export default class WaterConstraintsHasuraAdapter extends HasuraClient implemen
 		insertWaterConstraintsOneSubQuery.constraints = new Constraints()
 		insertWaterConstraintsOneSubQuery.constraints.set = new ConstraintPart('object')
 			.addConstraint([
-				new ConstraintPart('ph_min').addConstraint('"' + waterConstraints.ph_min +  "'"),
-				new ConstraintPart('ph_max').addConstraint('"' + waterConstraints.ph_max +  "'"),
+				new ConstraintPart('ph_min').addConstraint('"' + waterConstraints.ph_min +  '"'),
+				new ConstraintPart('ph_max').addConstraint('"' + waterConstraints.ph_max +  '"'),
 				new ConstraintPart('gh_min').addConstraint(waterConstraints.gh_min.toString()),
 				new ConstraintPart('gh_max').addConstraint(waterConstraints.gh_max.toString()),
 				new ConstraintPart('temp_min').addConstraint(waterConstraints.temp_min.toString()),
 				new ConstraintPart('temp_max').addConstraint(waterConstraints.temp_max.toString()),
-				new ConstraintPart('species_uuid').addConstraint('"' + waterConstraints.species_uuid +  "'"),
+				new ConstraintPart('species_uuid').addConstraint('"' + waterConstraints.species_uuid +  '"'),
 			])
 
 		queryBuilder.addReturnToQuery(insertWaterConstraintsOneSubQuery)
@@ -58,6 +58,8 @@ export default class WaterConstraintsHasuraAdapter extends HasuraClient implemen
 				new ConstraintPart('water_constraints_uuid').addConstraint('"' + waterConstraints.uuid + '"')
 			])
 
+		queryBuilder.addReturnToQuery(updateSpeciesByPkSubQuery)
+
 		const mutation: string = queryBuilder.buildQuery()
 
 		try {
@@ -84,8 +86,8 @@ export default class WaterConstraintsHasuraAdapter extends HasuraClient implemen
 			])
 		updateWaterConstraintsByPkSubQuery.constraints.set = new ConstraintPart('_set')
 			.addConstraint([
-				new ConstraintPart('ph_min').addConstraint('"' + waterConstraints.ph_min +  "'"),
-				new ConstraintPart('ph_max').addConstraint('"' + waterConstraints.ph_max +  "'"),
+				new ConstraintPart('ph_min').addConstraint('"' + waterConstraints.ph_min +  '"'),
+				new ConstraintPart('ph_max').addConstraint('"' + waterConstraints.ph_max +  '"'),
 				new ConstraintPart('gh_min').addConstraint(waterConstraints.gh_min.toString()),
 				new ConstraintPart('gh_max').addConstraint(waterConstraints.gh_max.toString()),
 				new ConstraintPart('temp_min').addConstraint(waterConstraints.temp_min.toString()),

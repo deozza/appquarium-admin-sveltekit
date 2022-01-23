@@ -11,18 +11,18 @@ import SpeciesFamily from "../entities/SpeciesFamily";
 import SpeciesGenre from "../entities/SpeciesGenre";
 import AnimalSpecs from "../entities/AnimalSpecs";
 
-import type AdapterInterface from "../adapters/AdapterInterface";
 import HasuraAdapter from "../adapters/HasuraAdapter";
+import type AdapterInterface from "../adapters/AdapterInterface";
 import SpeciesNamingHasuraAdapter from '../adapters/speciesNaming/HasuraAdapter';
-import SpeciesNamingAdapterInterface from '../adapters/speciesNaming/AdapterInterface';
+import type SpeciesNamingAdapterInterface from '../adapters/speciesNaming/AdapterInterface';
 import SpeciesFamiliesHasuraAdapter from '../adapters/speciesNaming/speciesFamily/HasuraAdapter';
-import SpeciesFamiliesAdapterInterface from '../adapters/speciesNaming/speciesFamily/AdapterInterface';
+import type SpeciesFamiliesAdapterInterface from '../adapters/speciesNaming/speciesFamily/AdapterInterface';
 import SpeciesGenresHasuraAdapter from '../adapters/speciesNaming/speciesGenre/HasuraAdapter';
-import SpeciesGenresAdapterInterface from '../adapters/speciesNaming/speciesGenre/AdapterInterface';
+import type SpeciesGenresAdapterInterface from '../adapters/speciesNaming/speciesGenre/AdapterInterface';
 import WaterConstraintsHasuraAdapter from '../adapters/waterConstraints/HasuraAdapter';
-import WaterConstraintsAdapterInterface from '../adapters/waterConstraints/AdapterInterface';
+import type WaterConstraintsAdapterInterface from '../adapters/waterConstraints/AdapterInterface';
 import AnimalSpecsHasuraAdapter from '../adapters/animalSpecs/HasuraAdapter';
-import AnimalSpecsAdapterInterface from '../adapters/animalSpecs/AdapterInterface';
+import type AnimalSpecsAdapterInterface from '../adapters/animalSpecs/AdapterInterface';
 
 export default class Services implements ServicesInterface {
     private static checkWaterConstraintsAreValid(waterConstraints: WaterConstraints): Result {

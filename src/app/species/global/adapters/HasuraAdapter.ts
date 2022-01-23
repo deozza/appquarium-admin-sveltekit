@@ -234,9 +234,7 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
         const query: string = queryBuilder.buildQuery()
 
         try {
-            const data = await this.client.request(query, {
-                category: category
-            })
+            const data = await this.client.request(query)
 
             const listOfSpecies: Array<Species> = data.species.map((item: Array<string>) => new Species(item))
             return listOfSpecies
@@ -289,6 +287,8 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
           .addConstraint([
             new ConstraintPart('origin').addConstraint(origin)
           ])
+
+        queryBuilder.addReturnToQuery(updateSpeciesByPkSubQuery)
 
         const mutation: string = queryBuilder.buildQuery()
 

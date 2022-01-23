@@ -8,7 +8,6 @@
     import UserUseCase from '../../../../app/user/useCases/UseCase';
     import FishUseCase from '../../../../app/species/fish/useCases/UseCase';
     import Result from '../../../../app/utils/useCasesResult/Result';
-    import UseCaseError from '../../../../app/utils/useCasesResult/types/UseCaseError';
 
     import {goto} from '$app/navigation';
     import { onMount } from 'svelte';

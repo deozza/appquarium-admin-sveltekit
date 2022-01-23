@@ -55,7 +55,7 @@ export default class AnimalSpecsHasuraAdapter extends HasuraClient implements An
 
 		updateSpeciesByPkSubQuery.constraints.set = new ConstraintPart('_set')
 			.addConstraint([
-				new ConstraintPart('uuid').addConstraint('"' + animalSpecs.uuid +  '"')
+				new ConstraintPart('animal_specs_uuid').addConstraint('"' + animalSpecs.uuid +  '"')
 			])
 
 		queryBuilder.addReturnToQuery(updateSpeciesByPkSubQuery)
