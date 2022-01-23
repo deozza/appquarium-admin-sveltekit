@@ -25,13 +25,17 @@
 
     import {page} from "$app/stores";
     import {goto} from '$app/navigation';
+    import { onMount } from 'svelte';
 
-    export let fish: Species = new Species([])
-    export let speciesOrigins: Array<string> = []
-    export let speciesGenres: Array<SpeciesGenre> = []
-    export let speciesFamilies: Array<SpeciesFamily> = []
+    let fish: Species = new Species([])
+    let speciesOrigins: Array<string> = []
+    let speciesGenres: Array<SpeciesGenre> = []
+    let speciesFamilies: Array<SpeciesFamily> = []
 
     const userUseCase: UserUseCase = new UserUseCase()
+    const fishUseCase: FishUseCase = new FishUseCase()
+    const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
+
     const jwt: Result = userUseCase.getToken()
     const user: User = new User(jwt.content)
 
@@ -61,8 +65,24 @@
       .setDisplaySizeOrTrowError('xxl')
       .setSizeOrTrowError('h2')
 
-    async function loadSpecies(): Promise<Species | Array<UseCaseError>>{
-        const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
+    let loadingFish: boolean = true
+
+    onMount(async () => {
+        fish = await loadFish()
+
+        header.setContent(fish.computeName())
+        statusPill.setStyleOrThrowError(fish.getPublicationStateStyle())
+        statusPill.content = fish.getPublicationStateContent()
+
+        speciesGenres = await loadFishGenres()
+        speciesFamilies = await loadFishFamilies()
+        speciesOrigins = await loadOrigins()
+
+        loadingFish = false
+
+    })
+
+    async function loadFish(): Promise<Species>{
         const fishResult: Result = await speciesUseCase.getSpecies(jwt.content, $page.params.uuid)
 
         if (fishResult.isFailed()) {
@@ -72,15 +92,13 @@
                     return goto('/')
                 }
             }
-            return fishResult.errors
+            return fishResult.content
         }
 
-        fish = fishResult.content
-        header.setContent(fish.computeName())
-        statusPill.setStyleOrThrowError(fish.getPublicationStateStyle())
-        statusPill.content = fish.getPublicationStateContent()
+        return fishResult.content
+    }
 
-        const fishUseCase: FishUseCase = new FishUseCase()
+    async function loadFishGenres(): Promise<Array<SpeciesGenre>> {
         const speciesGenresResult: Result = await fishUseCase.getFishGenres(jwt.content)
         if (speciesGenresResult.isFailed()) {
             for (const error of speciesGenresResult.errors) {
@@ -90,11 +108,13 @@
 
                 }
             }
-            return speciesGenresResult.errors
+            return speciesGenresResult.content
         }
 
-        speciesGenres = speciesGenresResult.content
+        return speciesGenresResult.content
+    }
 
+    async function loadFishFamilies(): Promise<Array<SpeciesGenre>> {
         const speciesFamiliesResult: Result = await fishUseCase.getFishFamilies(jwt.content)
         if (speciesFamiliesResult.isFailed()) {
             for (const error of speciesFamiliesResult.errors) {
@@ -104,11 +124,12 @@
 
                 }
             }
-            return speciesFamiliesResult.errors
+            return speciesFamiliesResult.content
         }
+        return speciesFamiliesResult.content
+    }
 
-        speciesFamilies = speciesFamiliesResult.content
-
+    async function loadOrigins(): Promise<Array<string>> {
         const speciesOriginsResult: Result = await speciesUseCase.getSpeciesOrigins(jwt.content)
         if (speciesOriginsResult.isFailed()) {
             for (const error of speciesOriginsResult.errors) {
@@ -118,18 +139,16 @@
 
                 }
             }
-            return speciesOriginsResult.errors
+            return speciesOriginsResult.content
         }
 
-        speciesOrigins = speciesOriginsResult.content
-
-        return fish
+        return speciesOriginsResult.content
     }
 
 </script>
 
 <div class="flex-c space-y-6">
-    {#await loadSpecies()}
+    {#if loadingFish}
 
         <section>
             <BaseHeader baseHeaderModel={header}>
@@ -137,7 +156,7 @@
             </BaseHeader>
         </section>
 
-    {:then species}
+    {:else}
         <section>
             <BaseHeader baseHeaderModel={header}>
                 <BasePill basePillModel={statusPill}/>
@@ -173,9 +192,5 @@
             <PublicationStateSwitcher species={fish} user={user}/>
         </section>
 
-    {:catch errors}
-        {#each errors as error}
-            <p>{error.type}</p>
-        {/each}
-    {/await}
+    {/if}
 </div>

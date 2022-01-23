@@ -21,13 +21,17 @@
     import { page } from '$app/stores';
     import {goto} from '$app/navigation';
     import UseCaseError from '../../../../app/utils/useCasesResult/types/UseCaseError';
+    import { onMount } from 'svelte';
 
     export let plant: Species = new Species([]);
     export let speciesOrigins: Array<string> = [];
     export let speciesGenres: Array<SpeciesGenre> = [];
     export let speciesFamilies: Array<SpeciesFamily> = [];
 
-    const userUseCase: UserUseCase = new UserUseCase();
+    const userUseCase: UserUseCase = new UserUseCase()
+    const plantUseCase: PlantUseCase = new PlantUseCase()
+    const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
+
     const jwt: Result = userUseCase.getToken();
     const user: User = new User(jwt.content);
 
@@ -53,65 +57,84 @@
       .setDisplaySizeOrTrowError('xxl')
       .setSizeOrTrowError('h2')
 
-    async function loadPlant(): Promise<Species | Array<UseCaseError>> {
+    let loadingPlant: boolean = true
 
-        const speciesUseCase: SpeciesUseCase = new SpeciesUseCase();
-        const plantResult: Result = await speciesUseCase.getSpecies(jwt.content, $page.params.uuid);
+    onMount(async () => {
+        plant = await loadPlant()
+
+        header.setContent(plant.computeName())
+        statusPill.setStyleOrThrowError(plant.getPublicationStateStyle())
+        statusPill.content = plant.getPublicationStateContent()
+
+        speciesGenres = await loadPlantGenres()
+        speciesFamilies = await loadPlantFamilies()
+        speciesOrigins = await loadOrigins()
+
+        loadingPlant = false
+
+    })
+
+    async function loadPlant(): Promise<Species>{
+        const plantResult: Result = await speciesUseCase.getSpecies(jwt.content, $page.params.uuid)
 
         if (plantResult.isFailed()) {
             for (const error of plantResult.errors) {
                 if (error.code === 401) {
-                    userUseCase.logout();
-                    return goto('/index')
-
-                }
-            }
-            return plantResult.errors;
-        }
-
-        plant = plantResult.content;
-
-        const plantUseCase: PlantUseCase = new PlantUseCase();
-        const speciesGenresResult: Result = await plantUseCase.getPlantGenres(jwt.content);
-        if (speciesGenresResult.isFailed()) {
-            for (const error of speciesGenresResult.errors) {
-                if (error.code === 401) {
-                    userUseCase.logout();
-                    return goto('/index')
-
-                }
-            }
-            return speciesGenresResult.errors;
-        }
-
-        speciesGenres = speciesGenresResult.content;
-
-        const speciesFamiliesResult: Result = await plantUseCase.getPlantFamilies(jwt.content);
-        if (speciesFamiliesResult.isFailed()) {
-            for (const error of speciesFamiliesResult.errors) {
-                if (error.code === 401) {
-                    userUseCase.logout();
-                    return goto('/index')
-
-                }
-            }
-            return speciesFamiliesResult.errors;
-        }
-
-        speciesFamilies = speciesFamiliesResult.content;
-
-        const speciesOriginsResult: Result = await speciesUseCase.getSpeciesOrigins(jwt.content);
-        if (speciesOriginsResult.isFailed()) {
-            for (const error of speciesOriginsResult.errors) {
-                if (error.code === 401) {
-                    userUseCase.logout();
+                    userUseCase.logout()
                     return goto('/')
                 }
             }
-            return speciesOriginsResult.errors;
+            return plantResult.content
         }
 
-        speciesOrigins = speciesOriginsResult.content;
+        return plantResult.content
+    }
+
+    async function loadPlantGenres(): Promise<Array<SpeciesGenre>> {
+        const speciesGenresResult: Result = await plantUseCase.getPlantGenres(jwt.content)
+        if (speciesGenresResult.isFailed()) {
+            for (const error of speciesGenresResult.errors) {
+                if (error.code === 401) {
+                    userUseCase.logout()
+                    return goto('/')
+
+                }
+            }
+            return speciesGenresResult.content
+        }
+
+        return speciesGenresResult.content
+    }
+
+    async function loadPlantFamilies(): Promise<Array<SpeciesGenre>> {
+        const speciesFamiliesResult: Result = await plantUseCase.getPlantFamilies(jwt.content)
+        if (speciesFamiliesResult.isFailed()) {
+            for (const error of speciesFamiliesResult.errors) {
+                if (error.code === 401) {
+                    userUseCase.logout()
+                    return goto('/')
+
+                }
+            }
+            return speciesFamiliesResult.content
+        }
+        return speciesFamiliesResult.content
+    }
+
+    async function loadOrigins(): Promise<Array<string>> {
+        const speciesOriginsResult: Result = await speciesUseCase.getSpeciesOrigins(jwt.content)
+        if (speciesOriginsResult.isFailed()) {
+            for (const error of speciesOriginsResult.errors) {
+                if (error.code === 401) {
+                    userUseCase.logout()
+                    return goto('/')
+
+                }
+            }
+            return speciesOriginsResult.content
+        }
+
+        return speciesOriginsResult.content
     }
 
 </script>
