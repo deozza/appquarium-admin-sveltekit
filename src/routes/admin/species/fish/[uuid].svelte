@@ -1,7 +1,15 @@
 <script lang="ts">
-    import BaseHeaderModel from "../../../../components/atoms/typography/header/BaseHeaderModel";
+    import {
+        header,
+        statusPill,
+        generalFormHeader,
+        namingFormHeader,
+        waterConstraintsFormHeader,
+        imageFormHeader,
+        animalSpecsFormHeader
+    } from '../../../../components/pages/admin/[uuid]/Modeles';
+
     import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
-    import BasePillModel from "../../../../components/atoms/pill/BasePillModel";
     import BasePill from "../../../../components/atoms/pill/BasePill.svelte";
     import GeneralForm from "../../../../components/molecules/species/generalForm/GeneralForm.svelte";
     import NamingForm from "../../../../components/molecules/species/namingForm/NamingForm.svelte";
@@ -21,115 +29,106 @@
     import SpeciesUseCase from '../../../../app/species/global/useCases/UseCase';
     import FishUseCase from '../../../../app/species/fish/useCases/UseCase';
     import Result from '../../../../app/utils/useCasesResult/Result';
-    import UseCaseError from '../../../../app/utils/useCasesResult/types/UseCaseError';
 
     import {page} from "$app/stores";
     import {goto} from '$app/navigation';
+    import { onMount } from 'svelte';
 
-    export let fish: Species = new Species([])
-    export let speciesOrigins: Array<string> = []
-    export let speciesGenres: Array<SpeciesGenre> = []
-    export let speciesFamilies: Array<SpeciesFamily> = []
+    let fish: Species = new Species([])
+    let speciesOrigins: Array<string> = []
+    let speciesGenres: Array<SpeciesGenre> = []
+    let speciesFamilies: Array<SpeciesFamily> = []
 
     const userUseCase: UserUseCase = new UserUseCase()
+    const fishUseCase: FishUseCase = new FishUseCase()
+    const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
+
     const jwt: Result = userUseCase.getToken()
     const user: User = new User(jwt.content)
 
-    const header: BaseHeaderModel = new BaseHeaderModel('Chargement ...')
-      .setDisplaySizeOrTrowError('xxxl')
-      .setSizeOrTrowError('h1')
+    let loadingFish: boolean = true
 
-    const statusPill: BasePillModel = new BasePillModel('')
+    onMount(async () => {
+        fish = await loadFish()
 
-    const generalFormHeader: BaseHeaderModel = new BaseHeaderModel('Infos générales')
-      .setDisplaySizeOrTrowError('xxl')
-      .setSizeOrTrowError('h2')
+        header.setContent(fish.computeName())
+        statusPill.setStyleOrThrowError(fish.getPublicationStateStyle())
+        statusPill.content = fish.getPublicationStateContent()
 
-    const namingFormHeader: BaseHeaderModel = new BaseHeaderModel('Nom')
-      .setDisplaySizeOrTrowError('xxl')
-      .setSizeOrTrowError('h2')
+        speciesGenres = await loadFishGenres()
+        speciesFamilies = await loadFishFamilies()
+        speciesOrigins = await loadOrigins()
 
-    const waterConstraintsFormHeader: BaseHeaderModel = new BaseHeaderModel("Contraintes d'eau")
-      .setDisplaySizeOrTrowError('xxl')
-      .setSizeOrTrowError('h2')
+        loadingFish = false
+    })
 
-    const animalSpecsFormHeader: BaseHeaderModel = new BaseHeaderModel("Caractéristiques animales")
-      .setDisplaySizeOrTrowError('xxl')
-      .setSizeOrTrowError('h2')
-
-    const imageFormHeader: BaseHeaderModel = new BaseHeaderModel("Images")
-      .setDisplaySizeOrTrowError('xxl')
-      .setSizeOrTrowError('h2')
-
-    async function loadSpecies(): Promise<Species | Array<UseCaseError>>{
-        const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
+    async function loadFish(): Promise<Species>{
         const fishResult: Result = await speciesUseCase.getSpecies(jwt.content, $page.params.uuid)
 
         if (fishResult.isFailed()) {
             for (const error of fishResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout()
-                    return goto('/admin')
+                    return goto('/')
                 }
             }
-            return fishResult.errors
+            return fishResult.content
         }
 
-        fish = fishResult.content
-        header.setContent(fish.computeName())
-        statusPill.setStyleOrThrowError(fish.getPublicationStateStyle())
-        statusPill.content = fish.getPublicationStateContent()
+        return fishResult.content
+    }
 
-        const fishUseCase: FishUseCase = new FishUseCase()
+    async function loadFishGenres(): Promise<Array<SpeciesGenre>> {
         const speciesGenresResult: Result = await fishUseCase.getFishGenres(jwt.content)
         if (speciesGenresResult.isFailed()) {
             for (const error of speciesGenresResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout()
-                    return goto('/admin')
+                    return goto('/')
 
                 }
             }
-            return speciesGenresResult.errors
+            return speciesGenresResult.content
         }
 
-        speciesGenres = speciesGenresResult.content
+        return speciesGenresResult.content
+    }
 
+    async function loadFishFamilies(): Promise<Array<SpeciesGenre>> {
         const speciesFamiliesResult: Result = await fishUseCase.getFishFamilies(jwt.content)
         if (speciesFamiliesResult.isFailed()) {
             for (const error of speciesFamiliesResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout()
-                    return goto('/admin')
+                    return goto('/')
 
                 }
             }
-            return speciesFamiliesResult.errors
+            return speciesFamiliesResult.content
         }
+        return speciesFamiliesResult.content
+    }
 
-        speciesFamilies = speciesFamiliesResult.content
-
+    async function loadOrigins(): Promise<Array<string>> {
         const speciesOriginsResult: Result = await speciesUseCase.getSpeciesOrigins(jwt.content)
         if (speciesOriginsResult.isFailed()) {
             for (const error of speciesOriginsResult.errors) {
                 if (error.code === 401) {
                     userUseCase.logout()
-                    return goto('/admin')
+                    return goto('/')
 
                 }
             }
-            return speciesOriginsResult.errors
+            return speciesOriginsResult.content
         }
 
-        speciesOrigins = speciesOriginsResult.content
-
-        return fish
+        return speciesOriginsResult.content
     }
 
 </script>
 
 <div class="flex-c space-y-6">
-    {#await loadSpecies()}
+    {#if loadingFish}
 
         <section>
             <BaseHeader baseHeaderModel={header}>
@@ -137,7 +136,7 @@
             </BaseHeader>
         </section>
 
-    {:then species}
+    {:else}
         <section>
             <BaseHeader baseHeaderModel={header}>
                 <BasePill basePillModel={statusPill}/>
@@ -173,9 +172,5 @@
             <PublicationStateSwitcher species={fish} user={user}/>
         </section>
 
-    {:catch errors}
-        {#each errors as error}
-            <p>{error.type}</p>
-        {/each}
-    {/await}
+    {/if}
 </div>

@@ -13,14 +13,25 @@ import WaterConstraints from "../entities/WaterConstraints";
 import SpeciesNaming from "../entities/SpeciesNaming";
 import AnimalSpecs from "../entities/AnimalSpecs";
 import HasuraClient from "../../../adapters/hasura/HasuraClient";
+import Query from '../../../adapters/hasura/HasuraRequestBuilderV2/Query';
+import Constraints from '../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
+import ConstraintPart from '../../../adapters/hasura/HasuraRequestBuilderV2/ConstraintPart';
+import { insert } from 'svelte/internal';
 
 export default class HasuraAdapter extends HasuraClient implements AdapterInterface {
 
     async queryTotalSpecies(): Promise<number | null> {
 
-        let queryBuilder: HasuraQueryBuilder = new HasuraQueryBuilder('species_aggregate')
-        queryBuilder.addReturn('aggregate {count}')
-        const query: string = queryBuilder.getRequest()
+        const queryBuilder: Query = new Query('query')
+
+        const speciesAggregateSubQuery: Query = new Query('species_aggregate')
+          .addReturnToQuery(new Query('aggregate')
+            .addReturnToQuery('count')
+          )
+
+        queryBuilder.addReturnToQuery(speciesAggregateSubQuery)
+
+        const query: string = queryBuilder.buildQuery()
 
         try {
             const data = await this.client.request(query)
@@ -33,11 +44,30 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
 
     async queryListOfSpecies(): Promise<Array<Species> | UseCaseError> {
 
-        let queryBuilder: HasuraQueryBuilder = new HasuraQueryBuilder('species')
-        queryBuilder.addOrderBy('created_at')
-        queryBuilder.addReturn('uuid', 'category', 'publication_state', 'created_at', 'updated_at', 'naming {name,  species_genre {name}}')
+        const queryBuilder: Query = new Query('query')
 
-        const query: string = queryBuilder.getRequest()
+        const speciesSubQuery: Query = new Query('species')
+          .addReturnToQuery('uuid')
+          .addReturnToQuery('category')
+          .addReturnToQuery('publication_state')
+          .addReturnToQuery('created_at')
+          .addReturnToQuery('updated_at')
+          .addReturnToQuery(new Query('naming')
+            .addReturnToQuery('name')
+            .addReturnToQuery(new Query('species_genre')
+              .addReturnToQuery('name')
+            )
+          )
+
+        speciesSubQuery.constraints = new Constraints()
+        speciesSubQuery.constraints.orderBy = new ConstraintPart('order_by')
+          .addConstraint([
+            new ConstraintPart('created_at').addConstraint('asc')
+          ])
+
+        queryBuilder.addReturnToQuery(speciesSubQuery)
+
+        const query: string = queryBuilder.buildQuery()
 
         try {
             const data = await this.client.request(query)
@@ -53,24 +83,71 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
     }
 
     async queryGetSpecies(uuid: string): Promise<Species | UseCaseError> {
-        let queryBuilder: HasuraQueryBuilder = new HasuraQueryBuilder('species_by_pk')
 
-        queryBuilder.addParam('$uuid', 'uuid!', uuid)
+        const queryBuilder: Query = new Query('query')
 
-        queryBuilder.addByPk('uuid', '$uuid')
+        const speciesByPkSubQuery: Query = new Query('species_by_pk')
+          .addReturnToQuery('uuid')
+          .addReturnToQuery('created_at')
+          .addReturnToQuery('updated_at')
+          .addReturnToQuery('category')
+          .addReturnToQuery('origin')
+          .addReturnToQuery('publication_state')
+          .addReturnToQuery(new Query('naming')
+            .addReturnToQuery('uuid')
+            .addReturnToQuery('created_at')
+            .addReturnToQuery('updated_at')
+            .addReturnToQuery('species_uuid')
+            .addReturnToQuery('name')
+            .addReturnToQuery('common_names')
+            .addReturnToQuery('old_names')
+            .addReturnToQuery(new Query('species_family')
+              .addReturnToQuery('name')
+              .addReturnToQuery('uuid')
+            )
+            .addReturnToQuery(new Query('species_genre')
+              .addReturnToQuery('name')
+              .addReturnToQuery('uuid')
+            )
+          )
+          .addReturnToQuery(new Query('water_constraints')
+            .addReturnToQuery('uuid')
+            .addReturnToQuery('created_at')
+            .addReturnToQuery('updated_at')
+            .addReturnToQuery('species_uuid')
+            .addReturnToQuery('ph_min')
+            .addReturnToQuery('ph_max')
+            .addReturnToQuery('gh_min')
+            .addReturnToQuery('gh_max')
+            .addReturnToQuery('temp_min')
+            .addReturnToQuery('temp_max')
+          )
+          .addReturnToQuery(new Query('animal_specs')
+            .addReturnToQuery('uuid')
+            .addReturnToQuery('created_at')
+            .addReturnToQuery('updated_at')
+            .addReturnToQuery('species_uuid')
+            .addReturnToQuery('male_size')
+            .addReturnToQuery('female_size')
+            .addReturnToQuery('longevity_in_years')
+          )
+          .addReturnToQuery(new Query('medias')
+            .addReturnToQuery('url')
+            .addReturnToQuery('title')
+            .addReturnToQuery('source')
+            .addReturnToQuery('thumbnail')
+            .addReturnToQuery('associated_to')
+          )
 
-        queryBuilder.addReturn('uuid', 'created_at', 'updated_at', 'category', 'origin', 'publication_state')
-        queryBuilder.addReturn('naming {uuid, created_at, updated_at, name, common_names, old_names, species_family {name, uuid}, species_genre {name, uuid}, species_uuid}')
-        queryBuilder.addReturn('water_constraints {uuid, created_at, updated_at, ph_min, ph_max, gh_min, gh_max, temp_min ,temp_max, species_uuid}')
-        queryBuilder.addReturn('animal_specs {uuid, created_at, updated_at, male_size, female_size, longevity_in_years, species_uuid}')
-        queryBuilder.addReturn('medias {url, title, source, thumbnail, associated_to}')
+        speciesByPkSubQuery.constraints = new Constraints()
+        speciesByPkSubQuery.constraints.where = new ConstraintPart('uuid').addConstraint('"' + uuid + '"')
 
-        const query: string = queryBuilder.getRequest()
+        queryBuilder.addReturnToQuery(speciesByPkSubQuery)
+
+        const query: string = queryBuilder.buildQuery()
 
         try {
-            const data = await this.client.request(query, {
-                uuid: uuid
-            })
+            const data = await this.client.request(query)
 
             return new Species(data.species_by_pk)
         } catch (e) {
@@ -84,10 +161,13 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
 
 
     async queryListOfSpeciesCategories(): Promise<Array<string> | UseCaseError> {
-        let queryBuilder: HasuraQueryBuilder = new HasuraQueryBuilder('species_categories')
-        queryBuilder.addReturn('name')
 
-        const query: string = queryBuilder.getRequest()
+        const queryBuilder: Query = new Query('query')
+          .addReturnToQuery(new Query('species_categories')
+            .addReturnToQuery('name')
+          )
+
+        const query: string = queryBuilder.buildQuery()
 
         try {
             const data = await this.client.request(query)
@@ -102,54 +182,14 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
         }
     }
 
-    async queryListOfSpeciesFamiliesByCategory(category: string): Promise<Array<SpeciesFamily> | UseCaseError> {
-        let queryBuilder: HasuraQueryBuilder = new HasuraQueryBuilder('species_family')
-        queryBuilder.addReturn('uuid', 'name', 'category', 'user_uid')
-        queryBuilder.addParam('$category', 'species_categories_enum', category)
-        queryBuilder.addWhere('category', '_eq', '$category')
-        const query: string = queryBuilder.getRequest()
-
-        try {
-            const data = await this.client.request(query, {
-                category: category
-            })
-            const listOfSpeciesFamilies: Array<SpeciesGenre> = data.species_family.map((item: Array<string>) => new SpeciesFamily(item))
-            return listOfSpeciesFamilies
-        } catch (e) {
-            if (e.message.includes("JWTExpired")) {
-                return new UseCaseError("JWT expired", 401)
-            }
-            return new UseCaseError(e.message, 400)
-        }
-    }
-
-    async queryListOfSpeciesGenresByCategory(category: string): Promise<Array<SpeciesGenre> | UseCaseError> {
-        let queryBuilder: HasuraQueryBuilder = new HasuraQueryBuilder('species_genre')
-        queryBuilder.addReturn('uuid', 'name', 'category', 'user_uid')
-        queryBuilder.addParam('$category', 'species_categories_enum', category)
-        queryBuilder.addWhere('category', '_eq', '$category')
-        const query: string = queryBuilder.getRequest()
-
-        try {
-            const data = await this.client.request(query, {
-                category: category
-            })
-
-            const listOfSpeciesGenres: Array<SpeciesGenre> = data.species_genre.map((item: Array<string>) => new SpeciesGenre(item))
-            return listOfSpeciesGenres
-        } catch (e) {
-            if (e.message.includes("JWTExpired")) {
-                return new UseCaseError("JWT expired", 401)
-
-            }
-            return new UseCaseError(e.message, 400)
-        }
-    }
-
     async queryListOfSpeciesOrigins(): Promise<Array<string> | UseCaseError> {
-        let queryBuilder: HasuraQueryBuilder = new HasuraQueryBuilder('species_origin')
-        queryBuilder.addReturn('name')
-        const query: string = queryBuilder.getRequest()
+
+        const queryBuilder: Query = new Query('query')
+          .addReturnToQuery(new Query('species_origin')
+            .addReturnToQuery('name')
+          )
+
+        const query: string = queryBuilder.buildQuery()
 
         try {
             const data = await this.client.request(query)
@@ -165,18 +205,36 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
     }
 
     async queryListOfSpeciesByCategory(category: string): Promise<Array<Species> | UseCaseError> {
-        let queryBuilder: HasuraQueryBuilder = new HasuraQueryBuilder('species')
-        queryBuilder.addReturn('uuid', 'created_at', 'updated_at', 'category', 'publication_state', 'naming {name, species_genre {name}}')
-        queryBuilder.addParam('$category', 'species_categories_enum', category)
-        queryBuilder.addWhere('category', '_eq', '$category')
-        queryBuilder.addOrderBy('created_at')
 
-        const query: string = queryBuilder.getRequest()
+        const queryBuilder: Query = new Query('query')
+        const speciesSubQuery: Query = new Query('species')
+          .addReturnToQuery('uuid')
+          .addReturnToQuery('created_at')
+          .addReturnToQuery('updated_at')
+          .addReturnToQuery('category')
+          .addReturnToQuery('publication_state')
+          .addReturnToQuery(new Query('naming')
+            .addReturnToQuery('name')
+            .addReturnToQuery(new Query('species_genre')
+              .addReturnToQuery('name')
+            )
+          )
+
+        speciesSubQuery.constraints = new Constraints()
+        speciesSubQuery.constraints.where = new ConstraintPart('where').addConstraint([
+          new ConstraintPart('category').addConstraint([new ConstraintPart('_eq').addConstraint(category)])
+        ])
+
+        speciesSubQuery.constraints.orderBy = new ConstraintPart('order_by').addConstraint([
+            new ConstraintPart('created_at').addConstraint('asc')
+          ])
+
+        queryBuilder.addReturnToQuery(speciesSubQuery)
+
+        const query: string = queryBuilder.buildQuery()
 
         try {
-            const data = await this.client.request(query, {
-                category: category
-            })
+            const data = await this.client.request(query)
 
             const listOfSpecies: Array<Species> = data.species.map((item: Array<string>) => new Species(item))
             return listOfSpecies
@@ -188,69 +246,23 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
         }
     }
 
-    async mutationCreateSpeciesFamily(speciesFamily: SpeciesFamily): Promise<string | UseCaseError> {
-        let queryBuilder: HasuraMutationInsertBuilder = new HasuraMutationInsertBuilder('insert_species_family_one')
-        queryBuilder.addParam('$category', 'species_categories_enum', speciesFamily.category)
-        queryBuilder.addParam('$name', 'String', speciesFamily.name)
-        queryBuilder.addInsert('category', '$category')
-        queryBuilder.addInsert('name', '$name')
-        queryBuilder.addReturn('uuid')
-
-        const mutation: string = queryBuilder.getRequest()
-
-        try {
-            const data = await this.client.request(mutation, {
-                category: speciesFamily.category,
-                name: speciesFamily.name,
-            })
-            return data.insert_species_family_one.uuid
-        } catch (e) {
-            if (e.message.includes("JWTExpired")) {
-                return new UseCaseError("JWT expired", 401)
-            }
-            return new UseCaseError(e.message, 400)
-        }
-    }
-
-    async mutationCreateSpeciesGenre(speciesGenre: SpeciesGenre): Promise<string | UseCaseError> {
-        let queryBuilder: HasuraMutationInsertBuilder = new HasuraMutationInsertBuilder('insert_species_genre_one')
-        queryBuilder.addParam('$category', 'species_categories_enum', speciesGenre.category)
-        queryBuilder.addParam('$name', 'String', speciesGenre.name)
-        queryBuilder.addInsert('category', '$category')
-        queryBuilder.addInsert('name', '$name')
-        queryBuilder.addReturn('uuid')
-
-        const mutation: string = queryBuilder.getRequest()
-
-        try {
-            const data = await this.client.request(mutation, {
-                category: speciesGenre.category,
-                name: speciesGenre.name,
-            })
-            return data.insert_species_genre_one.uuid
-        } catch (e) {
-            if (e.message.includes("JWTExpired")) {
-                return new UseCaseError("JWT expired", 401)
-            }
-            return new UseCaseError(e.message, 400)
-        }
-    }
-
     async mutationCreateSpecies(species: Species): Promise<string | UseCaseError> {
-        let queryBuilder: HasuraMutationInsertBuilder = new HasuraMutationInsertBuilder('insert_species_one')
+        const queryBuilder: Query = new Query('mutation')
+        const insertSpeciesOneSubQuery : Query = new Query('insert_species_one')
+          .addReturnToQuery('uuid')
 
-        queryBuilder.addParam('$category', 'species_categories_enum', species.category)
+        insertSpeciesOneSubQuery.constraints = new Constraints()
+        insertSpeciesOneSubQuery.constraints.set = new ConstraintPart('object')
+          .addConstraint([
+            new ConstraintPart('category').addConstraint(species.category)
+          ])
 
-        queryBuilder.addInsert('category', '$category')
+        queryBuilder.addReturnToQuery(insertSpeciesOneSubQuery)
 
-        queryBuilder.addReturn('uuid')
-
-        const mutation: string = queryBuilder.getRequest()
+        const mutation: string = queryBuilder.buildQuery()
 
         try {
-            const data = await this.client.request(mutation, {
-                category: species.category,
-            })
+            const data = await this.client.request(mutation)
             return data.insert_species_one.uuid
         } catch (e) {
             if (e.message.includes("JWTExpired")) {
@@ -261,24 +273,27 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
     }
 
     async mutationUpdateOrigin(uuid: string, origin: string): Promise<string | Array<UseCaseError>> {
-        let queryBuilder: HasuraMutationUpdateBuilder = new HasuraMutationUpdateBuilder('update_species_by_pk')
 
-        queryBuilder.addParam('$uuid', 'uuid!', uuid)
-        queryBuilder.addParam('$origin', 'species_origin_enum', origin)
+        const queryBuilder: Query = new Query('mutation')
+        const updateSpeciesByPkSubQuery: Query = new Query('update_species_by_pk')
+          .addReturnToQuery('origin')
 
-        queryBuilder.addPkColumn('uuid', '$uuid')
+        updateSpeciesByPkSubQuery.constraints = new Constraints()
+        updateSpeciesByPkSubQuery.constraints.where = new ConstraintPart('pk_columns')
+          .addConstraint([
+            new ConstraintPart('uuid').addConstraint('"' + uuid + '"')
+          ])
+        updateSpeciesByPkSubQuery.constraints.set = new ConstraintPart('_set')
+          .addConstraint([
+            new ConstraintPart('origin').addConstraint(origin)
+          ])
 
-        queryBuilder.addInsert('origin', '$origin')
+        queryBuilder.addReturnToQuery(updateSpeciesByPkSubQuery)
 
-        queryBuilder.addReturn('origin')
-
-        const mutation: string = queryBuilder.getRequest()
+        const mutation: string = queryBuilder.buildQuery()
 
         try {
-            const data = await this.client.request(mutation, {
-                uuid: uuid,
-                origin: origin
-            })
+            const data = await this.client.request(mutation)
 
             return data.update_species_by_pk.origin
         } catch (e) {
@@ -289,350 +304,28 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
         }
     }
 
-    async mutationCreateNaming(speciesNaming: SpeciesNaming): Promise<string | UseCaseError> {
-        let queryBuilder: HasuraMutationInsertBuilder = new HasuraMutationInsertBuilder('insert_species_naming_one')
-        queryBuilder.addParam('$genre', 'uuid', speciesNaming.species_genre.uuid)
-        queryBuilder.addParam('$family', 'uuid', speciesNaming.species_family.uuid)
-        queryBuilder.addParam('$name', 'String', speciesNaming.name)
-        queryBuilder.addParam('$common_names', 'jsonb', speciesNaming.common_names)
-        queryBuilder.addParam('$old_names', 'jsonb', speciesNaming.old_names)
-        queryBuilder.addParam('$species_uuid', 'uuid', speciesNaming.species_uid)
-
-        queryBuilder.addInsert('genre_uuid', '$genre')
-        queryBuilder.addInsert('family_uuid', '$family')
-        queryBuilder.addInsert('name', '$name')
-        queryBuilder.addInsert('common_names', '$common_names')
-        queryBuilder.addInsert('old_names', '$old_names')
-        queryBuilder.addInsert('species_uuid', '$species_uuid')
-        queryBuilder.addReturn('uuid')
-
-        const mutation: string = queryBuilder.getRequest()
-        const variables: object = {
-            genre: speciesNaming.species_genre.uuid,
-            family: speciesNaming.species_family.uuid,
-            name: speciesNaming.name,
-            common_names: speciesNaming.common_names,
-            old_names: speciesNaming.old_names,
-            species_uuid: speciesNaming.species_uid
-        }
-
-        try {
-            const data = await this.client.request(mutation, variables)
-            return data.insert_species_naming_one.uuid
-        } catch (e) {
-            if (e.message.includes("JWTExpired")) {
-                return new UseCaseError("JWT expired", 401)
-            }
-            return new UseCaseError(e.message, 400)
-        }
-    }
-
-    async mutationAddNamingToSpecies(speciesNaming: SpeciesNaming): Promise<SpeciesNaming | UseCaseError> {
-
-        let queryBuilder: HasuraMutationUpdateBuilder = new HasuraMutationUpdateBuilder('update_species_by_pk')
-
-        queryBuilder.addParam('$speciesUuid', 'uuid!', speciesNaming.species_uid)
-        queryBuilder.addParam('$namingUuid', 'uuid', speciesNaming.uuid)
-
-        queryBuilder.addPkColumn('uuid', '$speciesUuid')
-
-        queryBuilder.addInsert('naming_uuid', '$namingUuid')
-
-        queryBuilder.addReturn('uuid')
-
-        const mutation: string = queryBuilder.getRequest()
-
-        try {
-            await this.client.request(mutation, {
-                namingUuid: speciesNaming.uuid,
-                speciesUuid: speciesNaming.species_uid,
-            })
-            return speciesNaming
-        } catch (e) {
-            if (e.message.includes("JWTExpired")) {
-                return new UseCaseError("JWT expired", 401)
-            }
-
-            return new UseCaseError(e.message, 400)
-        }
-    }
-
-    async mutationUpdateSpeciesNaming(speciesNaming: SpeciesNaming): Promise<string | UseCaseError> {
-        let queryBuilder: HasuraMutationUpdateBuilder = new HasuraMutationUpdateBuilder('update_species_naming_by_pk')
-        queryBuilder.addParam('$uuid', 'uuid!', speciesNaming.uuid)
-        queryBuilder.addParam('$genre', 'uuid', speciesNaming.species_genre.uuid)
-        queryBuilder.addParam('$family', 'uuid', speciesNaming.species_family.uuid)
-        queryBuilder.addParam('$name', 'String', speciesNaming.name)
-        queryBuilder.addParam('$common_names', 'jsonb', speciesNaming.common_names)
-        queryBuilder.addParam('$old_names', 'jsonb', speciesNaming.old_names)
-        queryBuilder.addPkColumn('uuid', '$uuid')
-        queryBuilder.addInsert('genre_uuid', '$genre')
-        queryBuilder.addInsert('family_uuid', '$family')
-        queryBuilder.addInsert('name', '$name')
-        queryBuilder.addInsert('common_names', '$common_names')
-        queryBuilder.addInsert('old_names', '$old_names')
-        queryBuilder.addReturn('uuid')
-
-        const mutation: string = queryBuilder.getRequest()
-        const variables: object = {
-            uuid: speciesNaming.uuid,
-            genre: speciesNaming.species_genre.uuid,
-            family: speciesNaming.species_family.uuid,
-            name: speciesNaming.name,
-            common_names: speciesNaming.common_names,
-            old_names: speciesNaming.old_names
-        }
-
-        try {
-            const data = await this.client.request(mutation, variables)
-            return data.update_species_naming_by_pk.uuid
-        } catch (e) {
-            if (e.message.includes("JWTExpired")) {
-                return new UseCaseError("JWT expired", 401)
-            }
-            return new UseCaseError(e.message, 400)
-        }
-    }
-
-    async mutationCreateWaterConstraints(waterConstraints: WaterConstraints): Promise<string | Array<UseCaseError>> {
-        let queryBuilder: HasuraMutationInsertBuilder = new HasuraMutationInsertBuilder('insert_water_constraints_one')
-        queryBuilder.addParam('$ph_min', 'numeric', waterConstraints.ph_min)
-        queryBuilder.addParam('$ph_max', 'numeric', waterConstraints.ph_max)
-        queryBuilder.addParam('$gh_min', 'Int', waterConstraints.gh_min)
-        queryBuilder.addParam('$gh_max', 'Int', waterConstraints.gh_max)
-        queryBuilder.addParam('$temp_min', 'Int', waterConstraints.temp_min)
-        queryBuilder.addParam('$temp_max', 'Int', waterConstraints.temp_max)
-        queryBuilder.addParam('$species_uuid', 'uuid', waterConstraints.species_uuid)
-
-        queryBuilder.addInsert('ph_min', '$ph_min')
-        queryBuilder.addInsert('ph_max', '$ph_max')
-        queryBuilder.addInsert('gh_min', '$gh_min')
-        queryBuilder.addInsert('gh_max', '$gh_max')
-        queryBuilder.addInsert('temp_min', '$temp_min')
-        queryBuilder.addInsert('temp_max', '$temp_max')
-        queryBuilder.addInsert('species_uuid', '$species_uuid')
-
-        queryBuilder.addReturn('uuid')
-        const mutation: string = queryBuilder.getRequest()
-
-        try {
-            const data = await this.client.request(mutation, {
-                ph_min: waterConstraints.ph_min,
-                ph_max: waterConstraints.ph_max,
-                gh_min: waterConstraints.gh_min,
-                gh_max: waterConstraints.gh_max,
-                temp_min: waterConstraints.temp_min,
-                temp_max: waterConstraints.temp_max,
-                species_uuid: waterConstraints.species_uuid
-            })
-            return data.insert_water_constraints_one.uuid
-        } catch (e) {
-            let errors: Array<UseCaseError> = []
-            if (e.message.includes("JWTExpired")) {
-                errors.push(new UseCaseError("JWT expired", 401))
-                return errors
-            }
-            errors.push(new UseCaseError(e.message, 400))
-            return errors
-        }
-
-    }
-
-    async mutationAddWaterConstraintsToSpecies(waterConstraints: WaterConstraints): Promise<WaterConstraints | UseCaseError> {
-
-        let queryBuilder: HasuraMutationUpdateBuilder = new HasuraMutationUpdateBuilder('update_species_by_pk')
-
-        queryBuilder.addParam('$speciesUuid', 'uuid!', waterConstraints.species_uuid)
-        queryBuilder.addParam('$waterConstraintsUuid', 'uuid', waterConstraints.uuid)
-
-        queryBuilder.addPkColumn('uuid', '$speciesUuid')
-
-        queryBuilder.addInsert('water_constraints_uuid', '$waterConstraintsUuid')
-
-        queryBuilder.addReturn('uuid')
-
-        const mutation: string = queryBuilder.getRequest()
-
-        try {
-            await this.client.request(mutation, {
-                waterConstraintsUuid: waterConstraints.uuid,
-                speciesUuid: waterConstraints.species_uuid,
-            })
-            return waterConstraints
-        } catch (e) {
-            if (e.message.includes("JWTExpired")) {
-                return new UseCaseError("JWT expired", 401)
-            }
-
-            return new UseCaseError(e.message, 400)
-        }
-    }
-
-    async mutationEditWaterConstraints(waterConstraints: WaterConstraints): Promise<WaterConstraints | Array<UseCaseError>> {
-        let queryBuilder: HasuraMutationUpdateBuilder = new HasuraMutationUpdateBuilder('update_water_constraints_by_pk')
-
-        queryBuilder.addParam('$uuid', 'uuid!', waterConstraints.uuid)
-        queryBuilder.addParam('$ph_min', 'numeric', waterConstraints.ph_min)
-        queryBuilder.addParam('$ph_max', 'numeric', waterConstraints.ph_max)
-        queryBuilder.addParam('$gh_min', 'Int', waterConstraints.gh_min)
-        queryBuilder.addParam('$gh_max', 'Int', waterConstraints.gh_max)
-        queryBuilder.addParam('$temp_min', 'Int', waterConstraints.temp_min)
-        queryBuilder.addParam('$temp_max', 'Int', waterConstraints.temp_max)
-
-        queryBuilder.addPkColumn('uuid', '$uuid')
-
-        queryBuilder.addInsert('ph_min', '$ph_min')
-        queryBuilder.addInsert('ph_max', '$ph_max')
-        queryBuilder.addInsert('gh_min', '$gh_min')
-        queryBuilder.addInsert('gh_max', '$gh_max')
-        queryBuilder.addInsert('temp_min', '$temp_min')
-        queryBuilder.addInsert('temp_max', '$temp_max')
-
-        queryBuilder.addReturn('uuid')
-
-        const mutation: string = queryBuilder.getRequest()
-
-        try {
-            await this.client.request(mutation, {
-                uuid: waterConstraints.uuid,
-                ph_min: waterConstraints.ph_min,
-                ph_max: waterConstraints.ph_max,
-                gh_min: waterConstraints.gh_min,
-                gh_max: waterConstraints.gh_max,
-                temp_min: waterConstraints.temp_min,
-                temp_max: waterConstraints.temp_max,
-            })
-
-            return waterConstraints
-        } catch (e) {
-            if (e.message.includes("JWTExpired")) {
-                return [new UseCaseError("JWT expired", 401)]
-            }
-            return [new UseCaseError(e.message, 400)]
-        }
-
-    }
-
-    async mutationCreateAnimalSpecs(animalSpecs: AnimalSpecs): Promise<string | Array<UseCaseError>> {
-        let queryBuilder: HasuraMutationInsertBuilder = new HasuraMutationInsertBuilder('insert_animal_specs_one')
-        queryBuilder.addParam('$male_size', 'Int', animalSpecs.male_size)
-        queryBuilder.addParam('$female_size', 'Int', animalSpecs.female_size)
-        queryBuilder.addParam('$longevity_in_years', 'Int', animalSpecs.longevity_in_years)
-        queryBuilder.addParam('$species_uuid', 'uuid', animalSpecs.species_uuid)
-
-        queryBuilder.addInsert('male_size', '$male_size')
-        queryBuilder.addInsert('female_size', '$female_size')
-        queryBuilder.addInsert('longevity_in_years', '$longevity_in_years')
-        queryBuilder.addInsert('species_uuid', '$species_uuid')
-
-        queryBuilder.addReturn('uuid')
-        const mutation: string = queryBuilder.getRequest()
-
-        try {
-            const data = await this.client.request(mutation, {
-                male_size: animalSpecs.male_size,
-                female_size: animalSpecs.female_size,
-                longevity_in_years: animalSpecs.longevity_in_years,
-                species_uuid: animalSpecs.species_uuid
-            })
-            return data.insert_animal_specs_one.uuid
-        } catch (e) {
-            let errors: Array<UseCaseError> = []
-            if (e.message.includes("JWTExpired")) {
-                errors.push(new UseCaseError("JWT expired", 401))
-                return errors
-            }
-            errors.push(new UseCaseError(e.message, 400))
-            return errors
-        }
-
-    }
-
-    async mutationAddAnimalSpecsToSpecies(animalSpecs: AnimalSpecs): Promise<AnimalSpecs | UseCaseError> {
-
-        let queryBuilder: HasuraMutationUpdateBuilder = new HasuraMutationUpdateBuilder('update_species_by_pk')
-
-        queryBuilder.addParam('$speciesUuid', 'uuid!', animalSpecs.species_uuid)
-        queryBuilder.addParam('$animalSpecsUuid', 'uuid', animalSpecs.uuid)
-
-        queryBuilder.addPkColumn('uuid', '$speciesUuid')
-
-        queryBuilder.addInsert('animal_specs_uuid', '$animalSpecsUuid')
-
-        queryBuilder.addReturn('uuid')
-
-        const mutation: string = queryBuilder.getRequest()
-
-        try {
-            await this.client.request(mutation, {
-                animalSpecsUuid: animalSpecs.uuid,
-                speciesUuid: animalSpecs.species_uuid,
-            })
-            return animalSpecs
-        } catch (e) {
-            if (e.message.includes("JWTExpired")) {
-                return new UseCaseError("JWT expired", 401)
-            }
-
-            return new UseCaseError(e.message, 400)
-        }
-    }
-
-    async mutationEditAnimalSpecs(animalSpecs: AnimalSpecs): Promise<AnimalSpecs | Array<UseCaseError>> {
-        let queryBuilder: HasuraMutationUpdateBuilder = new HasuraMutationUpdateBuilder('update_animal_specs_by_pk')
-
-        queryBuilder.addParam('$uuid', 'uuid!', animalSpecs.uuid)
-        queryBuilder.addParam('$male_size', 'Int', animalSpecs.male_size)
-        queryBuilder.addParam('$female_size', 'Int', animalSpecs.female_size)
-        queryBuilder.addParam('$longevity_in_years', 'Int', animalSpecs.longevity_in_years)
-
-        queryBuilder.addPkColumn('uuid', '$uuid')
-
-        queryBuilder.addInsert('male_size', '$male_size')
-        queryBuilder.addInsert('female_size', '$female_size')
-        queryBuilder.addInsert('longevity_in_years', '$longevity_in_years')
-
-        queryBuilder.addReturn('uuid')
-
-        const mutation: string = queryBuilder.getRequest()
-
-        try {
-            await this.client.request(mutation, {
-                uuid: animalSpecs.uuid,
-                male_size: animalSpecs.male_size,
-                female_size: animalSpecs.female_size,
-                longevity_in_years: animalSpecs.longevity_in_years,
-            })
-
-            return animalSpecs
-        } catch (e) {
-            if (e.message.includes("JWTExpired")) {
-                return [new UseCaseError("JWT expired", 401)]
-            }
-            return [new UseCaseError(e.message, 400)]
-        }
-
-    }
-
     async mutationUpdatePublicationState(uuid: string, nextState: string): Promise<string | Array<UseCaseError>> {
-        let queryBuilder: HasuraMutationUpdateBuilder = new HasuraMutationUpdateBuilder('update_species_by_pk')
+        const queryBuilder: Query = new Query('mutation')
+        const updateSpeciesByPkSubQuery: Query = new Query('update_species_by_pk')
+          .addReturnToQuery('publication_state')
 
-        queryBuilder.addParam('$uuid', 'uuid!', uuid)
-        queryBuilder.addParam('$nextState', 'publication_state_enum', nextState)
+        updateSpeciesByPkSubQuery.constraints = new Constraints()
+        updateSpeciesByPkSubQuery.constraints.where = new ConstraintPart('pk_columns')
+          .addConstraint([
+            new ConstraintPart('uuid').addConstraint('"' + uuid + '"')
+          ])
 
-        queryBuilder.addPkColumn('uuid', '$uuid')
+        updateSpeciesByPkSubQuery.constraints.set = new ConstraintPart('_set')
+          .addConstraint([
+            new ConstraintPart('publication_state').addConstraint(nextState)
+          ])
 
-        queryBuilder.addInsert('publication_state', '$nextState')
+        queryBuilder.addReturnToQuery(updateSpeciesByPkSubQuery)
 
-        queryBuilder.addReturn('publication_state')
-
-        const mutation: string = queryBuilder.getRequest()
+        const mutation: string = queryBuilder.buildQuery()
 
         try {
-            const data = await this.client.request(mutation, {
-                uuid: uuid,
-                nextState: nextState
-            })
+            const data = await this.client.request(mutation)
 
             return data.update_species_by_pk.publication_state
         } catch (e) {
@@ -644,20 +337,22 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
     }
 
     async mutationDeleteSpecies(uuid: string): Promise<boolean | Array<UseCaseError>> {
-        let queryBuilder: HasuraMutationDeleteBuilder = new HasuraMutationDeleteBuilder('delete_species_by_pk')
+        const queryBuilder: Query = new Query('mutation')
+        const deleteSpeciesByPkSubQuery: Query = new Query('delete_species_by_pk')
+          .addReturnToQuery('uuid')
 
-        queryBuilder.addParam('$uuid', 'uuid!', uuid)
+        deleteSpeciesByPkSubQuery.constraints = new Constraints()
+        deleteSpeciesByPkSubQuery.constraints.where = new ConstraintPart('pk_columns')
+          .addConstraint([
+            new ConstraintPart('uuid').addConstraint('"' + uuid + '"')
+          ])
 
-        queryBuilder.addPkColumn('uuid', '$uuid')
+        queryBuilder.addReturnToQuery(deleteSpeciesByPkSubQuery)
 
-        queryBuilder.addReturn('uuid')
-
-        const mutation: string = queryBuilder.getRequest()
+        const mutation: string = queryBuilder.buildQuery()
 
         try {
-            await this.client.request(mutation, {
-                uuid: uuid
-            })
+            await this.client.request(mutation)
 
             return true
         } catch (e) {

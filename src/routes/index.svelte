@@ -24,6 +24,7 @@
         const user: Result = await userUseCase.login(formElements.emailInput.value, formElements.passwordInput.value)
 
         if (user.isSuccessful()) {
+            formElements.loginButton.setLoading(false)
             return goto('/admin')
         }
 
