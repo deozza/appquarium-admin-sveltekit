@@ -2,10 +2,6 @@
     import BaseNumberInputModel from "./BaseNumberInputModel";
 
     export let baseNumberInputModel: BaseNumberInputModel
-
-    function handleInput(e) {
-        baseNumberInputModel.value = e.target.value;
-    }
 </script>
 
 <div>
@@ -19,13 +15,13 @@
             name={baseNumberInputModel.name}
             on:change
             on:focusout
-            on:input={handleInput}
+            on:input
             placeholder={baseNumberInputModel.placeholder}
             readonly={baseNumberInputModel.readonly === true ? 'readonly' : ''}
             required={baseNumberInputModel.required === true ? 'required' : ''}
             step={baseNumberInputModel.step}
             type="number"
-            value={baseNumberInputModel.value}
+            bind:value={baseNumberInputModel.value}
     >
 
     {#if baseNumberInputModel.error}
