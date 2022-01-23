@@ -7,7 +7,7 @@ import type SpeciesGenresAdapterInterface from './AdapterInterface';
 import SpeciesGenre from '../../../entities/SpeciesGenre';
 
 export default class SpeciesGenresHasuraAdapter extends HasuraClient implements SpeciesGenresAdapterInterface {
-	async queryListOfSpeciesGenres(category: string): Promise<Array<SpeciesGenre> | UseCaseError> {
+	async queryListOfSpeciesGenresByCategory(category: string): Promise<Array<SpeciesGenre> | UseCaseError> {
 
 		const queryBuilder: Query = new Query('query')
 

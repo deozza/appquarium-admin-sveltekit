@@ -7,7 +7,7 @@ import Constraints from '../../../../../adapters/hasura/HasuraRequestBuilderV2/C
 import ConstraintPart from '../../../../../adapters/hasura/HasuraRequestBuilderV2/ConstraintPart';
 
 export default class SpeciesFamiliesHasuraAdapter extends HasuraClient implements SpeciesFamiliesAdapterInterface {
-	async queryListOfSpeciesFamilies(category: string): Promise<Array<SpeciesFamily> | UseCaseError> {
+	async queryListOfSpeciesFamiliesByCategory(category: string): Promise<Array<SpeciesFamily> | UseCaseError> {
 
 		const queryBuilder: Query = new Query('query')
 
