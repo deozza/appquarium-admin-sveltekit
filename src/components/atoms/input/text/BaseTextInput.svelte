@@ -3,6 +3,9 @@
 
     export let baseTextInputModel: BaseTextInputModel
 
+    function handleInput(e) {
+        baseTextInputModel.value = e.target.value;
+    }
 </script>
 
 <div>
@@ -17,12 +20,12 @@
             name={baseTextInputModel.name}
             on:change
             on:focusout
-            on:input
+            on:input={handleInput}
             placeholder={baseTextInputModel.placeholder}
             readonly={baseTextInputModel.readonly === true ? 'readonly' : ''}
             required={baseTextInputModel.required === true ? 'required' : ''}
             type={baseTextInputModel.type}
-            bind:value={baseTextInputModel.value}
+            value={baseTextInputModel.value}
     >
 
     {#if baseTextInputModel.error}
