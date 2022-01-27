@@ -10,22 +10,22 @@
 
 <div>
     <input
-            class="w-full py-2 px-3 border rounded-md border-black px-2"
-            class:border-red-500={baseTextInputModel.error === true}
-            class:text-red-500={baseTextInputModel.error === true}
-            id={baseTextInputModel.id}
-            list={baseTextInputModel.datalist !== null ? baseTextInputModel.datalist : null}
-            maxlength={baseTextInputModel.maxlength}
-            minlength={baseTextInputModel.minlength}
-            name={baseTextInputModel.name}
-            on:change
-            on:focusout
-            on:input={handleInput}
-            placeholder={baseTextInputModel.placeholder}
-            readonly={baseTextInputModel.readonly === true ? 'readonly' : ''}
-            required={baseTextInputModel.required === true ? 'required' : ''}
-            type={baseTextInputModel.type}
-            value={baseTextInputModel.value}
+      class="w-full py-2 px-3 border rounded-md border-black px-2 text-black"
+      class:border-red-500={baseTextInputModel.error === true}
+      class:text-red-500={baseTextInputModel.error === true}
+      id={baseTextInputModel.id}
+      list={baseTextInputModel.datalist !== null ? baseTextInputModel.datalist : null}
+      maxlength={baseTextInputModel.maxlength}
+      minlength={baseTextInputModel.minlength}
+      name={baseTextInputModel.name}
+      on:change
+      on:focusout
+      on:input={handleInput}
+      placeholder={baseTextInputModel.placeholder}
+      readonly={baseTextInputModel.readonly === true ? 'readonly' : ''}
+      required={baseTextInputModel.required === true ? 'required' : ''}
+      type={baseTextInputModel.type}
+      value={baseTextInputModel.value}
     >
 
     {#if baseTextInputModel.error}

@@ -10,7 +10,7 @@
 
         if (browser && token.isFailed()) {
             return {
-                redirect: '/login',
+                redirect: '/',
                 status: 302
             }
         }
