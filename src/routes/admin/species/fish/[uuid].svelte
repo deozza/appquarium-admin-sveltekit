@@ -6,7 +6,7 @@
         namingFormHeader,
         waterConstraintsFormHeader,
         imageFormHeader,
-        animalSpecsFormHeader
+        specsFormHeader
     } from '../../../../components/pages/admin/[uuid]/Modeles';
 
     import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
@@ -159,7 +159,7 @@
         </section>
 
         <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
-            <BaseHeader baseHeaderModel={animalSpecsFormHeader}/>
+            <BaseHeader baseHeaderModel={specsFormHeader}/>
             <AnimalSpecsForm species={fish} user={user}/>
         </section>
 

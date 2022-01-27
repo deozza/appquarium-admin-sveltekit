@@ -42,7 +42,7 @@
             return
         }
 
-        return goto('/login')
+        return goto('/')
 
     }
 
