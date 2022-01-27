@@ -5,6 +5,7 @@ import InvalidSpeciesObjectError from "../../../../errors/app/species/global/ent
 import UnexpectedSpeciesPublicationStateError
   from "../../../../errors/app/species/global/entities/UnexpectedSpeciesPublicationStateError";
 import Image from "../../../file/entities/Image";
+import PlantSpecs from './PlantSpecs';
 
 export default class Species {
     uuid: string
@@ -14,6 +15,7 @@ export default class Species {
     naming: SpeciesNaming
     water_constraints: WaterConstraints
     animal_specs: AnimalSpecs
+    plant_specs: PlantSpecs
     origin: string
     publication_state: string
     category: string
@@ -27,6 +29,7 @@ export default class Species {
         this.naming = species.hasOwnProperty('naming') && species['naming'] !== null ? new SpeciesNaming(species['naming']) : new SpeciesNaming([])
         this.water_constraints = species.hasOwnProperty('water_constraints') && species['water_constraints'] !== null ? new WaterConstraints(species['water_constraints']) : new WaterConstraints([])
         this.animal_specs = species.hasOwnProperty('animal_specs') && species['animal_specs'] !== null ? new AnimalSpecs(species['animal_specs']) : new AnimalSpecs([])
+        this.plant_specs = species.hasOwnProperty('plant_specs') && species['plant_specs'] !== null ? new PlantSpecs(species['plant_specs']) : new PlantSpecs([])
         this.origin = species.hasOwnProperty('origin') ? species['origin'] : ''
         this.publication_state = species.hasOwnProperty('publication_state') ? species['publication_state'] : ''
         this.category = species.hasOwnProperty('category') ? species['category'] : ''

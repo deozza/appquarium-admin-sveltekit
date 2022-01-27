@@ -23,6 +23,9 @@ import WaterConstraintsHasuraAdapter from '../adapters/waterConstraints/HasuraAd
 import type WaterConstraintsAdapterInterface from '../adapters/waterConstraints/AdapterInterface';
 import AnimalSpecsHasuraAdapter from '../adapters/animalSpecs/HasuraAdapter';
 import type AnimalSpecsAdapterInterface from '../adapters/animalSpecs/AdapterInterface';
+import PlantSpecs from '../entities/PlantSpecs';
+import type PlantSpecsAdapterInterface from '../adapters/plantSpecs/AdapterInterface';
+import PlantSpecsHasuraAdapter from '../adapters/plantSpecs/HasuraAdapter';
 
 export default class Services implements ServicesInterface {
     private static checkWaterConstraintsAreValid(waterConstraints: WaterConstraints): Result {
@@ -175,6 +178,24 @@ export default class Services implements ServicesInterface {
         const adapter: AnimalSpecsAdapterInterface = new AnimalSpecsHasuraAdapter(jwt)
 
         return await adapter.mutationEditAnimalSpecs(animalSpecs)
+    }
+
+    async createPlantSpecs(jwt: string, plantSpecs: PlantSpecs): Promise<string | Array<UseCaseError>> {
+        const adapter: PlantSpecsAdapterInterface = new PlantSpecsHasuraAdapter(jwt)
+
+        return await adapter.mutationCreatePlantSpecs(plantSpecs)
+    }
+
+    async addPlantSpecsToSpecies(jwt: string, plantSpecs: PlantSpecs): Promise<PlantSpecs | UseCaseError> {
+        const adapter: PlantSpecsAdapterInterface = new PlantSpecsHasuraAdapter(jwt)
+
+        return await adapter.mutationAddPlantSpecsToSpecies(plantSpecs)
+    }
+
+    async updatePlantSpecs(jwt: string, plantSpecs: PlantSpecs): Promise<PlantSpecs | Array<UseCaseError>> {
+        const adapter: PlantSpecsAdapterInterface = new PlantSpecsHasuraAdapter(jwt)
+
+        return await adapter.mutationEditPlantSpecs(plantSpecs)
     }
 
     async checkNextState(species: Species, nextState: string): Promise<boolean | Array<UseCaseError>> {

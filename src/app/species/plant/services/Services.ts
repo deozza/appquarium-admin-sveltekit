@@ -7,6 +7,7 @@ import SpeciesFamily from "../../global/entities/SpeciesFamily";
 import SpeciesGenre from "../../global/entities/SpeciesGenre";
 
 import SpeciesHasuraAdapter from "../../global/adapters/HasuraAdapter";
+import PlantHasuraAdapter from "../adapters/HasuraAdapter";
 import SpeciesFamiliesHasuraAdapter from '../../global/adapters/speciesNaming/speciesFamily/HasuraAdapter';
 import SpeciesGenresHasuraAdapter from '../../global/adapters/speciesNaming/speciesGenre/HasuraAdapter';
 
@@ -16,6 +17,18 @@ export default class Services implements ServicesInterface {
         const adapter: SpeciesHasuraAdapter = new SpeciesHasuraAdapter(jwt)
 
         return await adapter.queryListOfSpeciesByCategory("plant")
+    }
+
+    async queryGetListOfGrowthSpeeds(jwt: string): Promise<Array<string> | UseCaseError> {
+        const adapter: PlantHasuraAdapter = new PlantHasuraAdapter(jwt)
+
+        return await adapter.queryListOfGrowthSpeeds()
+    }
+
+    async queryGetListOfZones(jwt: string): Promise<Array<string> | UseCaseError> {
+        const adapter: PlantHasuraAdapter = new PlantHasuraAdapter(jwt)
+
+        return await adapter.queryListOfZones()
     }
 
     async queryPlantFamilies(jwt: string): Promise<Array<SpeciesFamily> | UseCaseError> {
@@ -29,4 +42,6 @@ export default class Services implements ServicesInterface {
 
         return await adapter.queryListOfSpeciesGenresByCategory('plant')
     }
+
+
 }

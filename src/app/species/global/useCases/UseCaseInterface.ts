@@ -24,6 +24,10 @@ export default interface UseCaseInterface {
 
     addAnimalSpecs(jwt: string, species: Species): Promise<Result>
 
+    updatePlantSpecs(jwt: string, species: Species): Promise<Result>
+
+    addPlantSpecs(jwt: string, species: Species): Promise<Result>
+
     updatePublicationState(jwt: string, species: Species, nextState: string): Promise<Result>
 
     deleteSpecies(jwt: string, species: Species): Promise<Result>

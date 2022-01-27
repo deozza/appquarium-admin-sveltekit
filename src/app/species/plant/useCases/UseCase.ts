@@ -12,6 +12,7 @@ import {default as SpeciesServices} from "../../global/services/Services";
 import User from "../../../user/entities/User";
 
 export default class PlantUseCase implements UseCaseInterface {
+
     async getListOfPlants(jwt: string): Promise<Result> {
         let result: Result = new Result()
         const plantService: Services = new Services()
@@ -24,6 +25,38 @@ export default class PlantUseCase implements UseCaseInterface {
         }
 
         result.content = listOfPlants
+        result.addSuccess("Query is ok", 200)
+        return result
+    }
+
+    async getListOfGrowthSpeeds(jwt: string): Promise<Result> {
+        let result: Result = new Result()
+        const plantService: Services = new Services()
+
+        const listOfGrowthSpeeds: Array<string> | UseCaseError = await plantService.queryGetListOfGrowthSpeeds(jwt)
+
+        if (listOfGrowthSpeeds instanceof UseCaseError) {
+            result.errors.push(listOfGrowthSpeeds)
+            return result
+        }
+
+        result.content = listOfGrowthSpeeds
+        result.addSuccess("Query is ok", 200)
+        return result
+    }
+
+    async getListOfZones(jwt: string): Promise<Result> {
+        let result: Result = new Result()
+        const plantService: Services = new Services()
+
+        const listOfZones: Array<string> | UseCaseError = await plantService.queryGetListOfZones(jwt)
+
+        if (listOfZones instanceof UseCaseError) {
+            result.errors.push(listOfZones)
+            return result
+        }
+
+        result.content = listOfZones
         result.addSuccess("Query is ok", 200)
         return result
     }

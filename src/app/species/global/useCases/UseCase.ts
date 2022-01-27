@@ -11,6 +11,7 @@ import AnimalSpecs from "../entities/AnimalSpecs";
 import Services from "../services/Services";
 import {default as FileServices} from "../../../file/services/Service"
 import Image from "../../../file/entities/Image";
+import PlantSpecs from '../entities/PlantSpecs';
 
 export default class SpeciesUseCase implements UseCaseInterface {
 
@@ -278,6 +279,43 @@ export default class SpeciesUseCase implements UseCaseInterface {
         }
 
         result.content = animalSpecsUuid
+        result.addSuccess('Query is OK', 201)
+        return result
+    }
+
+    async updatePlantSpecs(jwt: string, species: Species): Promise<Result> {
+        let result: Result = new Result()
+        const speciesService: Services = new Services()
+        const updatedPlantSpecs: PlantSpecs | Array<UseCaseError> = await speciesService.updatePlantSpecs(jwt, species.plant_specs)
+
+        if (updatedPlantSpecs instanceof PlantSpecs) {
+            result.addSuccess('Query is OK', 200)
+            return result
+        }
+
+        result.errors = updatedPlantSpecs
+        return result
+    }
+
+    async addPlantSpecs(jwt: string, species: Species): Promise<Result> {
+        let result: Result = new Result()
+        const speciesService: Services = new Services()
+
+        const plantSpecsUuid: string | Array<UseCaseError> = await speciesService.createPlantSpecs(jwt, species.plant_specs)
+        if (typeof plantSpecsUuid !== 'string') {
+            result.errors = plantSpecsUuid
+            return result
+        }
+
+        species.plant_specs.uuid = plantSpecsUuid
+
+        const updatedSpecies: PlantSpecs | UseCaseError = await speciesService.addPlantSpecsToSpecies(jwt, species.plant_specs)
+        if (updatedSpecies instanceof UseCaseError) {
+            result.errors.push(updatedSpecies)
+            return result
+        }
+
+        result.content = plantSpecsUuid
         result.addSuccess('Query is OK', 201)
         return result
     }

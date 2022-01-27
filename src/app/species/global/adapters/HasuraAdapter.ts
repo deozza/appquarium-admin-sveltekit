@@ -1,22 +1,12 @@
 import type AdapterInterface from "./AdapterInterface";
 
 import UseCaseError from "../../../utils/useCasesResult/types/UseCaseError";
-import HasuraQueryBuilder from "../../../adapters/hasura/HasuraRequestBuilder/HasuraQueryBuilder";
-import HasuraMutationInsertBuilder from "../../../adapters/hasura/HasuraRequestBuilder/HasuraMutationInsertBuilder";
-import HasuraMutationUpdateBuilder from "../../../adapters/hasura/HasuraRequestBuilder/HasuraMutationUpdateBuilder";
-import HasuraMutationDeleteBuilder from "../../../adapters/hasura/HasuraRequestBuilder/HasuraMutationDeleteBuilder";
 
 import Species from "../entities/Species";
-import SpeciesGenre from "../entities/SpeciesGenre";
-import SpeciesFamily from "../entities/SpeciesFamily";
-import WaterConstraints from "../entities/WaterConstraints";
-import SpeciesNaming from "../entities/SpeciesNaming";
-import AnimalSpecs from "../entities/AnimalSpecs";
 import HasuraClient from "../../../adapters/hasura/HasuraClient";
 import Query from '../../../adapters/hasura/HasuraRequestBuilderV2/Query';
 import Constraints from '../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
 import ConstraintPart from '../../../adapters/hasura/HasuraRequestBuilderV2/ConstraintPart';
-import { insert } from 'svelte/internal';
 
 export default class HasuraAdapter extends HasuraClient implements AdapterInterface {
 
@@ -130,6 +120,17 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
             .addReturnToQuery('male_size')
             .addReturnToQuery('female_size')
             .addReturnToQuery('longevity_in_years')
+          )
+          .addReturnToQuery(new Query('plant_specs')
+            .addReturnToQuery('uuid')
+            .addReturnToQuery('created_at')
+            .addReturnToQuery('updated_at')
+            .addReturnToQuery('species_uuid')
+            .addReturnToQuery('size')
+            .addReturnToQuery('zone')
+            .addReturnToQuery('growth_speed')
+            .addReturnToQuery('need_in_fertilizer')
+            .addReturnToQuery('need_in_carbone')
           )
           .addReturnToQuery(new Query('medias')
             .addReturnToQuery('url')

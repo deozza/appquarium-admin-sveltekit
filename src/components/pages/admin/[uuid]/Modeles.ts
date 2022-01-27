@@ -19,7 +19,7 @@ export const waterConstraintsFormHeader: BaseHeaderModel = new BaseHeaderModel("
 	.setDisplaySizeOrTrowError('xxl')
 	.setSizeOrTrowError('h2')
 
-export const animalSpecsFormHeader: BaseHeaderModel = new BaseHeaderModel("Caractéristiques animales")
+export const specsFormHeader: BaseHeaderModel = new BaseHeaderModel("Caractéristiques")
 	.setDisplaySizeOrTrowError('xxl')
 	.setSizeOrTrowError('h2')
 

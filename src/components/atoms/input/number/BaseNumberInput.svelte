@@ -7,7 +7,7 @@
 
 <div>
     <input
-      className='w-full py-2 px-3 border rounded-md border-black px-2'
+      class='w-full py-2 px-3 border rounded-md border-black px-2'
       class:border-red-500={baseNumberInputModel.error === true}
       class:text-red-500={baseNumberInputModel.error === true}
       id={baseNumberInputModel.id}
@@ -25,7 +25,7 @@
     >
 
     {#if baseNumberInputModel.error}
-        <span className='text-red-500'>{baseNumberInputModel.errorMessage}</span>
+        <span class='text-red-500'>{baseNumberInputModel.errorMessage}</span>
     {/if}
 </div>
 

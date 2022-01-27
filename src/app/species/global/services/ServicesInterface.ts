@@ -4,6 +4,7 @@ import WaterConstraints from "../entities/WaterConstraints";
 import User from "../../../user/entities/User";
 import SpeciesNaming from "../entities/SpeciesNaming";
 import AnimalSpecs from "../entities/AnimalSpecs";
+import PlantSpecs from '../entities/PlantSpecs';
 
 export default interface ServicesInterface {
     queryTotalSpecies(jwt: string): Promise<number | null>
@@ -37,6 +38,12 @@ export default interface ServicesInterface {
     createAnimalSpecs(jwt: string, animalSpecs: AnimalSpecs): Promise<string | Array<UseCaseError>>
 
     addAnimalSpecsToSpecies(jwt: string, animalSpecs: AnimalSpecs): Promise<AnimalSpecs | UseCaseError>
+
+    updatePlantSpecs(jwt: string, plantSpecs: PlantSpecs): Promise<PlantSpecs | Array<UseCaseError>>
+
+    createPlantSpecs(jwt: string, plantSpecs: PlantSpecs): Promise<string | Array<UseCaseError>>
+
+    addPlantSpecsToSpecies(jwt: string, plantSpecs: PlantSpecs): Promise<PlantSpecs | UseCaseError>
 
     initNewSpecies(user: User, category: string): Species
 
