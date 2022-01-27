@@ -19,6 +19,12 @@ export default class UserUseCase implements UseCaseInterface {
             return result
         }
 
+        const userHasAdminPrivileges: boolean = Services.checkUserHasAdminPrivileges(user)
+        if(userHasAdminPrivileges === false){
+            result.addError('User is forbidden', 403)
+            return result
+        }
+
         user = userServices.setCookie(user)
 
         if (user === null) {

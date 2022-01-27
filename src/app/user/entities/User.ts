@@ -5,6 +5,7 @@ export default class User {
     email: string = ''
     jwt: string
     lastSignInTime: string = ''
+    roles: Array<string> | unknown = []
 
 
     constructor(jwt: string) {
@@ -21,6 +22,7 @@ export default class User {
 
         this.uid = decoded.user_id
         this.email = decoded.email
+        this.roles = decoded["https://hasura.io/jwt/claims"]["x-hasura-allowed-roles"]
 
         return decoded
     }

@@ -28,7 +28,7 @@
             return goto('/admin')
         }
 
-        if (user.errors[0].code === 404) {
+        if (user.errors[0].code === 404 || user.errors[0].code === 403) {
             formElements.emailInput.error = true
             formElements.passwordInput.error = true
             errorParagraph.setContent(currentPageState)

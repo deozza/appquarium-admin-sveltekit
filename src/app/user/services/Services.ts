@@ -16,6 +16,10 @@ export default class Services implements ServicesInterface {
         return await adapter.authenticateWithEmailAndPassword(email, password)
     }
 
+    static checkUserHasAdminPrivileges(user: User): boolean{
+        return user.roles.includes('superadmin')
+    }
+
     async getRefreshedToken(): Promise<string | null> {
         const adapter: AdapterInterface | null = new FirebaseAdapter()
 

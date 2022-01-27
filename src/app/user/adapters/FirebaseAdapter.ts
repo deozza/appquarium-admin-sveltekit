@@ -23,8 +23,7 @@ export default class FirebaseAdapter implements AdapterInterface {
             )
 
             const user: User = new User(await userFromFirebase.user?.getIdToken()!)
-            user.uid = userFromFirebase.user?.uid
-            user.email = userFromFirebase.user?.email
+            user.extractUserInfoFromJwt()
 
             return user
         } catch (e) {
