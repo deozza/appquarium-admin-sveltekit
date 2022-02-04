@@ -5,6 +5,8 @@ import User from "../../../user/entities/User";
 import SpeciesNaming from "../entities/SpeciesNaming";
 import AnimalSpecs from "../entities/AnimalSpecs";
 import PlantSpecs from '../entities/PlantSpecs';
+import AquariumConstraints from '../entities/AquariumConstraints';
+import AnimalBehaviour from '../entities/AnimalBehaviour';
 
 export default interface ServicesInterface {
     queryTotalSpecies(jwt: string): Promise<number | null>
@@ -16,6 +18,18 @@ export default interface ServicesInterface {
     querySpeciesCategories(jwt: string): Promise<Array<string> | UseCaseError>
 
     querySpeciesOrigins(jwt: string): Promise<Array<string> | UseCaseError>
+
+    queryAlimentations(jwt: string): Promise<Array<string> | UseCaseError>
+
+    queryAnimalZones(jwt: string): Promise<Array<string> | UseCaseError>
+
+    queryAquariumKinds(jwt: string): Promise<Array<string> | UseCaseError>
+
+    queryBehaviours(jwt: string): Promise<Array<string> | UseCaseError>
+
+    queryDecors(jwt: string): Promise<Array<string> | UseCaseError>
+
+    querySoilKinds(jwt: string): Promise<Array<string> | UseCaseError>
 
     createSpecies(jwt: string, species: Species): Promise<string | UseCaseError>
 
@@ -44,6 +58,18 @@ export default interface ServicesInterface {
     createPlantSpecs(jwt: string, plantSpecs: PlantSpecs): Promise<string | Array<UseCaseError>>
 
     addPlantSpecsToSpecies(jwt: string, plantSpecs: PlantSpecs): Promise<PlantSpecs | UseCaseError>
+
+    updateAquariumConstraints(jwt: string, aquariumConstraints: AquariumConstraints): Promise<AquariumConstraints | Array<UseCaseError>>
+
+    createAquariumConstraints(jwt: string, aquariumConstraints: AquariumConstraints): Promise<string | Array<UseCaseError>>
+
+    addAquariumConstraintsToSpecies(jwt: string, aquariumConstraints: AquariumConstraints): Promise<AquariumConstraints | UseCaseError>
+
+    updateAnimalBehaviour(jwt: string, animalBehaviour: AnimalBehaviour): Promise<AnimalBehaviour | Array<UseCaseError>>
+
+    createAnimalBehaviour(jwt: string, animalBehaviour: AnimalBehaviour): Promise<string | Array<UseCaseError>>
+
+    addAnimalBehaviourToSpecies(jwt: string, animalBehaviour: AnimalBehaviour): Promise<AnimalBehaviour | UseCaseError>
 
     initNewSpecies(user: User, category: string): Species
 

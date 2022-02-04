@@ -26,6 +26,12 @@ import type AnimalSpecsAdapterInterface from '../adapters/animalSpecs/AdapterInt
 import PlantSpecs from '../entities/PlantSpecs';
 import type PlantSpecsAdapterInterface from '../adapters/plantSpecs/AdapterInterface';
 import PlantSpecsHasuraAdapter from '../adapters/plantSpecs/HasuraAdapter';
+import AnimalBehaviour from '../entities/AnimalBehaviour';
+import type AnimalBehaviourAdapterInterface from '../adapters/animalBehaviour/AdapterInterface';
+import AnimalBehaviourHasuraAdapter from '../adapters/animalBehaviour/HasuraAdapter';
+import AquariumConstraints from '../entities/AquariumConstraints';
+import type AquariumConstraintsAdapterInterface from '../adapters/aquariumConstraints/AdapterInterface';
+import AquariumConstraintsHasuraAdapter from '../adapters/aquariumConstraints/HasuraAdapter';
 
 export default class Services implements ServicesInterface {
     private static checkWaterConstraintsAreValid(waterConstraints: WaterConstraints): Result {
@@ -68,6 +74,42 @@ export default class Services implements ServicesInterface {
         const adapter: AdapterInterface = new HasuraAdapter(jwt)
 
         return await adapter.queryListOfSpeciesCategories()
+    }
+
+    async queryAlimentations(jwt: string): Promise<Array<string> | UseCaseError> {
+        const adapter: AnimalBehaviourAdapterInterface = new AnimalBehaviourHasuraAdapter(jwt)
+
+        return await adapter.queryListOfAlimentations()
+    }
+
+    async queryAnimalZones(jwt: string): Promise<Array<string> | UseCaseError> {
+        const adapter: AnimalBehaviourAdapterInterface = new AnimalBehaviourHasuraAdapter(jwt)
+
+        return await adapter.queryListOfAnimalZones()
+    }
+
+    async queryAquariumKinds(jwt: string): Promise<Array<string> | UseCaseError> {
+        const adapter: AnimalBehaviourAdapterInterface = new AnimalBehaviourHasuraAdapter(jwt)
+
+        return await adapter.queryListOfAquariumKinds()
+    }
+
+    async queryBehaviours(jwt: string): Promise<Array<string> | UseCaseError> {
+        const adapter: AnimalBehaviourAdapterInterface = new AnimalBehaviourHasuraAdapter(jwt)
+
+        return await adapter.queryListOfBehaviours()
+    }
+
+    async queryDecors(jwt: string): Promise<Array<string> | UseCaseError> {
+        const adapter: AquariumConstraintsAdapterInterface = new AquariumConstraintsHasuraAdapter(jwt)
+
+        return await adapter.queryListOfDecors()
+    }
+
+    async querySoilKinds(jwt: string): Promise<Array<string> | UseCaseError> {
+        const adapter: AquariumConstraintsAdapterInterface = new AquariumConstraintsHasuraAdapter(jwt)
+
+        return await adapter.queryListOfSoilKinds()
     }
 
     async querySpeciesOrigins(jwt: string): Promise<Array<string> | UseCaseError> {
@@ -196,6 +238,42 @@ export default class Services implements ServicesInterface {
         const adapter: PlantSpecsAdapterInterface = new PlantSpecsHasuraAdapter(jwt)
 
         return await adapter.mutationEditPlantSpecs(plantSpecs)
+    }
+
+    async createAnimalBehaviour(jwt: string, animalBehaviour: AnimalBehaviour): Promise<string | Array<UseCaseError>> {
+        const adapter: AnimalBehaviourAdapterInterface = new AnimalBehaviourHasuraAdapter(jwt)
+
+        return await adapter.mutationCreateAnimalBehaviour(animalBehaviour)
+    }
+
+    async addAnimalBehaviourToSpecies(jwt: string, animalBehaviour: AnimalBehaviour): Promise<AnimalBehaviour | UseCaseError> {
+        const adapter: AnimalBehaviourAdapterInterface = new AnimalBehaviourHasuraAdapter(jwt)
+
+        return await adapter.mutationAddAnimalBehaviourToSpecies(animalBehaviour)
+    }
+
+    async updateAnimalBehaviour(jwt: string, animalBehaviour: AnimalBehaviour): Promise<AnimalBehaviour | Array<UseCaseError>> {
+        const adapter: AnimalBehaviourAdapterInterface = new AnimalBehaviourHasuraAdapter(jwt)
+
+        return await adapter.mutationEditAnimalBehaviour(animalBehaviour)
+    }
+
+    async createAquariumConstraints(jwt: string, aquariumConstraints: AquariumConstraints): Promise<string | Array<UseCaseError>> {
+        const adapter: AquariumConstraintsAdapterInterface = new AquariumConstraintsHasuraAdapter(jwt)
+
+        return await adapter.mutationCreateAquariumConstraints(aquariumConstraints)
+    }
+
+    async addAquariumConstraintsToSpecies(jwt: string, aquariumConstraints: AquariumConstraints): Promise<AquariumConstraints | UseCaseError> {
+        const adapter: AquariumConstraintsAdapterInterface = new AquariumConstraintsHasuraAdapter(jwt)
+
+        return await adapter.mutationAddAquariumConstraintsToSpecies(aquariumConstraints)
+    }
+
+    async updateAquariumConstraints(jwt: string, aquariumConstraints: AquariumConstraints): Promise<AquariumConstraints | Array<UseCaseError>> {
+        const adapter: AquariumConstraintsAdapterInterface = new AquariumConstraintsHasuraAdapter(jwt)
+
+        return await adapter.mutationEditAquariumConstraints(aquariumConstraints)
     }
 
     async checkNextState(species: Species, nextState: string): Promise<boolean | Array<UseCaseError>> {

@@ -12,9 +12,10 @@ import Services from "../services/Services";
 import {default as FileServices} from "../../../file/services/Service"
 import Image from "../../../file/entities/Image";
 import PlantSpecs from '../entities/PlantSpecs';
+import AnimalBehaviour from '../entities/AnimalBehaviour';
+import AquariumConstraints from '../entities/AquariumConstraints';
 
 export default class SpeciesUseCase implements UseCaseInterface {
-
     private static async handleNewSpeciesNaming(jwt: string, species: Species): Promise<Species | UseCaseError> {
         const speciesService: Services = new Services()
 
@@ -122,6 +123,103 @@ export default class SpeciesUseCase implements UseCaseInterface {
         }
 
         result.content = speciesOrigins
+        result.addSuccess("Query is ok", 200)
+        return result
+    }
+
+    async getAlimentations(jwt: string): Promise<Result> {
+        let result: Result = new Result()
+        const speciesService: Services = new Services()
+
+        const alimentations: Array<string> | UseCaseError = await speciesService.queryAlimentations(jwt)
+
+        if (alimentations instanceof UseCaseError) {
+            result.errors.push(alimentations)
+            return result
+        }
+
+        result.content = alimentations
+        result.addSuccess("Query is ok", 200)
+        return result
+    }
+
+    async getAnimalZones(jwt: string): Promise<Result> {
+        let result: Result = new Result()
+        const speciesService: Services = new Services()
+
+        const animalZones: Array<string> | UseCaseError = await speciesService.queryAnimalZones(jwt)
+
+        if (animalZones instanceof UseCaseError) {
+            result.errors.push(animalZones)
+            return result
+        }
+
+        result.content = animalZones
+        result.addSuccess("Query is ok", 200)
+        return result
+    }
+
+    async getAquariumKinds(jwt: string): Promise<Result> {
+        let result: Result = new Result()
+        const speciesService: Services = new Services()
+
+        const aquariumKinds: Array<string> | UseCaseError = await speciesService.queryAquariumKinds(jwt)
+
+        if (aquariumKinds instanceof UseCaseError) {
+            result.errors.push(aquariumKinds)
+            return result
+        }
+
+        result.content = aquariumKinds
+        result.addSuccess("Query is ok", 200)
+        return result
+    }
+
+    async getBehaviours(jwt: string): Promise<Result> {
+        let result: Result = new Result()
+        const speciesService: Services = new Services()
+
+        const behaviours: Array<string> | UseCaseError = await speciesService.queryBehaviours(jwt)
+
+        if (behaviours instanceof UseCaseError) {
+            result.errors.push(behaviours)
+            return result
+        }
+
+        result.content = behaviours
+        result.addSuccess("Query is ok", 200)
+        return result
+    }
+
+    async getDecors(jwt: string): Promise<Result> {
+        let result: Result = new Result()
+        const speciesService: Services = new Services()
+
+        const decors: Array<string> | UseCaseError = await speciesService.queryDecors(jwt)
+
+        if (decors instanceof UseCaseError) {
+            result.errors.push(decors)
+            return result
+        }
+
+        result.content = decors
+        result.addSuccess("Query is ok", 200)
+        return result
+    }
+
+
+    async getSoilKinds(jwt: string): Promise<Result> {
+        let result: Result = new Result()
+        const speciesService: Services = new Services()
+
+        const soilKinds: Array<string> | UseCaseError = await speciesService.querySoilKinds(jwt)
+
+        if (soilKinds instanceof UseCaseError) {
+            result.errors.push(soilKinds)
+            return result
+        }
+
+        result.content = soilKinds
         result.addSuccess("Query is ok", 200)
         return result
     }
@@ -320,6 +418,82 @@ export default class SpeciesUseCase implements UseCaseInterface {
         return result
     }
 
+
+    async addAnimalBehaviour(jwt: string, species: Species): Promise<Result> {
+        let result: Result = new Result()
+        const speciesService: Services = new Services()
+
+        const animalBehaviourUuid: string | Array<UseCaseError> = await speciesService.createAnimalBehaviour(jwt, species.animal_behaviour)
+        if (typeof animalBehaviourUuid !== 'string') {
+            result.errors = animalBehaviourUuid
+            return result
+        }
+
+        species.animal_behaviour.uuid = animalBehaviourUuid
+
+        const updatedSpecies: AnimalBehaviour | UseCaseError = await speciesService.addAnimalBehaviourToSpecies(jwt, species.animal_behaviour)
+        if (updatedSpecies instanceof UseCaseError) {
+            result.errors.push(updatedSpecies)
+            return result
+        }
+
+        result.content = animalBehaviourUuid
+        result.addSuccess('Query is OK', 201)
+        return result
+    }
+
+
+    async updateAnimalBehaviour(jwt: string, species: Species): Promise<Result> {
+        let result: Result = new Result()
+        const speciesService: Services = new Services()
+        const updatedAnimalBehaviour: AnimalBehaviour | Array<UseCaseError> = await speciesService.updateAnimalBehaviour(jwt, species.animal_behaviour)
+
+        if (updatedAnimalBehaviour instanceof AnimalBehaviour) {
+            result.addSuccess('Query is OK', 200)
+            return result
+        }
+
+        result.errors = updatedAnimalBehaviour
+        return result
+    }
+
+    async addAquariumConstraints(jwt: string, species: Species): Promise<Result> {
+        let result: Result = new Result()
+        const speciesService: Services = new Services()
+
+        const aquariumConstraintsUuid: string | Array<UseCaseError> = await speciesService.createAquariumConstraints(jwt, species.aquarium_constraints)
+        if (typeof aquariumConstraintsUuid !== 'string') {
+            result.errors = aquariumConstraintsUuid
+            return result
+        }
+
+        species.aquarium_constraints.uuid = aquariumConstraintsUuid
+
+        const updatedSpecies: AquariumConstraints | UseCaseError = await speciesService.addAquariumConstraintsToSpecies(jwt, species.aquarium_constraints)
+        if (updatedSpecies instanceof UseCaseError) {
+            result.errors.push(updatedSpecies)
+            return result
+        }
+
+        result.content = aquariumConstraintsUuid
+        result.addSuccess('Query is OK', 201)
+        return result
+    }
+
+    async updateAquariumConstraints(jwt: string, species: Species): Promise<Result> {
+        let result: Result = new Result()
+        const speciesService: Services = new Services()
+        const updatedAquariumConstraints: AquariumConstraints | Array<UseCaseError> = await speciesService.updateAquariumConstraints(jwt, species.aquarium_constraints)
+
+        if (updatedAquariumConstraints instanceof AquariumConstraints) {
+            result.addSuccess('Query is OK', 200)
+            return result
+        }
+
+        result.errors = updatedAquariumConstraints
+        return result
+    }
+
     async addFile(jwt: string, species: Species, image: Image) {
         const result: Result = new Result()
         const fileService: FileServices = new FileServices()
@@ -392,4 +566,5 @@ export default class SpeciesUseCase implements UseCaseInterface {
         result.addSuccess('Resource is deleted', 204)
         return result
     }
+
 }

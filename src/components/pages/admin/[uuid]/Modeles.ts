@@ -23,6 +23,14 @@ export const specsFormHeader: BaseHeaderModel = new BaseHeaderModel("Caractéris
 	.setDisplaySizeOrTrowError('xxl')
 	.setSizeOrTrowError('h2')
 
+export const animalBehaviourFormHeader: BaseHeaderModel = new BaseHeaderModel("Comportement")
+	.setDisplaySizeOrTrowError('xxl')
+	.setSizeOrTrowError('h2')
+
+export const aquariumConstraintsFormHeader: BaseHeaderModel = new BaseHeaderModel("Aquarium requis")
+	.setDisplaySizeOrTrowError('xxl')
+	.setSizeOrTrowError('h2')
+
 export const imageFormHeader: BaseHeaderModel = new BaseHeaderModel("Images")
 	.setDisplaySizeOrTrowError('xxl')
 	.setSizeOrTrowError('h2')
