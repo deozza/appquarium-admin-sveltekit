@@ -10,12 +10,11 @@
     import Result from '../../../../app/utils/useCasesResult/Result';
     import UserUseCase from '../../../../app/user/useCases/UseCase';
     import BaseSelectInput from '../../../atoms/input/select/BaseSelectInput.svelte';
-    import BaseOptionModel from '../../../atoms/input/select/BaseOptionModel';
+    import {plantZones, growthSpeeds} from '../../../../store/SpeciesStore';
+    import plant from '../../../../routes/admin/species/plant/index.svelte';
 
     export let species: Species = new Species([]);
     export let user: User = new User('');
-    export let growthSpeeds: Array<BaseOptionModel> = []
-    export let zones: Array<BaseOptionModel> = []
 
     formElements.sizeInput.value = species.plant_specs.size;
     formElements.zoneInput.value = species.plant_specs.zone;
@@ -86,7 +85,7 @@
         <li class="flex-c">
             <div class="flex-r ">
                 <BaseLabel baseLabelModel={formElements.zoneLabel}/>
-                <BaseSelectInput baseSelectInputModel={formElements.zoneInput} options={zones}/>
+                <BaseSelectInput baseSelectInputModel={formElements.zoneInput} options={$plantZones}/>
             </div>
         </li>
         <li class="flex-c">
@@ -122,7 +121,7 @@
         <li class="flex-c">
             <div class="flex-r ">
                 <BaseLabel baseLabelModel={formElements.growthSpeedLabel}/>
-                <BaseSelectInput baseSelectInputModel={formElements.growthSpeedInput} options={growthSpeeds}/>
+                <BaseSelectInput baseSelectInputModel={formElements.growthSpeedInput} options={$growthSpeeds}/>
 
             </div>
         </li>

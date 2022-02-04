@@ -3,6 +3,7 @@
     import UserUseCase from "../../app/user/useCases/UseCase";
     import Result from "../../app/utils/useCasesResult/Result";
     import {browser} from "$app/env";
+    import {loadEnums} from '../../store/SpeciesStore';
 
     export async function load({}) {
         const userUserCase: UserUseCase = new UserUseCase()
@@ -15,6 +16,7 @@
             }
         }
 
+        await loadEnums()
         return {}
     }
 
