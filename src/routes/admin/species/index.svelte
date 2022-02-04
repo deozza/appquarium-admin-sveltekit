@@ -8,23 +8,38 @@
     import UserUseCase from '../../../app/user/useCases/UseCase';
     import Result from '../../../app/utils/useCasesResult/Result';
     import SpeciesUseCase from '../../../app/species/global/useCases/UseCase';
+    import Constraints from '../../../app/adapters/hasura/HasuraRequestBuilderV2/Constraints';
     import {goto} from '$app/navigation';
     import { onMount } from 'svelte';
+    import { page } from '$app/stores'
 
     let listOfSpecies: Array<Species> = []
+    let totalOfSpecies: number = 0
+    let totalPages: number = 1
     let loadingSpecies: boolean = true
+    let itemsPerPage : number = 10
+    let currentPage: number | string = 1
 
     onMount(async () => {
-        listOfSpecies = await loadSpecies()
+        totalOfSpecies = await loadTotalOfSpecies()
+        
+        totalPages = computePagination(totalOfSpecies, itemsPerPage)
+        currentPage = $page.url.searchParams.get('page') !== null ? $page.url.searchParams.get('page') : 1
+        currentPage--
+        listOfSpecies = await loadSpecies(null, 10, currentPage)
         loadingSpecies = false
     })
 
-    async function loadSpecies(): Promise<Array<Species>>{
+    async function loadSpecies(filters, limit: number = itemsPerPage, currentPage = currentPage): Promise<Array<Species>>{
         const userUseCase: UserUseCase = new UserUseCase()
         const jwt: Result = userUseCase.getToken()
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
-        const listOfSpeciesFromHasura: Result = await speciesUseCase.getListOfSpecies(jwt.content)
+        let speciesConstraints: Constraints = new Constraints();
+        speciesConstraints.limit = limit
+        speciesConstraints.offset = currentPage * speciesConstraints.limit
+
+        const listOfSpeciesFromHasura: Result = await speciesUseCase.getListOfSpecies(jwt.content, speciesConstraints)
 
         if (listOfSpeciesFromHasura.isFailed()) {
             for (const error of listOfSpeciesFromHasura.errors) {
@@ -38,6 +53,41 @@
         }
 
         return listOfSpeciesFromHasura.content
+    }
+
+    async function loadTotalOfSpecies(): Promise<number>{
+        const userUseCase: UserUseCase = new UserUseCase()
+        const jwt: Result = userUseCase.getToken()
+
+        const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
+        const totalOfSpeciesFromHasura: Result = await speciesUseCase.getTotalSpecies(jwt.content)
+
+        if (totalOfSpeciesFromHasura.isFailed()) {
+            for (const error of totalOfSpeciesFromHasura.errors) {
+                if (error.code === 401) {
+                    userUseCase.logout()
+                    return goto('/')
+                }
+            }
+
+            return totalOfSpeciesFromHasura.content
+        }
+
+        return totalOfSpeciesFromHasura.content
+    }
+
+    function computePagination(totalSpecies: number, itemPerPages: number): number{
+        return Math.ceil(totalSpecies/itemPerPages)
+    }
+
+    async function loadSpeciesWithFilters(itemsPerPage: number = itemsPerPage, newPage: number = 1){
+        loadingSpecies = true
+        currentPage = newPage - 1
+        listOfSpecies = await loadSpecies(null, itemsPerPage, currentPage)
+        $page.url.searchParams.set('page', currentPage+'')
+        window.history.replaceState({}, '',$page.url.pathname + $page.url.search)
+
+        loadingSpecies = false
     }
 </script>
 
@@ -75,6 +125,16 @@
             {/each}
             </tbody>
         </table>
+
+        <div class='flex-r space-x-3 my-6'>
+            {#each Array(totalPages) as _, i}
+                {#if i === currentPage}
+                    <button disabled class='font-bold text-blue-500'>{i+1}</button>
+                {:else}
+                    <button on:click={e => loadSpeciesWithFilters(itemsPerPage, i+1)} class='text-blue-500'>{i+1}</button>
+                {/if}
+            {/each}
+        </div>
     {/if}
 
     <div class="flex-r">
