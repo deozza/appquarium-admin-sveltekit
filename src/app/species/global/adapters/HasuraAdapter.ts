@@ -32,7 +32,7 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
         }
     }
 
-    async queryListOfSpecies(): Promise<Array<Species> | UseCaseError> {
+    async queryListOfSpecies(speciesConstraints: Constraints): Promise<Array<Species> | UseCaseError> {
 
         const queryBuilder: Query = new Query('query')
 
@@ -49,11 +49,12 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
             )
           )
 
-        speciesSubQuery.constraints = new Constraints()
-        speciesSubQuery.constraints.orderBy = new ConstraintPart('order_by')
+        speciesConstraints.orderBy = new ConstraintPart('order_by')
           .addConstraint([
             new ConstraintPart('created_at').addConstraint('asc')
           ])
+
+        speciesSubQuery.constraints = speciesConstraints
 
         queryBuilder.addReturnToQuery(speciesSubQuery)
 

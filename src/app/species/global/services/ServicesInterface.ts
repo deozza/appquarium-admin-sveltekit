@@ -7,13 +7,14 @@ import AnimalSpecs from "../entities/AnimalSpecs";
 import PlantSpecs from '../entities/PlantSpecs';
 import AquariumConstraints from '../entities/AquariumConstraints';
 import AnimalBehaviour from '../entities/AnimalBehaviour';
+import Constraints from '../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
 
 export default interface ServicesInterface {
     queryTotalSpecies(jwt: string): Promise<number | null>
 
     queryGetSpecies(jwt: string, uuid: string): Promise<Species | UseCaseError>
 
-    queryListOfSpecies(jwt: string): Promise<Array<Species> | UseCaseError>
+    queryListOfSpecies(jwt: string, speciesConstraints: Constraints): Promise<Array<Species> | UseCaseError>
 
     querySpeciesCategories(jwt: string): Promise<Array<string> | UseCaseError>
 

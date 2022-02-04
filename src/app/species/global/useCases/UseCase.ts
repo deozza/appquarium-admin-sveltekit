@@ -14,6 +14,7 @@ import Image from "../../../file/entities/Image";
 import PlantSpecs from '../entities/PlantSpecs';
 import AnimalBehaviour from '../entities/AnimalBehaviour';
 import AquariumConstraints from '../entities/AquariumConstraints';
+import Constraints from '../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
 
 export default class SpeciesUseCase implements UseCaseInterface {
     private static async handleNewSpeciesNaming(jwt: string, species: Species): Promise<Species | UseCaseError> {
@@ -79,11 +80,11 @@ export default class SpeciesUseCase implements UseCaseInterface {
         return result
     }
 
-    async getListOfSpecies(jwt: string): Promise<Result> {
+    async getListOfSpecies(jwt: string, speciesConstraints: Constraints): Promise<Result> {
         let result: Result = new Result()
         const speciesService: Services = new Services()
 
-        const listOfSpecies: Array<Species> | UseCaseError = await speciesService.queryListOfSpecies(jwt)
+        const listOfSpecies: Array<Species> | UseCaseError = await speciesService.queryListOfSpecies(jwt, speciesConstraints)
 
         if (listOfSpecies instanceof UseCaseError) {
             result.errors.push(listOfSpecies)

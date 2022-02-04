@@ -32,6 +32,7 @@ import AnimalBehaviourHasuraAdapter from '../adapters/animalBehaviour/HasuraAdap
 import AquariumConstraints from '../entities/AquariumConstraints';
 import type AquariumConstraintsAdapterInterface from '../adapters/aquariumConstraints/AdapterInterface';
 import AquariumConstraintsHasuraAdapter from '../adapters/aquariumConstraints/HasuraAdapter';
+import Constraints from '../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
 
 export default class Services implements ServicesInterface {
     private static checkWaterConstraintsAreValid(waterConstraints: WaterConstraints): Result {
@@ -58,10 +59,10 @@ export default class Services implements ServicesInterface {
         return await adapter.queryTotalSpecies()
     }
 
-    async queryListOfSpecies(jwt: string): Promise<Array<Species> | UseCaseError> {
+    async queryListOfSpecies(jwt: string, speciesConstraints: Constraints): Promise<Array<Species> | UseCaseError> {
         const adapter: AdapterInterface = new HasuraAdapter(jwt)
 
-        return await adapter.queryListOfSpecies()
+        return await adapter.queryListOfSpecies(speciesConstraints)
     }
 
     async queryGetSpecies(jwt: string, uuid: string): Promise<Species | UseCaseError> {

@@ -1,10 +1,11 @@
 import UseCaseError from "../../../utils/useCasesResult/types/UseCaseError";
 import Species from "../entities/Species";
+import Constraints from '../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
 
 export default interface AdapterInterface {
     queryTotalSpecies(): Promise<number | null>
 
-    queryListOfSpecies(): Promise<Array<Species> | UseCaseError>
+    queryListOfSpecies(speciesConstraints: Constraints): Promise<Array<Species> | UseCaseError>
 
     queryGetSpecies(uuid: string): Promise<Species | UseCaseError>
 
