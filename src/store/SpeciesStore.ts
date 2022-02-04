@@ -115,12 +115,10 @@ async function loadAnimalZones(){
 
 async function loadAquariumKinds(){
 	const aquariumKindsResult: Result = await speciesUseCase.getAquariumKinds('');
-	console.log(aquariumKindsResult)
 
 	if (aquariumKindsResult.isFailed()) {
 		new Error(aquariumKindsResult.errors.toString());
 	}
-
 
 	const options: Array<BaseOptionModel> = aquariumKindsResult.content.map((aquariumKind: object) => new BaseOptionModel(aquariumKind.name, aquariumKind.name));
 	aquariumKinds.set(options);
@@ -131,6 +129,7 @@ async function loadBehaviours(){
 	if (behavioursResult.isFailed()) {
 		new Error(behavioursResult.errors.toString());
 	}
+
 	const options: Array<BaseOptionModel> = behavioursResult.content.map((behaviour: object) => new BaseOptionModel(behaviour.name, behaviour.name));
 	behaviours.set(options);
 }

@@ -59,17 +59,37 @@ export default class AquariumConstraintsHasuraAdapter extends HasuraClient imple
 			.addReturnToQuery('uuid')
 
 		insertAquariumConstraintsOneSubQuery.constraints = new Constraints()
-		insertAquariumConstraintsOneSubQuery.constraints.set = new ConstraintPart('object')
-			.addConstraint([
-				new ConstraintPart('min_volume').addConstraint(aquariumConstraints.min_volume.toString()),
-				new ConstraintPart('max_volume').addConstraint(aquariumConstraints.max_volume.toString()),
-				new ConstraintPart('min_length').addConstraint(aquariumConstraints.min_length.toString()),
-				new ConstraintPart('max_height').addConstraint(aquariumConstraints.max_height.toString()),
-				new ConstraintPart('soil_kind').addConstraint(aquariumConstraints.soil_kind),
-				new ConstraintPart('decor').addConstraint(JSON.stringify(aquariumConstraints.decor)),
-				new ConstraintPart('species_uuid').addConstraint('"' + aquariumConstraints.species_uuid +  '"'),
 
-			])
+		let constraintParts: Array<object> = [
+			new ConstraintPart('min_volume').addConstraint(aquariumConstraints.min_volume.toString()),
+			new ConstraintPart('soil_kind').addConstraint('"' + aquariumConstraints.soil_kind + '"'),
+			new ConstraintPart('decor').addConstraint(JSON.stringify(aquariumConstraints.decor)),
+			new ConstraintPart('species_uuid').addConstraint('"' + aquariumConstraints.species_uuid +  '"'),
+		]
+
+		if(aquariumConstraints.max_volume !== null){
+			constraintParts = [
+				...constraintParts,
+				new ConstraintPart('max_volume').addConstraint(aquariumConstraints.max_volume.toString())
+			]
+		}
+
+		if(aquariumConstraints.min_length !== null){
+			constraintParts = [
+				...constraintParts,
+				new ConstraintPart('min_length').addConstraint(aquariumConstraints.min_length.toString())
+			]
+		}
+
+		if(aquariumConstraints.max_height !== null){
+			constraintParts = [
+				...constraintParts,
+				new ConstraintPart('max_height').addConstraint(aquariumConstraints.max_height.toString())
+			]
+		}
+
+		insertAquariumConstraintsOneSubQuery.constraints.set = new ConstraintPart('object')
+			.addConstraint(constraintParts)
 
 		queryBuilder.addReturnToQuery(insertAquariumConstraintsOneSubQuery)
 		const mutation: string = queryBuilder.buildQuery()

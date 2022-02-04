@@ -36,6 +36,8 @@
     import { goto } from '$app/navigation';
     import { onMount } from 'svelte';
     import {hasLoaded, loadEnums, origins, fishGenres, fishFamilies} from '../../../../store/SpeciesStore';
+    import AquariumConstraintsForm
+        from '../../../../components/molecules/species/aquariumConstraintsForm/AquariumConstraintsForm.svelte';
 
     let fish: Species = new Species([]);
 
@@ -119,6 +121,12 @@
         <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
             <BaseHeader baseHeaderModel={animalBehaviourFormHeader}/>
             <AnimalBehaviourForm species={fish} user={user}/>
+        </section>
+
+
+        <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
+            <BaseHeader baseHeaderModel={aquariumConstraintsFormHeader}/>
+            <AquariumConstraintsForm species={fish} user={user}/>
         </section>
 
         <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
