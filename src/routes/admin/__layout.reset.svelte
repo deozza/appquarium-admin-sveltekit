@@ -52,7 +52,7 @@
 <main class="relative min-h-screen bg-gray-200 flex">
     <nav class="z-10 static w-1/5 bg-white border-r-2 border-black ">
         <div class="flex-c items-start p-10 space-y-6 text-2xl">
-            <a href="/">Accueil</a>
+            <a href="/admin">Accueil</a>
             <button>Espèces</button>
             <div class="flex-c items-start text-xl space-y-3 pl-3">
                 <a href="/admin/species">Voir toutes</a>
