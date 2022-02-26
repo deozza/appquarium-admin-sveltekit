@@ -1,7 +1,7 @@
 import HasuraClient from '../../../../adapters/hasura/HasuraClient';
 import UseCaseError from '../../../../utils/useCasesResult/types/UseCaseError';
 import type AnimalSpecsAdapterInterface from './AdapterInterface';
-import AnimalSpecs from '../../entities/AnimalSpecs';
+import type AnimalSpecs from '../../entities/AnimalSpecs';
 import Query from '../../../../adapters/hasura/HasuraRequestBuilderV2/Query';
 import Constraints from '../../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
 import ConstraintPart from '../../../../adapters/hasura/HasuraRequestBuilderV2/ConstraintPart';

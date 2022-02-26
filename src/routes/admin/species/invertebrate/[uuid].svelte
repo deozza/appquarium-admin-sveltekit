@@ -22,13 +22,10 @@
 
     import User from '../../../../app/user/entities/User';
     import Species from '../../../../app/species/global/entities/Species';
-    import SpeciesGenre from '../../../../app/species/global/entities/SpeciesGenre';
-    import SpeciesFamily from '../../../../app/species/global/entities/SpeciesFamily';
 
     import UserUseCase from '../../../../app/user/useCases/UseCase';
     import SpeciesUseCase from '../../../../app/species/global/useCases/UseCase';
-    import InvertebrateUseCase from '../../../../app/species/invertebrate/useCases/UseCase';
-    import Result from '../../../../app/utils/useCasesResult/Result';
+    import type Result from '../../../../app/utils/useCasesResult/Result';
 
     import {page} from '$app/stores';
     import {goto} from '$app/navigation';
@@ -39,7 +36,6 @@
     export let invertebrate: Species = new Species([]);
 
     const userUseCase: UserUseCase = new UserUseCase()
-    const invertebrateUseCase: InvertebrateUseCase = new InvertebrateUseCase()
     const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
 
     const jwt: Result = userUseCase.getToken();
@@ -54,7 +50,7 @@
         statusPill.setStyleOrThrowError(invertebrate.getPublicationStateStyle())
         statusPill.content = invertebrate.getPublicationStateContent()
 
-        if(hasLoaded !== true){
+        if($hasLoaded !== true){
             await loadEnums()
         }
 
@@ -80,7 +76,7 @@
 </script>
 
 <div class="flex-c">
-    {#await loadInvertebrate()}
+    {#if loadingInvertebrate}
 
         <section>
             <BaseHeader baseHeaderModel={header}>
@@ -88,7 +84,7 @@
             </BaseHeader>
         </section>
 
-    {:then invertebrate}
+    {:else}
 
         <section>
             <BaseHeader baseHeaderModel={header}>
@@ -124,9 +120,5 @@
         <section class="w-3/5 flex-c space-y-6 p-6 bg-white border-2 rounded-md border-black">
             <PublicationStateSwitcher species={invertebrate} user={user}/>
         </section>
-    {:catch errors}
-        {#each errors as error}
-            <p>{error.type}</p>
-        {/each}
-    {/await}
+    {/if}
 </div>

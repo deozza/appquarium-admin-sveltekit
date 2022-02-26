@@ -3,7 +3,7 @@
 
     import BaseButton from "../../../atoms/button/BaseButton.svelte";
     import SpeciesUseCase from "../../../../app/species/global/useCases/UseCase";
-    import Result from "../../../../app/utils/useCasesResult/Result";
+    import type Result from "../../../../app/utils/useCasesResult/Result";
     import Species from "../../../../app/species/global/entities/Species";
     import UserUseCase from "../../../../app/user/useCases/UseCase";
     import BaseFileInput from "../../../atoms/input/file/BaseFileInput.svelte";
@@ -18,17 +18,17 @@
     export let thumbnailHasBeenUpdated: boolean = false
 
     async function uploadFile() {
-        formElements.submitButton.setLoading(true)
+        formElements['submitButton'].setLoading(true)
         const userUseCase: UserUseCase = new UserUseCase()
 
         const jwt: string = userUseCase.getToken().content
         const user: User = new User(jwt)
         user.extractUserInfoFromJwt()
 
-        const image: Image = new Image([])
-        image.title = formElements.newFileTitleInput.value
-        image.source = formElements.newFileSourceInput.value
-        image.file = formElements.newFileToUploadInput.value
+        const image: Image = new Image([], '')
+        image.title = formElements['newFileTitleInput'].value
+        image.source = formElements['newFileSourceInput'].value
+        image.file = formElements['newFileToUploadInput'].value
         image.user = user.uid
         image.associated_to = species.uuid
 
@@ -36,7 +36,7 @@
         const result: Result = await speciesUseCase.addFile(jwt, species, image)
 
         if (result.isFailed()) {
-            formElements.submitButton.setLoading(false)
+            formElements['submitButton'].setLoading(false)
 
             for (const error of result.errors) {
                 if (error.code === 401) {
@@ -53,10 +53,10 @@
         }
 
         species.images = [...species.images, result.content]
-        formElements.newFileToUploadInput.value = null
-        formElements.newFileTitleInput.value = ''
-        formElements.newFileSourceInput.value = ''
-        formElements.submitButton.setLoading(false)
+        formElements['newFileToUploadInput'].value = null
+        formElements['newFileTitleInput'].value = ''
+        formElements['newFileSourceInput'].value = ''
+        formElements['submitButton'].setLoading(false)
     }
 
     async function deleteFile(image: Image) {
@@ -109,7 +109,7 @@
 
     }
 
-    function handleThumbnailClick(e, image: Image){
+    function handleThumbnailClick(image: Image){
         image.thumbnail = true
         thumbnailHasBeenUpdated = true
 
@@ -128,7 +128,7 @@
 </script>
 
 <div class="min-w-full flex-r justify-start">
-    {#each species.images as image, index}
+    {#each species.images as image}
         <div class="flex-c card">
             <ul class="space-y-2">
                 <li class="flex-c">
@@ -138,7 +138,7 @@
                 </li>
                 <li class="flex-c">
                     <div class="w-full flex-r">
-                        <BaseLabel baseLabelModel={formElements.updateFileTitleLabel}/>
+                        <BaseLabel baseLabelModel={formElements['updateFileTitleLabel']}/>
                         <div style="flex: 2">
                             <input class="w-full py-2 px-3 border rounded-md border-black px-2" type="text" bind:value={image.title} id="updateFileTitleLabel">
                         </div>
@@ -147,16 +147,16 @@
 
                 <li class="flex-c">
                     <div class="w-full flex-r">
-                        <BaseLabel baseLabelModel={formElements.updateFileThumbnailLabel}/>
+                        <BaseLabel baseLabelModel={formElements['updateFileThumbnailLabel']}/>
                         <div style="flex: 2">
-                            <input class="w-full py-2 px-3 border rounded-md border-black px-2" type="checkbox" bind:checked={image.thumbnail} on:change={e => handleThumbnailClick(e, image)} id="updateFileThumbnailLabel">
+                            <input class="w-full py-2 px-3 border rounded-md border-black px-2" type="checkbox" bind:checked={image.thumbnail} on:change={() => handleThumbnailClick(image)} id="updateFileThumbnailLabel">
                         </div>
                     </div>
                 </li>
                 <li class="flex-c">
                     <div class="w-full flex-r justify-around">
-                        <BaseButton baseButtonModel={formElements.updateButton} on:click={editFileMetadata(image)}/>
-                        <BaseButton baseButtonModel={formElements.deleteButton} on:click={deleteFile(image)}/>
+                        <BaseButton baseButtonModel={formElements['updateButton']} on:click={() => editFileMetadata(image)}/>
+                        <BaseButton baseButtonModel={formElements['deleteButton']} on:click={() => deleteFile(image)}/>
                     </div>
                 </li>
             </ul>
@@ -169,26 +169,26 @@
                 <ul class="space-y-2">
                     <li class="flex-c">
                         <div class="flex-r">
-                            <BaseLabel baseLabelModel={formElements.newFileToUploadLabel}/>
-                            <BaseFileInput baseFileInputModel={formElements.newFileToUploadInput}/>
+                            <BaseLabel baseLabelModel={formElements['newFileToUploadLabel']}/>
+                            <BaseFileInput baseFileInputModel={formElements['newFileToUploadInput']}/>
                         </div>
                     </li>
 
                     <li class="flex-c">
                         <div class="flex-r">
-                            <BaseLabel baseLabelModel={formElements.newFileTitleLabel}/>
-                            <BaseTextInput baseTextInputModel={formElements.newFileTitleInput}/>
+                            <BaseLabel baseLabelModel={formElements['newFileTitleLabel']}/>
+                            <BaseTextInput baseTextInputModel={formElements['newFileTitleInput']}/>
                         </div>
                     </li>
 
                     <li class="flex-c">
                         <div class="flex-r">
-                            <BaseLabel baseLabelModel={formElements.newFileSourceLabel}/>
-                            <BaseTextInput baseTextInputModel={formElements.newFileSourceInput}/>
+                            <BaseLabel baseLabelModel={formElements['newFileSourceLabel']}/>
+                            <BaseTextInput baseTextInputModel={formElements['newFileSourceInput']}/>
                         </div>
                     </li>
                     <li class="flex-c">
-                        <BaseButton baseButtonModel={formElements.submitButton}/>
+                        <BaseButton baseButtonModel={formElements['submitButton']}/>
                     </li>
                 </ul>
 

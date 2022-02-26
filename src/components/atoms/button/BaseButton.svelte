@@ -1,5 +1,5 @@
 <script lang="ts">
-    import BaseButtonModel from "./BaseButtonModel";
+    import type BaseButtonModel from "./BaseButtonModel";
 
     export let baseButtonModel: BaseButtonModel
     $:isDisabled = baseButtonModel.isDisabled
@@ -10,7 +10,7 @@
         class:btn-outlined={baseButtonModel.isOutlined === true}
         class:disabled:opacity-50={baseButtonModel.isDisabled === true}
         class:pointer-events-none={baseButtonModel.isDisabled === true}
-        disabled="{isDisabled ? 'disabled' : ''}"
+        disabled="{isDisabled}"
         on:click
         type="{baseButtonModel.type}"
 >

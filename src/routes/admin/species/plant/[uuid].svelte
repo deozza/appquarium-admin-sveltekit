@@ -12,7 +12,6 @@
     import Species from '../../../../app/species/global/entities/Species';
     import BaseHeader from '../../../../components/atoms/typography/header/BaseHeader.svelte';
     import BasePill from '../../../../components/atoms/pill/BasePill.svelte';
-    import BaseOptionModel from '../../../../components/atoms/input/select/BaseOptionModel';
 
     import NamingForm from '../../../../components/molecules/species/namingForm/NamingForm.svelte';
     import WaterConstraintsForm
@@ -24,10 +23,9 @@
         from '../../../../components/molecules/species/publicationStateSwitcher/PublicationStateSwitcher.svelte';
     import GeneralForm from '../../../../components/molecules/species/generalForm/GeneralForm.svelte';
     import UserUseCase from '../../../../app/user/useCases/UseCase';
-    import Result from '../../../../app/utils/useCasesResult/Result';
+    import type Result from '../../../../app/utils/useCasesResult/Result';
     import User from '../../../../app/user/entities/User';
     import SpeciesUseCase from '../../../../app/species/global/useCases/UseCase';
-    import PlantUseCase from '../../../../app/species/plant/useCases/UseCase';
 
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';
@@ -37,7 +35,6 @@
     let plant: Species = new Species([]);
 
     const userUseCase: UserUseCase = new UserUseCase();
-    const plantUseCase: PlantUseCase = new PlantUseCase();
     const speciesUseCase: SpeciesUseCase = new SpeciesUseCase();
 
     const jwt: Result = userUseCase.getToken();

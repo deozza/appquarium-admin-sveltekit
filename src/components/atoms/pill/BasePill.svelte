@@ -1,5 +1,5 @@
 <script lang="ts">
-    import BasePillModel from "./BasePillModel";
+    import type BasePillModel from "./BasePillModel";
 
     export let basePillModel: BasePillModel
 </script>

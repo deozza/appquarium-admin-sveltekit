@@ -1,6 +1,6 @@
 import type UseCaseInterface from "./UseCaseInterface";
 
-import UseCaseError from "../../utils/useCasesResult/types/UseCaseError";
+import type UseCaseError from "../../utils/useCasesResult/types/UseCaseError";
 import Result from "../../utils/useCasesResult/Result";
 
 import Image from "../entities/Image";

@@ -18,10 +18,10 @@ export default class User {
             return
         }
 
-        const decoded = jwt_decode(this.jwt)
+        const decoded: object = jwt_decode(this.jwt)
 
-        this.uid = decoded.user_id
-        this.email = decoded.email
+        this.uid = decoded['user_id']
+        this.email = decoded['email']
         this.roles = decoded["https://hasura.io/jwt/claims"]["x-hasura-allowed-roles"]
 
         return decoded

@@ -1,5 +1,5 @@
 import BaseInputModel from "../BaseInputModel";
-import BaseOptionModel from './BaseOptionModel';
+import type BaseOptionModel from './BaseOptionModel';
 
 export default class BaseSelectInputModel extends BaseInputModel{
 

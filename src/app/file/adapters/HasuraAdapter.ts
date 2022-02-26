@@ -1,7 +1,7 @@
 import type AdapterInterface from "./AdapterInterface";
 
 import HasuraClient from "../../adapters/hasura/HasuraClient";
-import Image from "../entities/Image";
+import type Image from "../entities/Image";
 import UseCaseError from "../../utils/useCasesResult/types/UseCaseError";
 
 import Query from '../../adapters/hasura/HasuraRequestBuilderV2/Query';

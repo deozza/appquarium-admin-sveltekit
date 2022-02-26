@@ -1,7 +1,7 @@
-import Result from "../../../utils/useCasesResult/Result";
+import type Result from "../../../utils/useCasesResult/Result";
 
-import Species from "../../global/entities/Species";
-import User from "../../../user/entities/User";
+import type Species from "../../global/entities/Species";
+import type User from "../../../user/entities/User";
 
 export default interface UseCaseInterface {
     getListOfFishes(jwt: string, filters: Array<object>, itemsPerPage: number, offset: number): Promise<Result>

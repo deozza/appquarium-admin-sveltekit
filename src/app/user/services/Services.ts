@@ -1,6 +1,6 @@
 import type ServicesInterface from "./ServicesInterface";
 
-import User from "../entities/User";
+import type User from "../entities/User";
 
 import type AdapterInterface from "../adapters/AdapterInterface";
 import FirebaseAdapter from "../adapters/FirebaseAdapter";
@@ -38,7 +38,7 @@ export default class Services implements ServicesInterface {
         return user
     }
 
-    removeCookie(): null {
+    removeCookie(): void {
         Cookies.remove('appquarium-jwt')
     }
 

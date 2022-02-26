@@ -4,7 +4,7 @@ import type PlantSpecsAdapterInterface from './AdapterInterface';
 import Query from '../../../../adapters/hasura/HasuraRequestBuilderV2/Query';
 import Constraints from '../../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
 import ConstraintPart from '../../../../adapters/hasura/HasuraRequestBuilderV2/ConstraintPart';
-import PlantSpecs from '../../entities/PlantSpecs';
+import type PlantSpecs from '../../entities/PlantSpecs';
 
 export default class PlantSpecsHasuraAdapter extends HasuraClient implements PlantSpecsAdapterInterface {
 	async mutationCreatePlantSpecs(plantSpecs: PlantSpecs): Promise<string | Array<UseCaseError>> {

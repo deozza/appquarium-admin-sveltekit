@@ -1,13 +1,13 @@
-import UseCaseError from "../../../utils/useCasesResult/types/UseCaseError";
-import Species from "../entities/Species";
-import WaterConstraints from "../entities/WaterConstraints";
-import User from "../../../user/entities/User";
-import SpeciesNaming from "../entities/SpeciesNaming";
-import AnimalSpecs from "../entities/AnimalSpecs";
-import PlantSpecs from '../entities/PlantSpecs';
-import AquariumConstraints from '../entities/AquariumConstraints';
-import AnimalBehaviour from '../entities/AnimalBehaviour';
-import Constraints from '../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
+import type UseCaseError from "../../../utils/useCasesResult/types/UseCaseError";
+import type Species from "../entities/Species";
+import type WaterConstraints from "../entities/WaterConstraints";
+import type User from "../../../user/entities/User";
+import type SpeciesNaming from "../entities/SpeciesNaming";
+import type AnimalSpecs from "../entities/AnimalSpecs";
+import type PlantSpecs from '../entities/PlantSpecs';
+import type AquariumConstraints from '../entities/AquariumConstraints';
+import type AnimalBehaviour from '../entities/AnimalBehaviour';
+import type Constraints from '../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
 
 export default interface ServicesInterface {
     queryTotalSpecies(jwt: string, speciesConstraints: Constraints): Promise<number | null>

@@ -1,6 +1,6 @@
-import Result from "../../utils/useCasesResult/Result";
+import type Result from "../../utils/useCasesResult/Result";
 
-import Image from "../entities/Image";
+import type Image from "../entities/Image";
 
 export default interface UseCaseInterface {
     uploadFile(fileName: string, fileSource: string, basePath: string, file: File): Promise<Result>

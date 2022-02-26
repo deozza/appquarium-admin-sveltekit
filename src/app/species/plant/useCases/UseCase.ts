@@ -3,13 +3,13 @@ import type UseCaseInterface from "./UseCaseInterface";
 import Result from "../../../utils/useCasesResult/Result";
 import UseCaseError from "../../../utils/useCasesResult/types/UseCaseError";
 
-import Species from "../../global/entities/Species";
-import SpeciesFamily from "../../global/entities/SpeciesFamily";
-import SpeciesGenre from "../../global/entities/SpeciesGenre";
+import type Species from "../../global/entities/Species";
+import type SpeciesFamily from "../../global/entities/SpeciesFamily";
+import type SpeciesGenre from "../../global/entities/SpeciesGenre";
 
 import Services from "../services/Services";
 import {default as SpeciesServices} from "../../global/services/Services";
-import User from "../../../user/entities/User";
+import type User from "../../../user/entities/User";
 
 export default class PlantUseCase implements UseCaseInterface {
 

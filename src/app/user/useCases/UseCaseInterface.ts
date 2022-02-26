@@ -1,4 +1,4 @@
-import Result from "../../utils/useCasesResult/Result";
+import type Result from "../../utils/useCasesResult/Result";
 
 export default interface UseCaseInterface {
     login(email: string, password: string): Promise<Result>

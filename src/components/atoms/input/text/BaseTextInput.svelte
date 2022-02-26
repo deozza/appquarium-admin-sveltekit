@@ -1,5 +1,5 @@
 <script lang="ts">
-    import BaseTextInputModel from "./BaseTextInputModel";
+    import type BaseTextInputModel from "./BaseTextInputModel";
 
     export let baseTextInputModel: BaseTextInputModel
 
@@ -22,8 +22,8 @@
       on:focusout
       on:input={handleInput}
       placeholder={baseTextInputModel.placeholder}
-      readonly={baseTextInputModel.readonly === true ? 'readonly' : ''}
-      required={baseTextInputModel.required === true ? 'required' : ''}
+      readonly={baseTextInputModel.readonly}
+      required={baseTextInputModel.required}
       type={baseTextInputModel.type}
       value={baseTextInputModel.value}
     >

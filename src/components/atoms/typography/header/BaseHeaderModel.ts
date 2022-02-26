@@ -3,7 +3,7 @@ import Theme from "../../../utils/Theme";
 export default class BaseHeaderModel {
 
     readonly DEFAULT_DISPLAY_SIZE: string = 'xxxl'
-    readonly DEFAULT_SIZE: string = Theme.HEADER_SIZES().h1
+    readonly DEFAULT_SIZE: string = Theme.HEADER_SIZES()['h1']
     readonly DEFAULT_COLOR: string = 'black'
 
     private _content: string

@@ -29,8 +29,7 @@
 
     import UserUseCase from '../../../../app/user/useCases/UseCase';
     import SpeciesUseCase from '../../../../app/species/global/useCases/UseCase';
-    import FishUseCase from '../../../../app/species/fish/useCases/UseCase';
-    import Result from '../../../../app/utils/useCasesResult/Result';
+    import type Result from '../../../../app/utils/useCasesResult/Result';
 
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';
@@ -42,7 +41,6 @@
     let fish: Species = new Species([]);
 
     const userUseCase: UserUseCase = new UserUseCase();
-    const fishUseCase: FishUseCase = new FishUseCase();
     const speciesUseCase: SpeciesUseCase = new SpeciesUseCase();
 
     const jwt: Result = userUseCase.getToken();

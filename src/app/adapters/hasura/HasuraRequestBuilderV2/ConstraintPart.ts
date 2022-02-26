@@ -18,10 +18,10 @@ export default class ConstraintPart{
 
 		let constraintAsGQLString: string = ''
 
-		constraintAsGQLString +=  whereObject.constraintName + ': '
+		constraintAsGQLString +=  whereObject['constraintName'] + ': '
 
-		if(Array.isArray(whereObject.constraints)){
-			whereObject.constraints.forEach((subWhere: object, index: number) => {
+		if(Array.isArray(whereObject['constraints'])){
+			whereObject['constraints'].forEach((subWhere: object, index: number) => {
 
 				if(index < 1){
 					constraintAsGQLString += '{ '
@@ -30,13 +30,13 @@ export default class ConstraintPart{
 				}
 
 				constraintAsGQLString += this.buildConstraintsAsGQLString(subWhere)
-				if(index === whereObject.constraints.length - 1){
+				if(index === whereObject['constraints'].length - 1){
 					constraintAsGQLString += ' }'
 				}
 			})
 
 		}else{
-			constraintAsGQLString += whereObject.constraints
+			constraintAsGQLString += whereObject['constraints']
 		}
 
 

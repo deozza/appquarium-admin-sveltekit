@@ -6,36 +6,36 @@
     import Species from "../../../../app/species/global/entities/Species";
     import User from "../../../../app/user/entities/User";
     import SpeciesUseCase from "../../../../app/species/global/useCases/UseCase";
-    import Result from "../../../../app/utils/useCasesResult/Result";
+    import type Result from "../../../../app/utils/useCasesResult/Result";
     import {goto} from '$app/navigation';
     import UserUseCase from "../../../../app/user/useCases/UseCase";
     import BaseTextInput from "../../../atoms/input/text/BaseTextInput.svelte";
 
     export let species: Species = new Species([])
-    export let speciesOrigins: Array<string> = []
+    export let speciesOrigins: Array<object> = []
     export let user: User = new User('')
 
-    formElements.originInput.value = species.origin
+    formElements['originInput'].value = species.origin
 
     if (species.origin !== null) {
-        formElements.submitButton.setStyleOrThrowError('warning')
-        formElements.submitButton.content = 'Modifier'
+        formElements['submitButton'].setStyleOrThrowError('warning')
+        formElements['submitButton'].content = 'Modifier'
     }
 
     if (species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED') {
-        formElements.submitButton.isDisabled = true
-        formElements.originInput.readonly = true
+        formElements['submitButton'].isDisabled = true
+        formElements['originInput'].readonly = true
     }
 
     async function submitGeneralForm() {
-        formElements.submitButton.setLoading(true)
-        species.origin = formElements.originInput.value
+        formElements['submitButton'].setLoading(true)
+        species.origin = formElements['originInput'].value
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
         const result: Result = await speciesUseCase.updateGeneralInfos(user.jwt, species)
 
         if (result.isFailed()) {
-            formElements.submitButton.setLoading(false)
+            formElements['submitButton'].setLoading(false)
 
             for (const error of result.errors) {
 
@@ -50,7 +50,7 @@
             }
         }
 
-        formElements.submitButton.setLoading(false)
+        formElements['submitButton'].setLoading(false)
 
         if (result.success?.code === 201) {
             species.uuid = result.content
@@ -63,12 +63,12 @@
     <ul class="space-y-6">
         <li class="flex-c">
             <div class="flex-r">
-                <BaseLabel baseLabelModel="{formElements.originLabel}"/>
-                <BaseTextInput baseTextInputModel="{formElements.originInput}"/>
-                <datalist id={formElements.originInput.datalist}>
-                    {#each speciesOrigins as origin, index}
-                        <option value={origin.name}>
-                            { origin.name }
+                <BaseLabel baseLabelModel="{formElements['originLabel']}"/>
+                <BaseTextInput baseTextInputModel="{formElements['originInput']}"/>
+                <datalist id={formElements['originInput'].datalist}>
+                    {#each speciesOrigins as origin}
+                        <option value={origin['name']}>
+                            { origin['name'] }
                         </option>
                     {/each}
                 </datalist>
@@ -76,7 +76,7 @@
         </li>
 
         <li class="flex-c space-y-2">
-            <BaseButton baseButtonModel="{formElements.submitButton}"/>
+            <BaseButton baseButtonModel="{formElements['submitButton']}"/>
         </li>
     </ul>
 </form>

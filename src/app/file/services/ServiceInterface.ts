@@ -1,6 +1,6 @@
-import UseCaseError from "../../utils/useCasesResult/types/UseCaseError";
+import type UseCaseError from "../../utils/useCasesResult/types/UseCaseError";
 
-import Image from "../entities/Image";
+import type Image from "../entities/Image";
 
 export default interface ServiceInterface {
     getComputedFileName(fileName: string): string

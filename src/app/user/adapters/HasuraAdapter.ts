@@ -2,7 +2,7 @@ import type AdapterInterface from "./AdapterInterface";
 
 import HasuraClient from "../../adapters/hasura/HasuraClient";
 
-import User from "../entities/User";
+import type User from "../entities/User";
 import Query from '../../adapters/hasura/HasuraRequestBuilderV2/Query';
 
 export default class HasuraAdapter extends HasuraClient implements AdapterInterface {

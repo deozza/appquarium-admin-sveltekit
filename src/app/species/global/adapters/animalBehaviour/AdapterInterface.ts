@@ -1,5 +1,5 @@
-import UseCaseError from '../../../../utils/useCasesResult/types/UseCaseError';
-import AnimalBehaviour from '../../entities/AnimalBehaviour';
+import type UseCaseError from '../../../../utils/useCasesResult/types/UseCaseError';
+import type AnimalBehaviour from '../../entities/AnimalBehaviour';
 
 export default interface AnimalBehaviourAdapterInterface{
 	queryListOfAlimentations(): Promise<Array<string> | UseCaseError>

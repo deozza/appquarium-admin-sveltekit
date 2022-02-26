@@ -1,5 +1,5 @@
 <script lang='ts'>
-    import BaseNumberInputModel from "./BaseNumberInputModel";
+    import type BaseNumberInputModel from "./BaseNumberInputModel";
 
     export let baseNumberInputModel: BaseNumberInputModel
 
@@ -17,8 +17,8 @@
       on:change
       on:focusout
       placeholder={baseNumberInputModel.placeholder}
-      readOnly={baseNumberInputModel.readonly === true ? 'readonly' : ''}
-      required={baseNumberInputModel.required === true ? 'required' : ''}
+      readOnly={baseNumberInputModel.readonly}
+      required={baseNumberInputModel.required}
       step={baseNumberInputModel.step}
       type='number'
       bind:value={baseNumberInputModel.value}

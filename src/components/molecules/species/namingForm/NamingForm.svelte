@@ -4,13 +4,13 @@
     import BaseButton from "../../../atoms/button/BaseButton.svelte";
     import BaseLabel from "../../../atoms/input/BaseLabel.svelte";
     import BaseTextInput from "../../../atoms/input/text/BaseTextInput.svelte";
-    import SpeciesGenre from "../../../../app/species/global/entities/SpeciesGenre";
-    import SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";
+    import type SpeciesGenre from "../../../../app/species/global/entities/SpeciesGenre";
+    import type SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";
     import Species from "../../../../app/species/global/entities/Species";
     import SpeciesUseCase from "../../../../app/species/global/useCases/UseCase";
 
     import {goto} from '$app/navigation';
-    import Result from "../../../../app/utils/useCasesResult/Result";
+    import type Result from "../../../../app/utils/useCasesResult/Result";
     import User from "../../../../app/user/entities/User";
     import UserUseCase from "../../../../app/user/useCases/UseCase";
 
@@ -22,22 +22,22 @@
     let commonNames: Array<string> = species.naming.common_names
     let oldNames: Array<string> = species.naming.old_names
 
-    formElements.speciesNameInput.value = species.naming.name
-    formElements.speciesGenreInput.value = species.naming.species_genre.name
-    formElements.speciesFamilyInput.value = species.naming.species_family.name
+    formElements['speciesNameInput'].value = species.naming.name
+    formElements['speciesGenreInput'].value = species.naming.species_genre.name
+    formElements['speciesFamilyInput'].value = species.naming.species_family.name
 
     if (species.naming.uuid !== '') {
-        formElements.submitButton.setStyleOrThrowError('warning')
-        formElements.submitButton.content = 'Modifier'
+        formElements['submitButton'].setStyleOrThrowError('warning')
+        formElements['submitButton'].content = 'Modifier'
     }
 
     if (species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED') {
-        formElements.submitButton.isDisabled = true
-        formElements.speciesGenreInput.readonly = true
-        formElements.speciesFamilyInput.readonly = true
-        formElements.speciesNameInput.readonly = true
-        formElements.speciesCommonNamesInput.readonly = true
-        formElements.speciesOldNamesInput.readonly = true
+        formElements['submitButton'].isDisabled = true
+        formElements['speciesGenreInput'].readonly = true
+        formElements['speciesFamilyInput'].readonly = true
+        formElements['speciesNameInput'].readonly = true
+        formElements['speciesCommonNamesInput'].readonly = true
+        formElements['speciesOldNamesInput'].readonly = true
     }
 
     function linkUuidWithSpeciesGenre(speciesGenreName: string) {
@@ -63,29 +63,29 @@
     }
 
     function newCommonName() {
-        if (formElements.speciesCommonNamesInput.value === '') {
+        if (formElements['speciesCommonNamesInput'].value === '') {
             return
         }
 
-        commonNames = [...commonNames, formElements.speciesCommonNamesInput.value]
+        commonNames = [...commonNames, formElements['speciesCommonNamesInput'].value]
         species.naming.common_names = commonNames
-        formElements.speciesCommonNamesInput.value = ''
+        formElements['speciesCommonNamesInput'].value = ''
     }
 
     function newOldName() {
-        if (formElements.speciesOldNamesInput.value === '') {
+        if (formElements['speciesOldNamesInput'].value === '') {
             return
         }
 
-        oldNames = [...oldNames, formElements.speciesOldNamesInput.value]
+        oldNames = [...oldNames, formElements['speciesOldNamesInput'].value]
         species.naming.old_names = oldNames
-        formElements.speciesOldNamesInput.value = ''
+        formElements['speciesOldNamesInput'].value = ''
     }
 
     async function submitNamingForm() {
-        formElements.submitButton.setLoading(true)
+        formElements['submitButton'].setLoading(true)
 
-        species.naming.name = formElements.speciesNameInput.value
+        species.naming.name = formElements['speciesNameInput'].value
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
         let result: Result
@@ -96,7 +96,7 @@
         }
 
         if (result.isFailed()) {
-            formElements.submitButton.setLoading(false)
+            formElements['submitButton'].setLoading(false)
 
             console.log(result.errors)
 
@@ -112,7 +112,7 @@
 
         }
 
-        formElements.submitButton.setLoading(false)
+        formElements['submitButton'].setLoading(false)
 
         if (result.success?.code === 201) {
             species.uuid = result.content
@@ -127,11 +127,11 @@
     <ul class="space-y-6">
         <li class="flex-c">
             <div class="flex-r">
-                <BaseLabel baseLabelModel="{formElements.speciesGenreLabel}"/>
-                <BaseTextInput baseTextInputModel="{formElements.speciesGenreInput}"
-                               on:change={linkUuidWithSpeciesGenre(formElements.speciesGenreInput.value)}/>
-                <datalist id={formElements.speciesGenreInput.datalist}>
-                    {#each speciesGenres as genre, index}
+                <BaseLabel baseLabelModel="{formElements['speciesGenreLabel']}"/>
+                <BaseTextInput baseTextInputModel="{formElements['speciesGenreInput']}"
+                               on:change={() => linkUuidWithSpeciesGenre(formElements['speciesGenreInput'].value)}/>
+                <datalist id={formElements['speciesGenreInput'].datalist}>
+                    {#each speciesGenres as genre}
                         <option value={genre.name}>
                             { genre.name }
                         </option>
@@ -142,11 +142,11 @@
 
         <li class="flex-c">
             <div class="flex-r">
-                <BaseLabel baseLabelModel="{formElements.speciesFamilyLabel}"/>
-                <BaseTextInput baseTextInputModel="{formElements.speciesFamilyInput}"
-                               on:change={linkUuidWithSpeciesFamily(formElements.speciesFamilyInput.value)}/>
-                <datalist id={formElements.speciesFamilyInput.datalist}>
-                    {#each speciesFamilies as family, index}
+                <BaseLabel baseLabelModel="{formElements['speciesFamilyLabel']}"/>
+                <BaseTextInput baseTextInputModel="{formElements['speciesFamilyInput']}"
+                               on:change={() => linkUuidWithSpeciesFamily(formElements['speciesFamilyInput'].value)}/>
+                <datalist id={formElements['speciesFamilyInput'].datalist}>
+                    {#each speciesFamilies as family}
                         <option value={family.name}>
                             { family.name }
                         </option>
@@ -157,17 +157,17 @@
 
         <li class="flex-c">
             <div class="flex-r">
-                <BaseLabel baseLabelModel="{formElements.speciesNameLabel}"/>
-                <BaseTextInput baseTextInputModel="{formElements.speciesNameInput}"/>
+                <BaseLabel baseLabelModel="{formElements['speciesNameLabel']}"/>
+                <BaseTextInput baseTextInputModel="{formElements['speciesNameInput']}"/>
             </div>
         </li>
 
         <li class="flex-c">
             <div class="flex-r">
-                <BaseLabel baseLabelModel="{formElements.speciesCommonNamesLabel}"/>
+                <BaseLabel baseLabelModel="{formElements['speciesCommonNamesLabel']}"/>
                 <div class="flex-c">
                     <ul>
-                        {#each species.naming.common_names as name, index}
+                        {#each species.naming.common_names as name}
                             <li class="flex-c">
                                 <div class="flex-r">
                                     <input class="w-full py-2 px-3 border rounded-md border-black px-2" type="text"
@@ -176,7 +176,7 @@
                             </li>
                         {/each}
                     </ul>
-                    <BaseTextInput baseTextInputModel="{formElements.speciesCommonNamesInput}"
+                    <BaseTextInput baseTextInputModel="{formElements['speciesCommonNamesInput']}"
                                    on:focusout={newCommonName}/>
 
                 </div>
@@ -185,10 +185,10 @@
 
         <li class="flex-c">
             <div class="flex-r">
-                <BaseLabel baseLabelModel="{formElements.speciesOldNamesLabel}"/>
+                <BaseLabel baseLabelModel="{formElements['speciesOldNamesLabel']}"/>
                 <div class="flex-c">
                     <ul>
-                        {#each species.naming.old_names as name, index}
+                        {#each species.naming.old_names as name}
                             <li class="flex-c">
                                 <div class="flex-r">
                                     <input class="w-full py-2 px-3 border rounded-md border-black px-2" type="text"
@@ -197,14 +197,14 @@
                             </li>
                         {/each}
                     </ul>
-                    <BaseTextInput baseTextInputModel="{formElements.speciesOldNamesInput}" on:focusout={newOldName}/>
+                    <BaseTextInput baseTextInputModel="{formElements['speciesOldNamesInput']}" on:focusout={newOldName}/>
 
                 </div>
             </div>
         </li>
 
         <li class="flex-c space-y-2">
-            <BaseButton baseButtonModel="{formElements.submitButton}"/>
+            <BaseButton baseButtonModel="{formElements['submitButton']}"/>
         </li>
     </ul>
 </form>

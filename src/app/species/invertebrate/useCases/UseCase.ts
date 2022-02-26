@@ -3,13 +3,13 @@ import type UseCaseInterface from "./UseCaseInterface";
 import Result from "../../../utils/useCasesResult/Result";
 import UseCaseError from "../../../utils/useCasesResult/types/UseCaseError";
 
-import Species from "../../global/entities/Species";
-import SpeciesGenre from "../../global/entities/SpeciesGenre";
-import SpeciesFamily from "../../global/entities/SpeciesFamily";
+import type Species from "../../global/entities/Species";
+import type SpeciesGenre from "../../global/entities/SpeciesGenre";
+import type SpeciesFamily from "../../global/entities/SpeciesFamily";
 
 import Services from "../services/Services";
 import {default as SpeciesServices} from "../../global/services/Services";
-import User from "../../../user/entities/User";
+import type  User from "../../../user/entities/User";
 
 export default class InvertebrateUseCase implements UseCaseInterface {
     async getListOfInvertebrates(jwt: string): Promise<Result> {

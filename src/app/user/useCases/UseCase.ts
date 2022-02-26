@@ -2,7 +2,7 @@ import type UseCaseInterface from "./UseCaseInterface";
 
 import Result from "../../utils/useCasesResult/Result";
 
-import User from "../entities/User";
+import type User from "../entities/User";
 
 import Services from "../services/Services";
 

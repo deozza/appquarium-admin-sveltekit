@@ -1,5 +1,5 @@
 <script lang="ts">
-    import BaseParagraphModel from "./BaseParagraphModel";
+    import type BaseParagraphModel from "./BaseParagraphModel";
 
     export let baseParagraphModel: BaseParagraphModel
 </script>

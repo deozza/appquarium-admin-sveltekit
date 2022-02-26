@@ -10,37 +10,37 @@
     import BaseLabel from "../components/atoms/input/BaseLabel.svelte";
 
     import UserUseCase from "../app/user/useCases/UseCase";
-    import Result from "../app/utils/useCasesResult/Result";
+    import type Result from "../app/utils/useCasesResult/Result";
 
-    export let currentPageState: string = pageStates.normal
+    export let currentPageState: string = pageStates['normal']
 
     async function login() {
-        formElements.emailInput.error = false
-        formElements.passwordInput.error = false
-        formElements.loginButton.setLoading(true)
-        formElements.loginButton = formElements.loginButton
+        formElements['emailInput'].error = false
+        formElements['passwordInput'].error = false
+        formElements['loginButton'].setLoading(true)
+        formElements['loginButton'] = formElements['loginButton']
 
         const userUseCase: UserUseCase = new UserUseCase()
-        const user: Result = await userUseCase.login(formElements.emailInput.value, formElements.passwordInput.value)
+        const user: Result = await userUseCase.login(formElements['emailInput'].value, formElements['passwordInput'].value)
 
         if (user.isSuccessful()) {
-            formElements.loginButton.setLoading(false)
+            formElements['loginButton'].setLoading(false)
             return goto('/admin')
         }
 
         if (user.errors[0].code === 404 || user.errors[0].code === 403) {
-            formElements.emailInput.error = true
-            formElements.passwordInput.error = true
+            formElements['emailInput'].error = true
+            formElements['passwordInput'].error = true
             errorParagraph.setContent(currentPageState)
         }
 
         if (user.errors[0].code === 400) {
-            currentPageState = pageStates.cookieFailed
+            currentPageState = pageStates['cookieFailed']
             errorParagraph.setContent(currentPageState)
         }
 
-        formElements.loginButton.setLoading(false)
-        formElements.loginButton = formElements.loginButton
+        formElements['loginButton'].setLoading(false)
+        formElements['loginButton'] = formElements['loginButton']
     }
 
 </script>
@@ -52,19 +52,19 @@
             <ul class="space-y-6">
                 <li class="flex-c">
                     <div class="flex-r">
-                        <BaseLabel baseLabelModel={formElements.emailLabel}/>
-                        <BaseTextInput baseTextInputModel={formElements.emailInput}/>
+                        <BaseLabel baseLabelModel={formElements['emailLabel']}/>
+                        <BaseTextInput baseTextInputModel={formElements['emailInput']}/>
                     </div>
                 </li>
                 <li class="flex-c">
                     <div class="flex-r">
-                        <BaseLabel baseLabelModel={formElements.passwordLabel}/>
-                        <BaseTextInput baseTextInputModel={formElements.passwordInput}/>
+                        <BaseLabel baseLabelModel={formElements['passwordLabel']}/>
+                        <BaseTextInput baseTextInputModel={formElements['passwordInput']}/>
                     </div>
                 </li>
                 <li class="flex-c space-y-2">
-                    <BaseButton baseButtonModel={formElements.loginButton}/>
-                    {#if currentPageState !== pageStates.normal }
+                    <BaseButton baseButtonModel={formElements['loginButton']}/>
+                    {#if currentPageState !== pageStates['normal'] }
                         <BaseParagraph baseParagraphModel={errorParagraph}/>
                     {/if}
                 </li>

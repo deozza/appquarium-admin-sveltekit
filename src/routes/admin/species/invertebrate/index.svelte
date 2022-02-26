@@ -3,12 +3,11 @@
     import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
     import BaseButton from "../../../../components/atoms/button/BaseButton.svelte";
 
-    import Species from "../../../../app/species/global/entities/Species";
+    import type Species from "../../../../app/species/global/entities/Species";
 
     import UserUseCase from '../../../../app/user/useCases/UseCase';
     import InvertebrateUseCase from '../../../../app/species/invertebrate/useCases/UseCase';
-    import Result from '../../../../app/utils/useCasesResult/Result';
-    import UseCaseError from '../../../../app/utils/useCasesResult/types/UseCaseError';
+    import type Result from '../../../../app/utils/useCasesResult/Result';
 
     import {goto} from '$app/navigation';
     import { onMount } from 'svelte';

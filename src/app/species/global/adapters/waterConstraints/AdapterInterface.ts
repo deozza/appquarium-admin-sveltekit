@@ -1,5 +1,5 @@
-import UseCaseError from '../../../../utils/useCasesResult/types/UseCaseError';
-import WaterConstraints from '../../entities/WaterConstraints';
+import type UseCaseError from '../../../../utils/useCasesResult/types/UseCaseError';
+import type WaterConstraints from '../../entities/WaterConstraints';
 
 export default interface WaterConstraintsAdapterInterface{
 	mutationCreateWaterConstraints(waterConstraints: WaterConstraints): Promise<string | Array<UseCaseError>>

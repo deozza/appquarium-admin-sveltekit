@@ -1,9 +1,9 @@
 import type ServicesInterface from "./ServicesInterface";
 
-import Error from "../../../utils/useCasesResult/types/UseCaseError";
+import type Error from "../../../utils/useCasesResult/types/UseCaseError";
 
-import SpeciesFamily from "../../global/entities/SpeciesFamily";
-import SpeciesGenre from "../../global/entities/SpeciesGenre";
+import type SpeciesFamily from "../../global/entities/SpeciesFamily";
+import type SpeciesGenre from "../../global/entities/SpeciesGenre";
 
 import SpeciesFamiliesHasuraAdapter from '../../global/adapters/speciesNaming/speciesFamily/HasuraAdapter';
 import SpeciesGenresHasuraAdapter from '../../global/adapters/speciesNaming/speciesGenre/HasuraAdapter';

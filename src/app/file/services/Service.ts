@@ -1,7 +1,7 @@
 import type ServiceInterface from "./ServiceInterface";
-import UseCaseError from "../../utils/useCasesResult/types/UseCaseError";
+import type UseCaseError from "../../utils/useCasesResult/types/UseCaseError";
 
-import Image from "../entities/Image";
+import type Image from "../entities/Image";
 
 import type AdapterInterface from "../adapters/AdapterInterface";
 import FirebaseAdapter from "../adapters/FirebaseAdapter";

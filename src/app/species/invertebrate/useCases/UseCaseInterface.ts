@@ -1,6 +1,6 @@
-import Result from "../../../utils/useCasesResult/Result";
-import User from "../../../user/entities/User";
-import Species from "../../global/entities/Species";
+import type Result from "../../../utils/useCasesResult/Result";
+import type User from "../../../user/entities/User";
+import type Species from "../../global/entities/Species";
 
 export default interface UseCaseInterface {
     getListOfInvertebrates(jwt: string): Promise<Result>

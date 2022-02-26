@@ -1,4 +1,4 @@
-import type AdapterInterface from "./AdapterInterface.ts";
+import type AdapterInterface from "./AdapterInterface";
 
 import User from "../entities/User";
 

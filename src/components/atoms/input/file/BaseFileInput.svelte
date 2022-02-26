@@ -1,5 +1,5 @@
 <script lang="ts">
-    import BaseFileInputModel from "./BaseFileInputModel";
+    import type  BaseFileInputModel from "./BaseFileInputModel";
 
     export let baseFileInputModel: BaseFileInputModel
 
@@ -17,8 +17,8 @@
             id={baseFileInputModel.id}
             name={baseFileInputModel.name}
             on:change={handleInput}
-            readonly={baseFileInputModel.readonly === true ? 'readonly' : ''}
-            required={baseFileInputModel.required === true ? 'required' : ''}
+            readonly={baseFileInputModel.readonly}
+            required={baseFileInputModel.required}
             type="file"
     >
 

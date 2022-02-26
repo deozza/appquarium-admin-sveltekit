@@ -1,4 +1,4 @@
-import User from "../entities/User";
+import type User from "../entities/User";
 
 export default interface ServicesInterface {
     authenticateUser(email: string, password: string): Promise<User | null>

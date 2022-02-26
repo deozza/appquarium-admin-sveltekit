@@ -1,6 +1,6 @@
 import HasuraClient from '../../../../adapters/hasura/HasuraClient';
 import type WaterConstraintsAdapterInterface from './AdapterInterface';
-import WaterConstraints from '../../entities/WaterConstraints';
+import type WaterConstraints from '../../entities/WaterConstraints';
 import UseCaseError from '../../../../utils/useCasesResult/types/UseCaseError';
 import Query from '../../../../adapters/hasura/HasuraRequestBuilderV2/Query';
 import Constraints from '../../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';

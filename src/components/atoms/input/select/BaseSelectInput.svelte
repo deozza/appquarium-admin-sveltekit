@@ -1,14 +1,10 @@
 <script lang="ts">
 
-    import BaseSelectInputModel from '../select/BaseSelectInputModel';
-    import BaseOptionModel from './BaseOptionModel';
+    import type BaseSelectInputModel from '../select/BaseSelectInputModel';
+    import type BaseOptionModel from './BaseOptionModel';
 
     export let baseSelectInputModel: BaseSelectInputModel
     export let options: Array<BaseOptionModel>
-
-    function handleInput(e) {
-        baseSelectInputModel.value = e.target.value;
-    }
 </script>
 
 <div>
@@ -21,11 +17,11 @@
       bind:value={baseSelectInputModel.value}
       on:change
       on:focusout
-      readonly={baseSelectInputModel.readonly === true ? 'readonly' : ''}
-      required={baseSelectInputModel.required === true ? 'required' : ''}
+      readonly={baseSelectInputModel.readonly}
+      required={baseSelectInputModel.required}
     >
         <option value=''></option>
-        {#each options as option, index}
+        {#each options as option}
             <option value={option.value}>
                 { option.name }
             </option>

@@ -1,5 +1,5 @@
-import SpeciesFamily from '../../../entities/SpeciesFamily';
-import UseCaseError from '../../../../../utils/useCasesResult/types/UseCaseError';
+import type SpeciesFamily from '../../../entities/SpeciesFamily';
+import type UseCaseError from '../../../../../utils/useCasesResult/types/UseCaseError';
 
 export default interface SpeciesFamiliesAdapterInterface{
 	queryListOfSpeciesFamiliesByCategory(category: string): Promise<Array<SpeciesFamily> | UseCaseError>

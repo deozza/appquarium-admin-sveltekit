@@ -3,11 +3,11 @@
     import BaseHeader from "../../../../components/atoms/typography/header/BaseHeader.svelte";
     import BaseButton from "../../../../components/atoms/button/BaseButton.svelte";
 
-    import Species from "../../../../app/species/global/entities/Species";
+    import type Species from "../../../../app/species/global/entities/Species";
 
     import UserUseCase from '../../../../app/user/useCases/UseCase';
     import FishUseCase from '../../../../app/species/fish/useCases/UseCase';
-    import Result from '../../../../app/utils/useCasesResult/Result';
+    import type Result from '../../../../app/utils/useCasesResult/Result';
 
     import {goto} from '$app/navigation';
     import { onMount } from 'svelte';
@@ -21,7 +21,7 @@
     let totalOfSpecies: number = 0
     let totalPages: number = 1
     let itemsPerPage : number = 10
-    let currentPage: number | string = 1
+    let currentPage: number = 1
 
     let loadingFishes: boolean = true
 
@@ -29,17 +29,17 @@
         totalOfSpecies = await loadTotalOfFishes()
 
         totalPages = computePagination(totalOfSpecies, itemsPerPage)
-        currentPage = $page.url.searchParams.get('page') !== null ? $page.url.searchParams.get('page') : 1
+        currentPage = $page.url.searchParams.get('page') !== null ? parseInt($page.url.searchParams.get('page')) : 1
         currentPage--
 
         listOfFishes = await loadFishes(null, itemsPerPage, currentPage)
         loadingFishes = false
     })
 
-    async function loadFishes(filters, limit: number = itemsPerPage, currentPage = currentPage): Promise<Array<Species>>{
+    async function loadFishes(filters, limit: number = itemsPerPage, currentPageNumber = currentPage): Promise<Array<Species>>{
         const fishUseCase: FishUseCase = new FishUseCase()
 
-        const listOfFishesResult: Result = await fishUseCase.getListOfFishes(jwt.content, [], limit, currentPage*limit)
+        const listOfFishesResult: Result = await fishUseCase.getListOfFishes(jwt.content, [], limit, currentPageNumber*limit)
 
         if (listOfFishesResult.isFailed()) {
             for (const error of listOfFishesResult.errors) {
@@ -80,10 +80,10 @@
         return Math.ceil(totalSpecies/itemPerPages)
     }
 
-    async function loadFishesWithFilters(itemsPerPage: number = itemsPerPage, newPage: number = 1){
+    async function loadFishesWithFilters(nbOfItemsPerPage: number = itemsPerPage, newPage: number = 1){
         loadingFishes = true
         currentPage = newPage - 1
-        listOfFishes = await loadFishes(null, itemsPerPage, currentPage)
+        listOfFishes = await loadFishes(null, nbOfItemsPerPage, currentPage)
         $page.url.searchParams.set('page', currentPage+'')
         window.history.replaceState({}, '',$page.url.pathname + $page.url.search)
 
@@ -127,7 +127,7 @@
                 {#if i === currentPage}
                     <button disabled class='font-bold text-blue-500'>{i+1}</button>
                 {:else}
-                    <button on:click={e => loadFishesWithFilters(itemsPerPage, i+1)} class='text-blue-500'>{i+1}</button>
+                    <button on:click={() => loadFishesWithFilters(itemsPerPage, i+1)} class='text-blue-500'>{i+1}</button>
                 {/if}
             {/each}
         </div>

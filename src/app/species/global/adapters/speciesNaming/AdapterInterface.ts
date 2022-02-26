@@ -1,5 +1,5 @@
-import SpeciesNaming from '../../entities/SpeciesNaming';
-import UseCaseError from '../../../../utils/useCasesResult/types/UseCaseError';
+import type SpeciesNaming from '../../entities/SpeciesNaming';
+import type UseCaseError from '../../../../utils/useCasesResult/types/UseCaseError';
 
 export default interface SpeciesNamingAdapterInterface{
 	mutationCreateNaming(speciesNaming: SpeciesNaming): Promise<string | UseCaseError>

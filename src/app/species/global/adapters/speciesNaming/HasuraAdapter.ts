@@ -1,6 +1,6 @@
 import HasuraClient from '../../../../adapters/hasura/HasuraClient';
 import type SpeciesNamingAdapterInterface from './AdapterInterface';
-import SpeciesNaming from '../../entities/SpeciesNaming';
+import type SpeciesNaming from '../../entities/SpeciesNaming';
 import UseCaseError from '../../../../utils/useCasesResult/types/UseCaseError';
 import Query from '../../../../adapters/hasura/HasuraRequestBuilderV2/Query';
 import ConstraintPart from '../../../../adapters/hasura/HasuraRequestBuilderV2/ConstraintPart';

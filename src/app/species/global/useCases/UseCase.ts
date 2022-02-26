@@ -3,9 +3,9 @@ import type UseCaseInterface from "./UseCaseInterface";
 import Result from "../../../utils/useCasesResult/Result";
 import UseCaseError from "../../../utils/useCasesResult/types/UseCaseError";
 
-import Species from "../entities/Species";
+import type Species from "../entities/Species";
 import WaterConstraints from "../entities/WaterConstraints";
-import SpeciesNaming from "../entities/SpeciesNaming";
+import type SpeciesNaming from "../entities/SpeciesNaming";
 import AnimalSpecs from "../entities/AnimalSpecs";
 
 import Services from "../services/Services";

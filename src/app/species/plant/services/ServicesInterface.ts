@@ -1,7 +1,7 @@
-import UseCaseError from "../../../utils/useCasesResult/types/UseCaseError";
-import Species from "../../global/entities/Species";
-import SpeciesFamily from "../../global/entities/SpeciesFamily";
-import SpeciesGenre from "../../global/entities/SpeciesGenre";
+import type UseCaseError from "../../../utils/useCasesResult/types/UseCaseError";
+import type Species from "../../global/entities/Species";
+import type SpeciesFamily from "../../global/entities/SpeciesFamily";
+import type SpeciesGenre from "../../global/entities/SpeciesGenre";
 
 export default interface ServicesInterface {
     queryGetListOfPlants(jwt: string): Promise<Array<Species> | UseCaseError>

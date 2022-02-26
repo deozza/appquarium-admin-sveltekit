@@ -4,11 +4,10 @@
 
     import BaseHeader from "../../../components/atoms/typography/header/BaseHeader.svelte";
     import BaseButton from "../../../components/atoms/button/BaseButton.svelte";
-    import Species from "../../../app/species/global/entities/Species";
+    import type Species from "../../../app/species/global/entities/Species";
     import UserUseCase from '../../../app/user/useCases/UseCase';
-    import Result from '../../../app/utils/useCasesResult/Result';
+    import type Result from '../../../app/utils/useCasesResult/Result';
     import SpeciesUseCase from '../../../app/species/global/useCases/UseCase';
-    import Constraints from '../../../app/adapters/hasura/HasuraRequestBuilderV2/Constraints';
     import {goto} from '$app/navigation';
     import { onMount } from 'svelte';
     import { page } from '$app/stores'
@@ -20,7 +19,7 @@
     let totalOfSpecies: number = 0
     let totalPages: number = 1
     let itemsPerPage : number = 10
-    let currentPage: number | string = 1
+    let currentPage: number = 1
 
     let loadingSpecies: boolean = true
 
@@ -28,18 +27,18 @@
         totalOfSpecies = await loadTotalOfSpecies()
         
         totalPages = computePagination(totalOfSpecies, itemsPerPage)
-        currentPage = $page.url.searchParams.get('page') !== null ? $page.url.searchParams.get('page') : 1
+        currentPage = $page.url.searchParams.get('page') !== null ? parseInt($page.url.searchParams.get('page')) : 1
         currentPage--
 
         listOfSpecies = await loadSpecies([], itemsPerPage, currentPage)
         loadingSpecies = false
     })
 
-    async function loadSpecies(filters: Array<object> = [], limit: number = itemsPerPage, currentPage = currentPage): Promise<Array<Species>>{
+    async function loadSpecies(filters: Array<object> = [], limit: number = itemsPerPage, currentPageNumber = currentPage): Promise<Array<Species>>{
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
 
-        const listOfSpeciesFromHasura: Result = await speciesUseCase.getListOfSpecies(jwt.content, [], limit, currentPage*limit)
+        const listOfSpeciesFromHasura: Result = await speciesUseCase.getListOfSpecies(jwt.content, [], limit, currentPageNumber*limit)
         console.log(listOfSpeciesFromHasura)
 
         if (listOfSpeciesFromHasura.isFailed()) {
@@ -81,10 +80,10 @@
         return Math.ceil(totalSpecies/itemPerPages)
     }
 
-    async function loadSpeciesWithFilters(itemsPerPage: number = itemsPerPage, newPage: number = 1){
+    async function loadSpeciesWithFilters(nbOfItemsPerPage: number = itemsPerPage, newPage: number = 1){
         loadingSpecies = true
         currentPage = newPage - 1
-        listOfSpecies = await loadSpecies([], itemsPerPage, currentPage)
+        listOfSpecies = await loadSpecies([], nbOfItemsPerPage, currentPage)
         $page.url.searchParams.set('page', currentPage+'')
         window.history.replaceState({}, '',$page.url.pathname + $page.url.search)
 
@@ -132,7 +131,7 @@
                 {#if i === currentPage}
                     <button disabled class='font-bold text-blue-500'>{i+1}</button>
                 {:else}
-                    <button on:click={e => loadSpeciesWithFilters(itemsPerPage, i+1)} class='text-blue-500'>{i+1}</button>
+                    <button on:click={() => loadSpeciesWithFilters(itemsPerPage, i+1)} class='text-blue-500'>{i+1}</button>
                 {/if}
             {/each}
         </div>
@@ -140,8 +139,8 @@
 
     <div class="flex-r">
         {#each buttonsAdd as button}
-            <a href={button.link}>
-                <BaseButton baseButtonModel={button.modele}/>
+            <a href={button['link']}>
+                <BaseButton baseButtonModel={button['modele']}/>
             </a>
         {/each}
     </div>

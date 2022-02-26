@@ -4,15 +4,15 @@
     import NamingForm from "../../../../components/molecules/species/namingForm/NamingForm.svelte";
 
     import User from '../../../../app/user/entities/User';
-    import Species from "../../../../app/species/global/entities/Species";
-    import SpeciesGenre from "../../../../app/species/global/entities/SpeciesGenre";
-    import SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";
+    import type Species from "../../../../app/species/global/entities/Species";
+    import type SpeciesGenre from "../../../../app/species/global/entities/SpeciesGenre";
+    import type SpeciesFamily from "../../../../app/species/global/entities/SpeciesFamily";
 
     import UserUseCase from '../../../../app/user/useCases/UseCase';
     import InvertebrateUseCase from '../../../../app/species/invertebrate/useCases/UseCase';
 
-    import Result from '../../../../app/utils/useCasesResult/Result';
-    import UseCaseError from '../../../../app/utils/useCasesResult/types/UseCaseError';
+    import type Result from '../../../../app/utils/useCasesResult/Result';
+    import type UseCaseError from '../../../../app/utils/useCasesResult/types/UseCaseError';
 
     import {goto} from '$app/navigation';
 

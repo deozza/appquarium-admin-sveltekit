@@ -1,5 +1,5 @@
-import Result from "../../../utils/useCasesResult/Result";
-import Species from "../entities/Species";
+import type Result from "../../../utils/useCasesResult/Result";
+import type Species from "../entities/Species";
 
 export default interface UseCaseInterface {
     getTotalSpecies(jwt: string, filters: Array<object>): Promise<Result>

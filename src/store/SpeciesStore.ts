@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import Result from '../app/utils/useCasesResult/Result';
+import type Result from '../app/utils/useCasesResult/Result';
 import FishUseCase from '../app/species/fish/useCases/UseCase';
 import SpeciesUseCase from '../app/species/global/useCases/UseCase';
 import PlantUseCase from '../app/species/plant/useCases/UseCase';
@@ -120,7 +120,7 @@ async function loadAquariumKinds(){
 		new Error(aquariumKindsResult.errors.toString());
 	}
 
-	const options: Array<BaseOptionModel> = aquariumKindsResult.content.map((aquariumKind: object) => new BaseOptionModel(aquariumKind.name, aquariumKind.name));
+	const options: Array<BaseOptionModel> = aquariumKindsResult.content.map((aquariumKind: object) => new BaseOptionModel(aquariumKind['name'], aquariumKind['name']));
 	aquariumKinds.set(options);
 }
 
@@ -130,7 +130,7 @@ async function loadBehaviours(){
 		new Error(behavioursResult.errors.toString());
 	}
 
-	const options: Array<BaseOptionModel> = behavioursResult.content.map((behaviour: object) => new BaseOptionModel(behaviour.name, behaviour.name));
+	const options: Array<BaseOptionModel> = behavioursResult.content.map((behaviour: object) => new BaseOptionModel(behaviour['name'], behaviour['name']));
 	behaviours.set(options);
 }
 
@@ -140,7 +140,7 @@ async function loadSoilKinds(){
 		new Error(soilKindsResult.errors.toString());
 	}
 
-	const options: Array<BaseOptionModel> = soilKindsResult.content.map((soilKind: object) => new BaseOptionModel(soilKind.name, soilKind.name));
+	const options: Array<BaseOptionModel> = soilKindsResult.content.map((soilKind: object) => new BaseOptionModel(soilKind['name'], soilKind['name']));
 	soilKinds.set(options);
 }
 
@@ -177,7 +177,7 @@ async function loadListOfGrowthSpeeds(){
 		new Error(listOfGrowthSpeedsFromAdapter.errors.toString());
 	}
 
-	const options: Array<BaseOptionModel> = listOfGrowthSpeedsFromAdapter.content.map((growthSpeed: object) => new BaseOptionModel(growthSpeed.name, growthSpeed.name));
+	const options: Array<BaseOptionModel> = listOfGrowthSpeedsFromAdapter.content.map((growthSpeed: object) => new BaseOptionModel(growthSpeed['name'], growthSpeed['name']));
 	growthSpeeds.set(options)
 }
 
@@ -187,6 +187,6 @@ async function loadListOfPlantZones(){
 	if (listOfZonesFromAdapter.isFailed()) {
 		new Error(listOfZonesFromAdapter.errors.toString());
 	}
-	const options: Array<BaseOptionModel> = listOfZonesFromAdapter.content.map((zone: object) => new BaseOptionModel(zone.name, zone.name));
+	const options: Array<BaseOptionModel> = listOfZonesFromAdapter.content.map((zone: object) => new BaseOptionModel(zone['name'], zone['name']));
 	plantZones.set(options)
 }

@@ -1,6 +1,6 @@
-import UseCaseError from "../../../utils/useCasesResult/types/UseCaseError";
-import Species from "../entities/Species";
-import Constraints from '../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
+import type UseCaseError from "../../../utils/useCasesResult/types/UseCaseError";
+import type Species from "../entities/Species";
+import type Constraints from '../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
 
 export default interface AdapterInterface {
     queryTotalSpecies(speciesConstraints: Constraints): Promise<number | null>

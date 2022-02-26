@@ -9,7 +9,7 @@ export default class BaseTextInputModel extends BaseInputModel{
         tel: 'tel'
     }
 
-    readonly DEFAULT_TYPE: string = this.TEXT_INPUT_TYPES.text
+    readonly DEFAULT_TYPE: string = this.TEXT_INPUT_TYPES['text']
 
     private _placeholder: string
     private _minlength: number | null

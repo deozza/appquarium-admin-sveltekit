@@ -1,5 +1,5 @@
 <script lang="ts">
-    import BaseLabelModel from "./BaseLabelModel";
+    import type BaseLabelModel from "./BaseLabelModel";
 
     export let baseLabelModel: BaseLabelModel
 </script>

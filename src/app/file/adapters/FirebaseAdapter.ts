@@ -22,7 +22,7 @@ export default class FirebaseAdapter implements AdapterInterface {
     async uploadFile(path: string, file: File): Promise<Image | Array<UseCaseError>> {
         return await uploadBytes(ref(this.storage, path), file)
             .then(async () => {
-                const newImage: Image = new Image([])
+                const newImage: Image = new Image([], '')
                 newImage.url = await getDownloadURL(ref(this.storage, path))
                 return newImage
 

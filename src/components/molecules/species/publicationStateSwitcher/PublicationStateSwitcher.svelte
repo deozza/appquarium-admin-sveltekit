@@ -7,7 +7,7 @@
 
     import SpeciesUseCase from "../../../../app/species/global/useCases/UseCase";
     import UserUseCase from "../../../../app/user/useCases/UseCase";
-    import Result from "../../../../app/utils/useCasesResult/Result";
+    import type Result from "../../../../app/utils/useCasesResult/Result";
 
     import {goto} from '$app/navigation';
 
@@ -57,7 +57,7 @@
 <div class="flex-r space-x-6">
     {#if isLoading === false}
         {#each possibleNextStates[species.publication_state] as button}
-            <BaseButton baseButtonModel={button} on:click={editPublicationState(button.event)}/>
+            <BaseButton baseButtonModel={button} on:click={() => editPublicationState(button.event)}/>
         {/each}
     {:else}
         <p>chargement ...</p>

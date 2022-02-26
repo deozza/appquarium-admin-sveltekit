@@ -1,5 +1,5 @@
-import UseCaseError from '../../../../utils/useCasesResult/types/UseCaseError';
-import AquariumConstraints from '../../entities/AquariumConstraints';
+import type UseCaseError from '../../../../utils/useCasesResult/types/UseCaseError';
+import type AquariumConstraints from '../../entities/AquariumConstraints';
 
 export default interface AquariumConstraintsAdapterInterface{
 	queryListOfDecors(): Promise<Array<string> | UseCaseError>
