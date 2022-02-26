@@ -27,8 +27,8 @@
 	onMount(async () => {
 		const loadTotalOfFishesResult: number | void = await loadTotalOfFishes();
 
-		if(typeof loadTotalOfFishesResult === 'number'){
-			totalOfSpecies = loadTotalOfFishesResult
+		if (typeof loadTotalOfFishesResult === 'number') {
+			totalOfSpecies = loadTotalOfFishesResult;
 		}
 
 		totalPages = computePagination(totalOfSpecies, itemsPerPage);
@@ -38,9 +38,9 @@
 				: 1;
 		currentPage--;
 
-		const loadFishResult : Array<Species> | void = await loadFishes(null, itemsPerPage, currentPage)
+		const loadFishResult: Array<Species> | void = await loadFishes(null, itemsPerPage, currentPage);
 
-		if(Array.isArray(loadFishResult)) {
+		if (Array.isArray(loadFishResult)) {
 			listOfFishes = loadFishResult;
 		}
 		loadingFishes = false;
@@ -105,9 +105,13 @@
 	) {
 		loadingFishes = true;
 		currentPage = newPage - 1;
-		const loadFishResult : Array<Species> | void = await loadFishes(null, nbOfItemsPerPage, currentPage)
+		const loadFishResult: Array<Species> | void = await loadFishes(
+			null,
+			nbOfItemsPerPage,
+			currentPage
+		);
 
-		if(Array.isArray(loadFishResult)) {
+		if (Array.isArray(loadFishResult)) {
 			listOfFishes = loadFishResult;
 		}
 

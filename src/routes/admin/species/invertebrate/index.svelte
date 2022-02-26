@@ -22,9 +22,9 @@
 	let loadingInvertebrate: boolean = true;
 
 	onMount(async () => {
-		const loadInvertebrateResult : Array<Species> | void = await loadInvertebrates()
+		const loadInvertebrateResult: Array<Species> | void = await loadInvertebrates();
 
-		if(Array.isArray(loadInvertebrateResult)) {
+		if (Array.isArray(loadInvertebrateResult)) {
 			listOfInvertebrates = loadInvertebrateResult;
 		}
 		loadingInvertebrate = false;

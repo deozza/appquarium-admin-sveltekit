@@ -49,9 +49,9 @@
 	let loadingPlant: boolean = true;
 
 	onMount(async () => {
-		const loadPlantResult : Species | void = await loadPlant()
+		const loadPlantResult: Species | void = await loadPlant();
 
-		if(loadPlantResult instanceof Species) {
+		if (loadPlantResult instanceof Species) {
 			plant = loadPlantResult;
 		}
 

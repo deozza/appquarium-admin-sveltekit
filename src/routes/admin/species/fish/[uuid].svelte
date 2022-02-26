@@ -51,9 +51,9 @@
 	let loadingFish: boolean = true;
 
 	onMount(async () => {
-		const loadFishResult : Species | void = await loadFish()
+		const loadFishResult: Species | void = await loadFish();
 
-		if(loadFishResult instanceof Species) {
+		if (loadFishResult instanceof Species) {
 			fish = loadFishResult;
 		}
 

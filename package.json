@@ -3,7 +3,7 @@
 	"description": "Admin platform for appquarium",
 	"version": "0.2.0",
 	"scripts": {
-		"dev": "svelte-kit dev --host 0.0.0.0",
+		"dev": "svelte-kit dev",
 		"build": "svelte-kit build",
 		"package": "svelte-kit package",
 		"preview": "svelte-kit preview",
@@ -17,8 +17,8 @@
 		"@sveltejs/adapter-netlify": "^1.0.0-next.48",
 		"@sveltejs/kit": "next",
 		"@types/js-cookie": "^3.0.1",
-		"@typescript-eslint/eslint-plugin": "^4.31.1",
-		"@typescript-eslint/parser": "^4.31.1",
+		"@typescript-eslint/eslint-plugin": "^5.10.1",
+		"@typescript-eslint/parser": "^5.10.1",
 		"encoding": "^0.1.13",
 		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0",
@@ -31,12 +31,12 @@
 		"postcss-cli": "^9.0.2",
 		"prettier": "^2.4.1",
 		"prettier-plugin-svelte": "^2.4.0",
-		"svelte": "^3.44.0",
+		"svelte": "^3.46.0",
 		"svelte-check": "^2.2.6",
-		"svelte-preprocess": "^4.9.4",
+		"svelte-preprocess": "^4.10.1",
 		"tailwindcss": "^3.0.2",
 		"tslib": "^2.3.1",
-		"typescript": "^4.4.3"
+		"typescript": "~4.5.4"
 	},
 	"type": "module"
 }

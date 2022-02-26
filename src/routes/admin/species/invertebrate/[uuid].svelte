@@ -48,9 +48,9 @@
 	let loadingInvertebrate: boolean = true;
 
 	onMount(async () => {
-		const loadInvertebrateResult : Species | void = await loadInvertebrate()
+		const loadInvertebrateResult: Species | void = await loadInvertebrate();
 
-		if(loadInvertebrateResult instanceof Species) {
+		if (loadInvertebrateResult instanceof Species) {
 			invertebrate = loadInvertebrateResult;
 		}
 
