@@ -1,117 +1,114 @@
-import type UseCaseInterface from "./UseCaseInterface";
+import type UseCaseInterface from './UseCaseInterface';
 
-import Result from "../../utils/useCasesResult/Result";
+import Result from '../../utils/useCasesResult/Result';
 
-import type User from "../entities/User";
+import type User from '../entities/User';
 
-import Services from "../services/Services";
+import Services from '../services/Services';
 
 export default class UserUseCase implements UseCaseInterface {
+	async login(email: string, password: string): Promise<Result> {
+		const userServices: Services = new Services();
+		let result: Result = new Result();
 
-    async login(email: string, password: string): Promise<Result> {
-        const userServices: Services = new Services()
-        let result: Result = new Result()
+		let user: User | null = await userServices.authenticateUser(email, password);
 
-        let user: User | null = await userServices.authenticateUser(email, password)
+		if (user === null) {
+			result.addError('User not found', 404);
+			return result;
+		}
 
-        if (user === null) {
-            result.addError('User not found', 404)
-            return result
-        }
+		const userHasAdminPrivileges: boolean = Services.checkUserHasAdminPrivileges(user);
+		if (userHasAdminPrivileges === false) {
+			result.addError('User is forbidden', 403);
+			return result;
+		}
 
-        const userHasAdminPrivileges: boolean = Services.checkUserHasAdminPrivileges(user)
-        if(userHasAdminPrivileges === false){
-            result.addError('User is forbidden', 403)
-            return result
-        }
+		user = userServices.setCookie(user);
 
-        user = userServices.setCookie(user)
+		if (user === null) {
+			result.addError('Cookie failed', 400);
+			return result;
+		}
 
-        if (user === null) {
-            result.addError('Cookie failed', 400)
-            return result
-        }
+		result.content = user;
+		result.addSuccess('Credentials are ok', 201);
+		return result;
+	}
 
-        result.content = user
-        result.addSuccess('Credentials are ok', 201)
-        return result
-    }
+	getToken(): Result {
+		const userServices: Services = new Services();
+		let result: Result = new Result();
 
+		const token: string | undefined = userServices.getCookie();
 
-    getToken(): Result {
-        const userServices: Services = new Services()
-        let result: Result = new Result()
+		if (token === undefined) {
+			result.addError('User is not logged in', 401);
+			return result;
+		}
 
-        const token: string | undefined = userServices.getCookie()
+		result.content = token;
+		result.addSuccess('Token found', 200);
 
-        if (token === undefined) {
-            result.addError('User is not logged in', 401)
-            return result
-        }
+		return result;
+	}
 
-        result.content = token
-        result.addSuccess('Token found', 200)
+	logout(): Result {
+		const userServices: Services = new Services();
+		let result: Result = new Result();
 
-        return result
-    }
+		userServices.removeCookie();
 
-    logout(): Result {
-        const userServices: Services = new Services()
-        let result: Result = new Result()
+		const token: string | undefined = userServices.getCookie();
 
-        userServices.removeCookie()
+		if (token !== undefined) {
+			result.addError('User is still logged in', 400);
+			return result;
+		}
 
-        const token: string | undefined = userServices.getCookie()
+		result.content = true;
+		result.addSuccess('Token removed', 204);
 
-        if (token !== undefined) {
-            result.addError('User is still logged in', 400)
-            return result
-        }
+		return result;
+	}
 
-        result.content = true
-        result.addSuccess('Token removed', 204)
+	async checkTokenIsValidOrRefresh(token: string): Promise<Result> {
+		const userServices: Services = new Services();
+		let result: Result = new Result();
 
-        return result
-    }
+		const tokenDecodablePart = token.split('.')[1];
+		const decoded = JSON.parse(Buffer.from(tokenDecodablePart, 'base64').toString());
 
-    async checkTokenIsValidOrRefresh(token: string): Promise<Result> {
-        const userServices: Services = new Services()
-        let result: Result = new Result()
+		if (Date.now() < decoded.exp * 1000) {
+			result.addSuccess('Token is valid', 200);
+			return result;
+		}
 
-        const tokenDecodablePart = token.split('.')[1]
-        const decoded = JSON.parse(Buffer.from(tokenDecodablePart, 'base64').toString())
+		const refreshedToken: string | null = await userServices.getRefreshedToken();
 
-        if (Date.now() < decoded.exp * 1000) {
-            result.addSuccess('Token is valid', 200)
-            return result
-        }
+		if (refreshedToken === null) {
+			result.addError('Invalid credentials', 401);
+			return result;
+		}
 
-        const refreshedToken: string | null = await userServices.getRefreshedToken()
+		result.content = refreshedToken;
+		result.addSuccess('Token is refreshed', 201);
+		return result;
+	}
 
-        if (refreshedToken === null) {
-            result.addError('Invalid credentials', 401)
-            return result
-        }
+	async getTotalUsers(jwt: string): Promise<Result> {
+		const userServices: Services = new Services();
+		let result: Result = new Result();
 
-        result.content = refreshedToken
-        result.addSuccess('Token is refreshed', 201)
-        return result
-    }
+		const totalUsers: number | null = await userServices.queryTotalUsers(jwt);
 
-    async getTotalUsers(jwt: string): Promise<Result> {
-        const userServices: Services = new Services()
-        let result: Result = new Result()
+		if (totalUsers === null) {
+			result.addError('Query failed', 400);
+			return result;
+		}
 
-        const totalUsers: number | null = await userServices.queryTotalUsers(jwt)
-
-        if (totalUsers === null) {
-            result.addError('Query failed', 400)
-            return result
-        }
-
-        result.content = totalUsers
-        result.addSuccess("Query is ok", 200)
-        return result
-    }
-
+		result.content = totalUsers;
+		result.addSuccess('Query is ok', 200);
+		return result;
+	}
 }

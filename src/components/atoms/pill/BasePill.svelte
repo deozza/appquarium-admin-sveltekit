@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type BasePillModel from "./BasePillModel";
+	import type BasePillModel from './BasePillModel';
 
-    export let basePillModel: BasePillModel
+	export let basePillModel: BasePillModel;
 </script>
 
 <span class="pill pill-{basePillModel.style}">
-    {basePillModel.content}
+	{basePillModel.content}
 </span>

@@ -1,45 +1,40 @@
-export default class ConstraintPart{
-	constraintName: string
-	constraints: Array<object> | string
+export default class ConstraintPart {
+	constraintName: string;
+	constraints: Array<object> | string;
 
 	constructor(constraintName: string) {
-		this.constraintName = constraintName
-		this.constraints = []
+		this.constraintName = constraintName;
+		this.constraints = [];
 	}
 
 	addConstraint(constraints: Array<object> | string): ConstraintPart {
-		this.constraints = constraints
+		this.constraints = constraints;
 
-		return this
+		return this;
 	}
 
+	buildConstraintsAsGQLString(whereObject: object): string {
+		let constraintAsGQLString: string = '';
 
-	buildConstraintsAsGQLString(whereObject: object): string{
+		constraintAsGQLString += whereObject['constraintName'] + ': ';
 
-		let constraintAsGQLString: string = ''
-
-		constraintAsGQLString +=  whereObject['constraintName'] + ': '
-
-		if(Array.isArray(whereObject['constraints'])){
+		if (Array.isArray(whereObject['constraints'])) {
 			whereObject['constraints'].forEach((subWhere: object, index: number) => {
-
-				if(index < 1){
-					constraintAsGQLString += '{ '
-				}else{
-					constraintAsGQLString += ', '
+				if (index < 1) {
+					constraintAsGQLString += '{ ';
+				} else {
+					constraintAsGQLString += ', ';
 				}
 
-				constraintAsGQLString += this.buildConstraintsAsGQLString(subWhere)
-				if(index === whereObject['constraints'].length - 1){
-					constraintAsGQLString += ' }'
+				constraintAsGQLString += this.buildConstraintsAsGQLString(subWhere);
+				if (index === whereObject['constraints'].length - 1) {
+					constraintAsGQLString += ' }';
 				}
-			})
-
-		}else{
-			constraintAsGQLString += whereObject['constraints']
+			});
+		} else {
+			constraintAsGQLString += whereObject['constraints'];
 		}
 
-
-		return constraintAsGQLString
+		return constraintAsGQLString;
 	}
 }

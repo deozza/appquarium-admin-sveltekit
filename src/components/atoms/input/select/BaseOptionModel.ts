@@ -1,10 +1,10 @@
-export default class BaseOptionModel{
-	private _name: string|number
-	private _value: string|number
+export default class BaseOptionModel {
+	private _name: string | number;
+	private _value: string | number;
 
-	public constructor(name: string|number, value: string|number) {
-		this._name = name
-		this._value = value
+	public constructor(name: string | number, value: string | number) {
+		this._name = name;
+		this._value = value;
 	}
 
 	get name(): string | number {

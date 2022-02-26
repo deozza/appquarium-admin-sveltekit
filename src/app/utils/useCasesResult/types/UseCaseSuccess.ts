@@ -1,12 +1,11 @@
-import type UseCaseResultTypeInterface from "./UseCaseResultTypeInterface";
+import type UseCaseResultTypeInterface from './UseCaseResultTypeInterface';
 
 export default class UseCaseSuccess implements UseCaseResultTypeInterface {
-    code: number;
-    type: string;
+	code: number;
+	type: string;
 
-    constructor(type: string, code: number) {
-        this.type = type
-        this.code = code
-    }
-
+	constructor(type: string, code: number) {
+		this.type = type;
+		this.code = code;
+	}
 }

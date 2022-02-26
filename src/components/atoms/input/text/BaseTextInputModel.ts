@@ -1,78 +1,76 @@
-import BaseInputModel from "../BaseInputModel";
+import BaseInputModel from '../BaseInputModel';
 
-export default class BaseTextInputModel extends BaseInputModel{
+export default class BaseTextInputModel extends BaseInputModel {
+	readonly TEXT_INPUT_TYPES: object = {
+		text: 'text',
+		password: 'password',
+		email: 'email',
+		tel: 'tel'
+	};
 
-    readonly TEXT_INPUT_TYPES: object = {
-        text: 'text',
-        password: 'password',
-        email: 'email',
-        tel: 'tel'
-    }
+	readonly DEFAULT_TYPE: string = this.TEXT_INPUT_TYPES['text'];
 
-    readonly DEFAULT_TYPE: string = this.TEXT_INPUT_TYPES['text']
+	private _placeholder: string;
+	private _minlength: number | null;
+	private _maxlength: number | null;
+	private _datalist: string | null;
 
-    private _placeholder: string
-    private _minlength: number | null
-    private _maxlength: number | null
-    private _datalist: string | null
+	public constructor(name: string) {
+		super(name);
+		this._type = this.DEFAULT_TYPE;
+		this._placeholder = '';
+		this._minlength = null;
+		this._maxlength = null;
+		this._datalist = null;
+	}
 
-    public constructor(name: string) {
-        super(name)
-        this._type = this.DEFAULT_TYPE
-        this._placeholder = ''
-        this._minlength = null
-        this._maxlength = null
-        this._datalist = null
-    }
+	get type(): string {
+		return this._type;
+	}
 
-    get type(): string {
-        return this._type;
-    }
+	set type(value: string) {
+		if (this.TEXT_INPUT_TYPES.hasOwnProperty(value) === false) {
+			throw new Error();
+		}
+		this._type = value;
+	}
 
-    set type(value: string) {
-        if(this.TEXT_INPUT_TYPES.hasOwnProperty(value) === false){
-            throw new Error()
-        }
-        this._type = value;
-    }
+	get placeholder(): string {
+		return this._placeholder;
+	}
 
-    get placeholder(): string {
-        return this._placeholder;
-    }
+	set placeholder(value: string) {
+		this._placeholder = value;
+	}
 
-    set placeholder(value: string) {
-        this._placeholder = value;
-    }
+	get minlength(): number | null {
+		return this._minlength;
+	}
 
-    get minlength(): number | null {
-        return this._minlength;
-    }
+	set minlength(value: number | null) {
+		if (this._maxlength !== null && value > this._maxlength) {
+			throw new Error();
+		}
 
-    set minlength(value: number | null) {
+		this._minlength = value;
+	}
 
-        if(this._maxlength !== null && value > this._maxlength){
-            throw new Error()
-        }
+	get maxlength(): number | null {
+		return this._maxlength;
+	}
 
-        this._minlength = value;
-    }
+	set maxlength(value: number | null) {
+		if (this._minlength !== null && value < this._minlength) {
+			throw new Error();
+		}
+		this._maxlength = value;
+	}
 
-    get maxlength(): number | null {
-        return this._maxlength;
-    }
+	get datalist(): string | null {
+		return this._datalist;
+	}
 
-    set maxlength(value: number | null) {
-        if(this._minlength !== null && value < this._minlength){
-            throw new Error()
-        }
-        this._maxlength = value;
-    }
-
-    get datalist(): string|null {
-        return this._datalist;
-    }
-
-    set datalist(value: string) {
-        this._datalist = value;
-    }
+	set datalist(value: string) {
+		this._datalist = value;
+	}
 }

@@ -1,35 +1,33 @@
-import BaseHeaderModel from "../../../atoms/typography/header/BaseHeaderModel";
-import BaseButtonModel from "../../../atoms/button/BaseButtonModel";
+import BaseHeaderModel from '../../../atoms/typography/header/BaseHeaderModel';
+import BaseButtonModel from '../../../atoms/button/BaseButtonModel';
 
 export const header: BaseHeaderModel = new BaseHeaderModel('Dashboard espèces')
-    .setDisplaySizeOrTrowError('xxxl')
-    .setSizeOrTrowError('h1')
+	.setDisplaySizeOrTrowError('xxxl')
+	.setSizeOrTrowError('h1');
 
 const addFishButton: BaseButtonModel = new BaseButtonModel('Ajouter un poisson')
-    .setTypeOrThrowError('button')
-    .setStyleOrThrowError('primary')
+	.setTypeOrThrowError('button')
+	.setStyleOrThrowError('primary');
 
 const addPlantButton: BaseButtonModel = new BaseButtonModel('Ajouter une plante')
-    .setTypeOrThrowError('button')
-    .setStyleOrThrowError('success')
+	.setTypeOrThrowError('button')
+	.setStyleOrThrowError('success');
 
 const addInvertebrateButton: BaseButtonModel = new BaseButtonModel('Ajouter un invertébré')
-    .setTypeOrThrowError('button')
-    .setStyleOrThrowError('warning')
+	.setTypeOrThrowError('button')
+	.setStyleOrThrowError('warning');
 
-
-export const buttonsAdd: Array<object> =[
-    {
-        modele: addFishButton,
-        link : "/admin/species/fish/add"
-    },
-    {
-        modele: addPlantButton,
-        link: "/admin/species/plant/add"
-    },
-    {
-        modele: addInvertebrateButton,
-        link: "/admin/species/invertebrate/add"
-    }
-]
-
+export const buttonsAdd: Array<object> = [
+	{
+		modele: addFishButton,
+		link: '/admin/species/fish/add'
+	},
+	{
+		modele: addPlantButton,
+		link: '/admin/species/plant/add'
+	},
+	{
+		modele: addInvertebrateButton,
+		link: '/admin/species/invertebrate/add'
+	}
+];

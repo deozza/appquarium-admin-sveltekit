@@ -1,3 +1,3 @@
-import BaseHeaderModel from "../../../../atoms/typography/header/BaseHeaderModel";
+import BaseHeaderModel from '../../../../atoms/typography/header/BaseHeaderModel';
 
-export const header: BaseHeaderModel = new BaseHeaderModel("Ajouter une espèce de plante")
+export const header: BaseHeaderModel = new BaseHeaderModel('Ajouter une espèce de plante');

@@ -1,34 +1,34 @@
 <script lang="ts">
-    import type  BaseFileInputModel from "./BaseFileInputModel";
+	import type BaseFileInputModel from './BaseFileInputModel';
 
-    export let baseFileInputModel: BaseFileInputModel
+	export let baseFileInputModel: BaseFileInputModel;
 
-    function handleInput(e) {
-        baseFileInputModel.value = e.target.files[0];
-    }
+	function handleInput(e) {
+		baseFileInputModel.value = e.target.files[0];
+	}
 </script>
 
 <div>
-    <input
-            accept={baseFileInputModel.accept.join(',')}
-            class="w-full py-2 px-3"
-            class:border-red-500={baseFileInputModel.error === true}
-            class:text-red-500={baseFileInputModel.error === true}
-            id={baseFileInputModel.id}
-            name={baseFileInputModel.name}
-            on:change={handleInput}
-            readonly={baseFileInputModel.readonly}
-            required={baseFileInputModel.required}
-            type="file"
-    >
+	<input
+		accept={baseFileInputModel.accept.join(',')}
+		class="w-full py-2 px-3"
+		class:border-red-500={baseFileInputModel.error === true}
+		class:text-red-500={baseFileInputModel.error === true}
+		id={baseFileInputModel.id}
+		name={baseFileInputModel.name}
+		on:change={handleInput}
+		readonly={baseFileInputModel.readonly}
+		required={baseFileInputModel.required}
+		type="file"
+	/>
 
-    {#if baseFileInputModel.error}
-        <span class="text-red-500">{baseFileInputModel.errorMessage}</span>
-    {/if}
+	{#if baseFileInputModel.error}
+		<span class="text-red-500">{baseFileInputModel.errorMessage}</span>
+	{/if}
 </div>
 
 <style>
-    div {
-        flex: 2
-    }
+	div {
+		flex: 2;
+	}
 </style>

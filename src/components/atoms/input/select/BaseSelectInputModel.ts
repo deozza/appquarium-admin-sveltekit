@@ -1,21 +1,19 @@
-import BaseInputModel from "../BaseInputModel";
+import BaseInputModel from '../BaseInputModel';
 import type BaseOptionModel from './BaseOptionModel';
 
-export default class BaseSelectInputModel extends BaseInputModel{
+export default class BaseSelectInputModel extends BaseInputModel {
+	private _options: Array<BaseOptionModel>;
 
-    private _options: Array<BaseOptionModel>
+	public constructor(name: string) {
+		super(name);
+		this._options = [];
+	}
 
-    public constructor(name: string) {
-        super(name)
-        this._options = []
-    }
+	get options(): Array<BaseOptionModel> {
+		return this._options;
+	}
 
-
-    get options(): Array<BaseOptionModel> {
-        return this._options;
-    }
-
-    set options(value: Array<BaseOptionModel>) {
-        this._options = value;
-    }
+	set options(value: Array<BaseOptionModel>) {
+		this._options = value;
+	}
 }

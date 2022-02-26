@@ -1,48 +1,46 @@
-import type ServicesInterface from "./ServicesInterface";
+import type ServicesInterface from './ServicesInterface';
 
-import type User from "../entities/User";
+import type User from '../entities/User';
 
-import type AdapterInterface from "../adapters/AdapterInterface";
-import FirebaseAdapter from "../adapters/FirebaseAdapter";
-import HasuraAdapter from "../adapters/HasuraAdapter";
+import type AdapterInterface from '../adapters/AdapterInterface';
+import FirebaseAdapter from '../adapters/FirebaseAdapter';
+import HasuraAdapter from '../adapters/HasuraAdapter';
 import Cookies from 'js-cookie';
 
 export default class Services implements ServicesInterface {
+	async authenticateUser(email: string, password: string): Promise<User | null> {
+		const adapter: AdapterInterface | null = new FirebaseAdapter();
 
-    async authenticateUser(email: string, password: string): Promise<User | null> {
+		return await adapter.authenticateWithEmailAndPassword(email, password);
+	}
 
-        const adapter: AdapterInterface | null = new FirebaseAdapter()
+	static checkUserHasAdminPrivileges(user: User): boolean {
+		return user.roles.includes('superadmin');
+	}
 
-        return await adapter.authenticateWithEmailAndPassword(email, password)
-    }
+	async getRefreshedToken(): Promise<string | null> {
+		const adapter: AdapterInterface | null = new FirebaseAdapter();
 
-    static checkUserHasAdminPrivileges(user: User): boolean{
-        return user.roles.includes('superadmin')
-    }
+		return await adapter.getRefreshedToken();
+	}
 
-    async getRefreshedToken(): Promise<string | null> {
-        const adapter: AdapterInterface | null = new FirebaseAdapter()
+	async queryTotalUsers(jwt: string): Promise<number | null> {
+		const adapter: AdapterInterface | null = new HasuraAdapter(jwt);
 
-        return await adapter.getRefreshedToken()
-    }
+		return await adapter.queryTotalUsers();
+	}
 
-    async queryTotalUsers(jwt: string): Promise<number | null> {
-        const adapter: AdapterInterface | null = new HasuraAdapter(jwt)
+	setCookie(user: User): User | null {
+		Cookies.set('appquarium-jwt', user.jwt, { sameSite: 'strict' });
 
-        return await adapter.queryTotalUsers()
-    }
+		return user;
+	}
 
-    setCookie(user: User): User | null {
-        Cookies.set('appquarium-jwt', user.jwt, {sameSite: "strict"})
+	removeCookie(): void {
+		Cookies.remove('appquarium-jwt');
+	}
 
-        return user
-    }
-
-    removeCookie(): void {
-        Cookies.remove('appquarium-jwt')
-    }
-
-    getCookie(): string | undefined {
-        return Cookies.get('appquarium-jwt')
-    }
+	getCookie(): string | undefined {
+		return Cookies.get('appquarium-jwt');
+	}
 }
