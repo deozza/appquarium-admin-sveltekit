@@ -49,7 +49,11 @@
 	let loadingPlant: boolean = true;
 
 	onMount(async () => {
-		plant = await loadPlant();
+		const loadPlantResult : Species | void = await loadPlant()
+
+		if(loadPlantResult instanceof Species) {
+			plant = loadPlantResult;
+		}
 
 		header.setContent(plant.computeName());
 		statusPill.setStyleOrThrowError(plant.getPublicationStateStyle());
@@ -61,7 +65,7 @@
 		loadingPlant = false;
 	});
 
-	async function loadPlant(): Promise<Species> {
+	async function loadPlant(): Promise<Species | void> {
 		const plantResult: Result = await speciesUseCase.getSpecies(jwt.content, $page.params.uuid);
 
 		if (plantResult.isFailed()) {

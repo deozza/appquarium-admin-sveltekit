@@ -23,7 +23,11 @@
 	let loadingSpecies: boolean = true;
 
 	onMount(async () => {
-		totalOfSpecies = await loadTotalOfSpecies();
+		const loadTotalOfSpeciesResult: number | void = await loadTotalOfSpecies();
+
+		if(typeof loadTotalOfSpeciesResult === 'number'){
+			totalOfSpecies = loadTotalOfSpeciesResult
+		}
 
 		totalPages = computePagination(totalOfSpecies, itemsPerPage);
 		currentPage =
@@ -32,7 +36,12 @@
 				: 1;
 		currentPage--;
 
-		listOfSpecies = await loadSpecies([], itemsPerPage, currentPage);
+		const loadSpeciesResult : Array<Species> | void = await loadSpecies([], itemsPerPage, currentPage);
+
+		if(Array.isArray(loadSpeciesResult)) {
+			listOfSpecies = loadSpeciesResult;
+		}
+
 		loadingSpecies = false;
 	});
 
@@ -40,7 +49,7 @@
 		filters: Array<object> = [],
 		limit: number = itemsPerPage,
 		currentPageNumber = currentPage
-	): Promise<Array<Species>> {
+	): Promise<Array<Species> | void> {
 		const speciesUseCase: SpeciesUseCase = new SpeciesUseCase();
 
 		const listOfSpeciesFromHasura: Result = await speciesUseCase.getListOfSpecies(
@@ -65,7 +74,7 @@
 		return listOfSpeciesFromHasura.content;
 	}
 
-	async function loadTotalOfSpecies(): Promise<number> {
+	async function loadTotalOfSpecies(): Promise<number | void> {
 		const userUseCase: UserUseCase = new UserUseCase();
 		const jwt: Result = userUseCase.getToken();
 
@@ -96,7 +105,13 @@
 	) {
 		loadingSpecies = true;
 		currentPage = newPage - 1;
-		listOfSpecies = await loadSpecies([], nbOfItemsPerPage, currentPage);
+
+		const loadSpeciesResult : Array<Species> | void = await loadSpecies([], nbOfItemsPerPage, currentPage);
+
+		if(Array.isArray(loadSpeciesResult)) {
+			listOfSpecies = loadSpeciesResult;
+		}
+
 		$page.url.searchParams.set('page', currentPage + '');
 		window.history.replaceState({}, '', $page.url.pathname + $page.url.search);
 

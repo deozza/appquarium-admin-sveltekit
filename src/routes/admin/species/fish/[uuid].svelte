@@ -51,7 +51,11 @@
 	let loadingFish: boolean = true;
 
 	onMount(async () => {
-		fish = await loadFish();
+		const loadFishResult : Species | void = await loadFish()
+
+		if(loadFishResult instanceof Species) {
+			fish = loadFishResult;
+		}
 
 		header.setContent(fish.computeName());
 		statusPill.setStyleOrThrowError(fish.getPublicationStateStyle());
@@ -64,7 +68,7 @@
 		loadingFish = false;
 	});
 
-	async function loadFish(): Promise<Species> {
+	async function loadFish(): Promise<Species | void> {
 		const fishResult: Result = await speciesUseCase.getSpecies(jwt.content, $page.params.uuid);
 
 		if (fishResult.isFailed()) {

@@ -26,7 +26,7 @@
 	const plantUseCase: PlantUseCase = new PlantUseCase();
 	let plant: Species = plantUseCase.initNewPlant(user);
 
-	async function loadSpeciesNaming(): Promise<Species | Array<UseCaseError>> {
+	async function loadSpeciesNaming(): Promise<Species | Array<UseCaseError> | void> {
 		const speciesGenresResult: Result = await plantUseCase.getPlantGenres(jwt.content);
 		if (speciesGenresResult.isFailed()) {
 			for (const error of speciesGenresResult.errors) {

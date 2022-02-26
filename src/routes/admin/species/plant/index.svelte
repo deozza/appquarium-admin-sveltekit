@@ -19,11 +19,16 @@
 	let loadingPlant: boolean = true;
 
 	onMount(async () => {
-		listOfPlants = await loadPlants();
+		const loadPlantResult : Array<Species> | void = await loadPlants()
+
+		if(Array.isArray(loadPlantResult)) {
+			listOfPlants = loadPlantResult;
+		}
+
 		loadingPlant = false;
 	});
 
-	async function loadPlants(): Promise<Array<Species>> {
+	async function loadPlants(): Promise<Array<Species> | void>  {
 		const plantUseCase: PlantUseCase = new PlantUseCase();
 		const listOfPlantsResult: Result = await plantUseCase.getListOfPlants(jwt.content);
 

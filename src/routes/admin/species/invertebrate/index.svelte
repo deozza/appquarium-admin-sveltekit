@@ -22,11 +22,15 @@
 	let loadingInvertebrate: boolean = true;
 
 	onMount(async () => {
-		listOfInvertebrates = await loadInvertebrates();
+		const loadInvertebrateResult : Array<Species> | void = await loadInvertebrates()
+
+		if(Array.isArray(loadInvertebrateResult)) {
+			listOfInvertebrates = loadInvertebrateResult;
+		}
 		loadingInvertebrate = false;
 	});
 
-	async function loadInvertebrates(): Promise<Array<Species>> {
+	async function loadInvertebrates(): Promise<Array<Species> | void> {
 		const invertebrateUseCase: InvertebrateUseCase = new InvertebrateUseCase();
 		const listOfInvertebratesResult: Result = await invertebrateUseCase.getListOfInvertebrates(
 			jwt.content

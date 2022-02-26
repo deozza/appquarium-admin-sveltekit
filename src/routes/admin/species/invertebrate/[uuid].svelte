@@ -48,7 +48,11 @@
 	let loadingInvertebrate: boolean = true;
 
 	onMount(async () => {
-		invertebrate = await loadInvertebrate();
+		const loadInvertebrateResult : Species | void = await loadInvertebrate()
+
+		if(loadInvertebrateResult instanceof Species) {
+			invertebrate = loadInvertebrateResult;
+		}
 
 		header.setContent(invertebrate.computeName());
 		statusPill.setStyleOrThrowError(invertebrate.getPublicationStateStyle());
@@ -61,7 +65,7 @@
 		loadingInvertebrate = false;
 	});
 
-	async function loadInvertebrate(): Promise<Species> {
+	async function loadInvertebrate(): Promise<Species | void> {
 		const invertebrateResult: Result = await speciesUseCase.getSpecies(
 			jwt.content,
 			$page.params.uuid

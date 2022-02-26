@@ -25,7 +25,11 @@
 	let loadingFishes: boolean = true;
 
 	onMount(async () => {
-		totalOfSpecies = await loadTotalOfFishes();
+		const loadTotalOfFishesResult: number | void = await loadTotalOfFishes();
+
+		if(typeof loadTotalOfFishesResult === 'number'){
+			totalOfSpecies = loadTotalOfFishesResult
+		}
 
 		totalPages = computePagination(totalOfSpecies, itemsPerPage);
 		currentPage =
@@ -34,7 +38,11 @@
 				: 1;
 		currentPage--;
 
-		listOfFishes = await loadFishes(null, itemsPerPage, currentPage);
+		const loadFishResult : Array<Species> | void = await loadFishes(null, itemsPerPage, currentPage)
+
+		if(Array.isArray(loadFishResult)) {
+			listOfFishes = loadFishResult;
+		}
 		loadingFishes = false;
 	});
 
@@ -42,7 +50,7 @@
 		filters,
 		limit: number = itemsPerPage,
 		currentPageNumber = currentPage
-	): Promise<Array<Species>> {
+	): Promise<Array<Species> | void> {
 		const fishUseCase: FishUseCase = new FishUseCase();
 
 		const listOfFishesResult: Result = await fishUseCase.getListOfFishes(
@@ -66,7 +74,7 @@
 		return listOfFishesResult.content;
 	}
 
-	async function loadTotalOfFishes(): Promise<number> {
+	async function loadTotalOfFishes(): Promise<number | void> {
 		const userUseCase: UserUseCase = new UserUseCase();
 		const jwt: Result = userUseCase.getToken();
 
@@ -97,7 +105,12 @@
 	) {
 		loadingFishes = true;
 		currentPage = newPage - 1;
-		listOfFishes = await loadFishes(null, nbOfItemsPerPage, currentPage);
+		const loadFishResult : Array<Species> | void = await loadFishes(null, nbOfItemsPerPage, currentPage)
+
+		if(Array.isArray(loadFishResult)) {
+			listOfFishes = loadFishResult;
+		}
+
 		$page.url.searchParams.set('page', currentPage + '');
 		window.history.replaceState({}, '', $page.url.pathname + $page.url.search);
 

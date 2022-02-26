@@ -26,7 +26,7 @@
 	const fishUseCase: FishUseCase = new FishUseCase();
 	let fish: Species = fishUseCase.initNewFish(user);
 
-	async function loadSpeciesNaming(): Promise<Species | Array<UseCaseError>> {
+	async function loadSpeciesNaming(): Promise<Species | Array<UseCaseError> | void> {
 		const speciesGenresResult: Result = await fishUseCase.getFishGenres(jwt.content);
 		if (speciesGenresResult.isFailed()) {
 			console.log('speciesGenresResult.errors');

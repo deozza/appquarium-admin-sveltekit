@@ -26,7 +26,7 @@
 	const invertebrateUseCase: InvertebrateUseCase = new InvertebrateUseCase();
 	let invertebrate: Species = invertebrateUseCase.initNewInvertebrate(user);
 
-	async function loadSpeciesNaming(): Promise<Species | Array<UseCaseError>> {
+	async function loadSpeciesNaming(): Promise<Species | Array<UseCaseError> | void> {
 		const speciesGenresResult: Result = await invertebrateUseCase.getInvertebrateGenres(
 			jwt.content
 		);
