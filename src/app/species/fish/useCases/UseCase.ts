@@ -10,14 +10,25 @@ import User from "../../../user/entities/User";
 
 import Services from "../services/Services";
 import {default as SpeciesServices} from "../../global/services/Services";
+import Constraints from '../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
+import ConstraintPart from '../../../adapters/hasura/HasuraRequestBuilderV2/ConstraintPart';
 
 export default class FishUseCase implements UseCaseInterface {
 
-    async getListOfFishes(jwt: string): Promise<Result> {
+    async getListOfFishes(jwt: string, filters: Array<object>, itemsPerPage: number, offset: number): Promise<Result> {
         let result: Result = new Result()
-        const fishService: Services = new Services()
+        const speciesService: SpeciesServices = new SpeciesServices()
 
-        const listOfFishes: Array<Species> | Error = await fishService.queryGetListOfFishes(jwt)
+        let speciesConstraints: Constraints = new Constraints()
+        speciesConstraints.offset = offset
+        speciesConstraints.limit = itemsPerPage
+        filters = [
+            ...filters,
+            new ConstraintPart('category').addConstraint([new ConstraintPart('_eq').addConstraint('fish')])
+        ]
+        speciesConstraints.where = new ConstraintPart('where').addConstraint(filters)
+
+        const listOfFishes: Array<Species> | Error = await speciesService.queryListOfSpecies(jwt, speciesConstraints)
 
         if (listOfFishes instanceof Error) {
             result.errors.push(listOfFishes)
@@ -25,6 +36,30 @@ export default class FishUseCase implements UseCaseInterface {
         }
 
         result.content = listOfFishes
+        result.addSuccess("Query is ok", 200)
+        return result
+    }
+
+    async getTotalOfFishes(jwt: string, filters: Array<object> = []): Promise<Result> {
+        let result: Result = new Result()
+
+        let speciesConstraints: Constraints = new Constraints()
+
+        filters = [
+          ...filters,
+            new ConstraintPart('category').addConstraint([new ConstraintPart('_eq').addConstraint('fish')])
+        ]
+        speciesConstraints.where = new ConstraintPart('where').addConstraint(filters)
+
+        const speciesService: SpeciesServices = new SpeciesServices()
+        const totalSpecies: number | null = await speciesService.queryTotalSpecies(jwt, speciesConstraints)
+
+        if (totalSpecies === null) {
+            result.addError('Query failed', 400)
+            return result
+        }
+
+        result.content = totalSpecies
         result.addSuccess("Query is ok", 200)
         return result
     }

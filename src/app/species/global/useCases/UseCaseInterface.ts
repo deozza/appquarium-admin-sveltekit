@@ -1,11 +1,10 @@
 import Result from "../../../utils/useCasesResult/Result";
-import Species from "..//entities/Species";
-import Constraints from '../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
+import Species from "../entities/Species";
 
 export default interface UseCaseInterface {
-    getTotalSpecies(jwt: string): Promise<Result>
+    getTotalSpecies(jwt: string, filters: Array<object>): Promise<Result>
 
-    getListOfSpecies(jwt: string, speciesConstraints: Constraints): Promise<Result>
+    getListOfSpecies(jwt: string, filters: Array<object>, itemsPerPage: number, offset: number): Promise<Result>
 
     getSpeciesOrigins(jwt: string): Promise<Result>
 

@@ -53,10 +53,10 @@ export default class Services implements ServicesInterface {
         return result
     }
 
-    async queryTotalSpecies(jwt: string): Promise<number | null> {
+    async queryTotalSpecies(jwt: string, speciesConstraints: Constraints): Promise<number | null> {
         const adapter: AdapterInterface = new HasuraAdapter(jwt)
 
-        return await adapter.queryTotalSpecies()
+        return await adapter.queryTotalSpecies(speciesConstraints)
     }
 
     async queryListOfSpecies(jwt: string, speciesConstraints: Constraints): Promise<Array<Species> | UseCaseError> {

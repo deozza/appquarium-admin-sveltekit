@@ -28,9 +28,11 @@
 
     if (species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED') {
         formElements.submitButton.isDisabled = true
-        formElements.maleSizeInput.readonly = true
-        formElements.femaleSizeInput.readonly = true
-        formElements.longevityInput.readonly = true
+        formElements.minVolumeInput.readonly = true
+        formElements.maxVolumeInput.readonly = true
+        formElements.minLengthInput.readonly = true
+        formElements.maxHeightInput.readonly = true
+        formElements.soilKindInput.readonly = true
     }
 
     async function submitAquariumConstraintsForm() {

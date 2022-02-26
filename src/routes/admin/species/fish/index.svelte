@@ -11,21 +11,35 @@
 
     import {goto} from '$app/navigation';
     import { onMount } from 'svelte';
+    import { page } from '$app/stores'
+
 
     let listOfFishes: Array<Species> = []
     const userUseCase: UserUseCase = new UserUseCase()
     const jwt: Result = userUseCase.getToken()
 
+    let totalOfSpecies: number = 0
+    let totalPages: number = 1
+    let itemsPerPage : number = 10
+    let currentPage: number | string = 1
+
     let loadingFishes: boolean = true
 
     onMount(async () => {
-        listOfFishes = await loadFishes()
+        totalOfSpecies = await loadTotalOfFishes()
+
+        totalPages = computePagination(totalOfSpecies, itemsPerPage)
+        currentPage = $page.url.searchParams.get('page') !== null ? $page.url.searchParams.get('page') : 1
+        currentPage--
+
+        listOfFishes = await loadFishes(null, itemsPerPage, currentPage)
         loadingFishes = false
     })
 
-    async function loadFishes(): Promise<Array<Species>>{
+    async function loadFishes(filters, limit: number = itemsPerPage, currentPage = currentPage): Promise<Array<Species>>{
         const fishUseCase: FishUseCase = new FishUseCase()
-        const listOfFishesResult: Result = await fishUseCase.getListOfFishes(jwt.content)
+
+        const listOfFishesResult: Result = await fishUseCase.getListOfFishes(jwt.content, [], limit, currentPage*limit)
 
         if (listOfFishesResult.isFailed()) {
             for (const error of listOfFishesResult.errors) {
@@ -39,6 +53,41 @@
         }
 
         return listOfFishesResult.content
+    }
+
+    async function loadTotalOfFishes(): Promise<number>{
+        const userUseCase: UserUseCase = new UserUseCase()
+        const jwt: Result = userUseCase.getToken()
+
+        const fishUseCase: FishUseCase = new FishUseCase()
+        const totalOfFishesFromHasura: Result = await fishUseCase.getTotalOfFishes(jwt.content, [])
+
+        if (totalOfFishesFromHasura.isFailed()) {
+            for (const error of totalOfFishesFromHasura.errors) {
+                if (error.code === 401) {
+                    userUseCase.logout()
+                    return goto('/')
+                }
+            }
+
+            return totalOfFishesFromHasura.content
+        }
+
+        return totalOfFishesFromHasura.content
+    }
+
+    function computePagination(totalSpecies: number, itemPerPages: number): number{
+        return Math.ceil(totalSpecies/itemPerPages)
+    }
+
+    async function loadFishesWithFilters(itemsPerPage: number = itemsPerPage, newPage: number = 1){
+        loadingFishes = true
+        currentPage = newPage - 1
+        listOfFishes = await loadFishes(null, itemsPerPage, currentPage)
+        $page.url.searchParams.set('page', currentPage+'')
+        window.history.replaceState({}, '',$page.url.pathname + $page.url.search)
+
+        loadingFishes = false
     }
 </script>
 
@@ -72,6 +121,17 @@
             {/each}
             </tbody>
         </table>
+
+        <div class='flex-r space-x-3 my-6'>
+            {#each Array(totalPages) as _, i}
+                {#if i === currentPage}
+                    <button disabled class='font-bold text-blue-500'>{i+1}</button>
+                {:else}
+                    <button on:click={e => loadFishesWithFilters(itemsPerPage, i+1)} class='text-blue-500'>{i+1}</button>
+                {/if}
+            {/each}
+        </div>
+
     {/if}
     <a href="/admin/species/fish/add">
         <BaseButton baseButtonModel={addFishButton}/>

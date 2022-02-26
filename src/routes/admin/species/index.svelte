@@ -14,11 +14,15 @@
     import { page } from '$app/stores'
 
     let listOfSpecies: Array<Species> = []
+    const userUseCase: UserUseCase = new UserUseCase()
+    const jwt: Result = userUseCase.getToken()
+
     let totalOfSpecies: number = 0
     let totalPages: number = 1
-    let loadingSpecies: boolean = true
     let itemsPerPage : number = 10
     let currentPage: number | string = 1
+
+    let loadingSpecies: boolean = true
 
     onMount(async () => {
         totalOfSpecies = await loadTotalOfSpecies()
@@ -26,20 +30,17 @@
         totalPages = computePagination(totalOfSpecies, itemsPerPage)
         currentPage = $page.url.searchParams.get('page') !== null ? $page.url.searchParams.get('page') : 1
         currentPage--
-        listOfSpecies = await loadSpecies(null, 10, currentPage)
+
+        listOfSpecies = await loadSpecies([], itemsPerPage, currentPage)
         loadingSpecies = false
     })
 
-    async function loadSpecies(filters, limit: number = itemsPerPage, currentPage = currentPage): Promise<Array<Species>>{
-        const userUseCase: UserUseCase = new UserUseCase()
-        const jwt: Result = userUseCase.getToken()
+    async function loadSpecies(filters: Array<object> = [], limit: number = itemsPerPage, currentPage = currentPage): Promise<Array<Species>>{
 
         const speciesUseCase: SpeciesUseCase = new SpeciesUseCase()
-        let speciesConstraints: Constraints = new Constraints();
-        speciesConstraints.limit = limit
-        speciesConstraints.offset = currentPage * speciesConstraints.limit
 
-        const listOfSpeciesFromHasura: Result = await speciesUseCase.getListOfSpecies(jwt.content, speciesConstraints)
+        const listOfSpeciesFromHasura: Result = await speciesUseCase.getListOfSpecies(jwt.content, [], limit, currentPage*limit)
+        console.log(listOfSpeciesFromHasura)
 
         if (listOfSpeciesFromHasura.isFailed()) {
             for (const error of listOfSpeciesFromHasura.errors) {
@@ -83,7 +84,7 @@
     async function loadSpeciesWithFilters(itemsPerPage: number = itemsPerPage, newPage: number = 1){
         loadingSpecies = true
         currentPage = newPage - 1
-        listOfSpecies = await loadSpecies(null, itemsPerPage, currentPage)
+        listOfSpecies = await loadSpecies([], itemsPerPage, currentPage)
         $page.url.searchParams.set('page', currentPage+'')
         window.history.replaceState({}, '',$page.url.pathname + $page.url.search)
 

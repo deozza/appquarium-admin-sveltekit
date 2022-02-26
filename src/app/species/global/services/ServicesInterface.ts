@@ -10,7 +10,7 @@ import AnimalBehaviour from '../entities/AnimalBehaviour';
 import Constraints from '../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
 
 export default interface ServicesInterface {
-    queryTotalSpecies(jwt: string): Promise<number | null>
+    queryTotalSpecies(jwt: string, speciesConstraints: Constraints): Promise<number | null>
 
     queryGetSpecies(jwt: string, uuid: string): Promise<Species | UseCaseError>
 

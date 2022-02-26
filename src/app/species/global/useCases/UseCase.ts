@@ -15,6 +15,7 @@ import PlantSpecs from '../entities/PlantSpecs';
 import AnimalBehaviour from '../entities/AnimalBehaviour';
 import AquariumConstraints from '../entities/AquariumConstraints';
 import Constraints from '../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
+import ConstraintPart from '../../../adapters/hasura/HasuraRequestBuilderV2/ConstraintPart';
 
 export default class SpeciesUseCase implements UseCaseInterface {
     private static async handleNewSpeciesNaming(jwt: string, species: Species): Promise<Species | UseCaseError> {
@@ -41,11 +42,14 @@ export default class SpeciesUseCase implements UseCaseInterface {
         return species
     }
 
-    async getTotalSpecies(jwt: string): Promise<Result> {
+    async getTotalSpecies(jwt: string, filters: Array<object> = []): Promise<Result> {
         let result: Result = new Result()
         const speciesService: Services = new Services()
 
-        const totalSpecies: number | null = await speciesService.queryTotalSpecies(jwt)
+        let speciesConstraints: Constraints = new Constraints()
+        speciesConstraints.where = new ConstraintPart('where').addConstraint(filters)
+
+        const totalSpecies: number | null = await speciesService.queryTotalSpecies(jwt, speciesConstraints)
 
         if (totalSpecies === null) {
             result.addError('Query failed', 400)
@@ -80,8 +84,17 @@ export default class SpeciesUseCase implements UseCaseInterface {
         return result
     }
 
-    async getListOfSpecies(jwt: string, speciesConstraints: Constraints): Promise<Result> {
+    async getListOfSpecies(jwt: string, filters: Array<object>, itemsPerPage: number, offset: number): Promise<Result> {
         let result: Result = new Result()
+
+        let speciesConstraints: Constraints = new Constraints()
+        speciesConstraints.offset = offset
+        speciesConstraints.limit = itemsPerPage
+
+        if(filters.length > 0){
+            speciesConstraints.where = new ConstraintPart('where').addConstraint(filters)
+        }
+
         const speciesService: Services = new Services()
 
         const listOfSpecies: Array<Species> | UseCaseError = await speciesService.queryListOfSpecies(jwt, speciesConstraints)

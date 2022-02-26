@@ -3,7 +3,7 @@ import Species from "../entities/Species";
 import Constraints from '../../../adapters/hasura/HasuraRequestBuilderV2/Constraints';
 
 export default interface AdapterInterface {
-    queryTotalSpecies(): Promise<number | null>
+    queryTotalSpecies(speciesConstraints: Constraints): Promise<number | null>
 
     queryListOfSpecies(speciesConstraints: Constraints): Promise<Array<Species> | UseCaseError>
 

@@ -4,7 +4,9 @@ import Species from "../../global/entities/Species";
 import User from "../../../user/entities/User";
 
 export default interface UseCaseInterface {
-    getListOfFishes(jwt: string): Promise<Result>
+    getListOfFishes(jwt: string, filters: Array<object>, itemsPerPage: number, offset: number): Promise<Result>
+
+    getTotalOfFishes(jwt: string, filters: Array<object>): Promise<Result>
 
     getFishGenres(jwt: string): Promise<Result>
 

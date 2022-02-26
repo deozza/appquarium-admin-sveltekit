@@ -16,7 +16,7 @@
             }
         }
 
-        await loadEnums()
+        //await loadEnums()
         return {}
     }
 

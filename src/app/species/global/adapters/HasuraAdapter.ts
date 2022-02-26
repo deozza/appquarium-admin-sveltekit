@@ -10,7 +10,7 @@ import ConstraintPart from '../../../adapters/hasura/HasuraRequestBuilderV2/Cons
 
 export default class HasuraAdapter extends HasuraClient implements AdapterInterface {
 
-    async queryTotalSpecies(): Promise<number | null> {
+    async queryTotalSpecies(speciesConstraints: Constraints): Promise<number | null> {
 
         const queryBuilder: Query = new Query('query')
 
@@ -18,6 +18,8 @@ export default class HasuraAdapter extends HasuraClient implements AdapterInterf
           .addReturnToQuery(new Query('aggregate')
             .addReturnToQuery('count')
           )
+
+        speciesAggregateSubQuery.constraints = speciesConstraints
 
         queryBuilder.addReturnToQuery(speciesAggregateSubQuery)
 
