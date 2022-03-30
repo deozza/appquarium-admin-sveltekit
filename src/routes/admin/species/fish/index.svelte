@@ -2,6 +2,7 @@
 	import { header, addFishButton } from '../../../../components/pages/admin/fish/index/Modeles';
 	import BaseHeader from '../../../../components/atoms/typography/header/BaseHeader.svelte';
 	import BaseButton from '../../../../components/atoms/button/BaseButton.svelte';
+	import BasePaginator from '../../../../components/molecules/paginator/BasePaginator.svelte';
 
 	import type Species from '../../../../app/species/global/entities/Species';
 
@@ -99,6 +100,11 @@
 		return Math.ceil(totalSpecies / itemPerPages);
 	}
 
+	function handlePagination(event) {
+		const newPage: number = event.detail.page
+		loadFishesWithFilters(itemsPerPage, newPage)
+	}
+
 	async function loadFishesWithFilters(
 		nbOfItemsPerPage: number = itemsPerPage,
 		newPage: number = 1
@@ -115,7 +121,7 @@
 			listOfFishes = loadFishResult;
 		}
 
-		$page.url.searchParams.set('page', currentPage + '');
+		$page.url.searchParams.set('page', newPage + '');
 		window.history.replaceState({}, '', $page.url.pathname + $page.url.search);
 
 		loadingFishes = false;
@@ -176,17 +182,8 @@
 			</tbody>
 		</table>
 
-		<div class="flex-r space-x-3 my-6">
-			{#each Array(totalPages) as _, i}
-				{#if i === currentPage}
-					<button disabled class="font-bold text-blue-500">{i + 1}</button>
-				{:else}
-					<button on:click={() => loadFishesWithFilters(itemsPerPage, i + 1)} class="text-blue-500"
-						>{i + 1}</button
-					>
-				{/if}
-			{/each}
-		</div>
+		<BasePaginator totalPages={totalPages} currentPage={currentPage} on:change_page={handlePagination} />
+
 	{/if}
 	<a href="/admin/species/fish/add">
 		<BaseButton baseButtonModel={addFishButton} />
