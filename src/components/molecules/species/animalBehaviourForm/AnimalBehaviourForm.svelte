@@ -4,18 +4,21 @@
 	import BaseLabel from '../../../atoms/input/BaseLabel.svelte';
 	import BaseNumberInput from '../../../atoms/input/number/BaseNumberInput.svelte';
 	import BaseButton from '../../../atoms/button/BaseButton.svelte';
+	import BaseSelectInput from '../../../atoms/input/select/BaseSelectInput.svelte';
+
 	import Species from '../../../../app/species/global/entities/Species';
 	import User from '../../../../app/user/entities/User';
 	import UserUseCase from '../../../../app/user/useCases/UseCase';
 	import SpeciesUseCase from '../../../../app/species/global/useCases/UseCase';
 	import type Result from '../../../../app/utils/useCasesResult/Result';
+	import Translation from '../../../../app/utils/i18n/Translation';
+
 	import {
 		alimentations,
 		animalZones,
 		aquariumKinds,
 		behaviours
 	} from '../../../../store/SpeciesStore';
-	import BaseSelectInput from '../../../atoms/input/select/BaseSelectInput.svelte';
 
 	export let species: Species = new Species([]);
 	export let user: User = new User('');
@@ -178,7 +181,7 @@
 								id={zone.name}
 								name={zone.name}
 							/>
-							{zone.name}
+							{Translation.translate(["animal_zones", zone.name])}
 						</label>
 					{/each}
 				</div>
@@ -198,7 +201,7 @@
 								id={alimentation.name}
 								name={alimentation.name}
 							/>
-							{alimentation.name}
+							{Translation.translate(["alimentations", alimentation.name])}
 						</label>
 					{/each}
 				</div>

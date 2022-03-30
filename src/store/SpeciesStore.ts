@@ -6,6 +6,8 @@ import PlantUseCase from '../app/species/plant/useCases/UseCase';
 import InvertebrateUseCase from '../app/species/invertebrate/useCases/UseCase';
 import BaseOptionModel from '../components/atoms/input/select/BaseOptionModel';
 
+import Translation from '../app/utils/i18n/Translation';
+
 const speciesUseCase: SpeciesUseCase = new SpeciesUseCase();
 const fishUseCase: FishUseCase = new FishUseCase();
 const plantUseCase: PlantUseCase = new PlantUseCase();
@@ -121,7 +123,7 @@ async function loadAquariumKinds() {
 	}
 
 	const options: Array<BaseOptionModel> = aquariumKindsResult.content.map(
-		(aquariumKind: object) => new BaseOptionModel(aquariumKind['name'], aquariumKind['name'])
+		(aquariumKind: object) => new BaseOptionModel(Translation.translate(["aquarium_kinds", aquariumKind['name']]), aquariumKind['name'])
 	);
 	aquariumKinds.set(options);
 }
@@ -133,7 +135,7 @@ async function loadBehaviours() {
 	}
 
 	const options: Array<BaseOptionModel> = behavioursResult.content.map(
-		(behaviour: object) => new BaseOptionModel(behaviour['name'], behaviour['name'])
+		(behaviour: object) => new BaseOptionModel(Translation.translate(["animal_behaviours", behaviour['name']]), behaviour['name'])
 	);
 	behaviours.set(options);
 }
@@ -145,7 +147,7 @@ async function loadSoilKinds() {
 	}
 
 	const options: Array<BaseOptionModel> = soilKindsResult.content.map(
-		(soilKind: object) => new BaseOptionModel(soilKind['name'], soilKind['name'])
+		(soilKind: object) => new BaseOptionModel(Translation.translate(['soil_kinds', soilKind['name']]), soilKind['name'])
 	);
 	soilKinds.set(options);
 }

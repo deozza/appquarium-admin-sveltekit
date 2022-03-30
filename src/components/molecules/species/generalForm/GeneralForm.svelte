@@ -3,13 +3,16 @@
 
 	import BaseLabel from '../../../atoms/input/BaseLabel.svelte';
 	import BaseButton from '../../../atoms/button/BaseButton.svelte';
+	import BaseTextInput from '../../../atoms/input/text/BaseTextInput.svelte';
+
 	import Species from '../../../../app/species/global/entities/Species';
 	import User from '../../../../app/user/entities/User';
 	import SpeciesUseCase from '../../../../app/species/global/useCases/UseCase';
-	import type Result from '../../../../app/utils/useCasesResult/Result';
-	import { goto } from '$app/navigation';
 	import UserUseCase from '../../../../app/user/useCases/UseCase';
-	import BaseTextInput from '../../../atoms/input/text/BaseTextInput.svelte';
+	import type Result from '../../../../app/utils/useCasesResult/Result';
+	import Translation from '../../../../app/utils/i18n/Translation';
+
+	import { goto } from '$app/navigation';
 
 	export let species: Species = new Species([]);
 	export let speciesOrigins: Array<object> = [];
@@ -67,7 +70,7 @@
 				<datalist id={formElements['originInput'].datalist}>
 					{#each speciesOrigins as origin}
 						<option value={origin['name']}>
-							{origin['name']}
+							{Translation.translate(['origins',origin['name']])}
 						</option>
 					{/each}
 				</datalist>

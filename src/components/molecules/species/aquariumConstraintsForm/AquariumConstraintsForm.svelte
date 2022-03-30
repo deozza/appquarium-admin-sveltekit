@@ -4,12 +4,15 @@
 	import BaseLabel from '../../../atoms/input/BaseLabel.svelte';
 	import BaseNumberInput from '../../../atoms/input/number/BaseNumberInput.svelte';
 	import BaseButton from '../../../atoms/button/BaseButton.svelte';
+	import BaseSelectInput from '../../../atoms/input/select/BaseSelectInput.svelte';
+
 	import Species from '../../../../app/species/global/entities/Species';
 	import User from '../../../../app/user/entities/User';
 	import SpeciesUseCase from '../../../../app/species/global/useCases/UseCase';
 	import type Result from '../../../../app/utils/useCasesResult/Result';
 	import UserUseCase from '../../../../app/user/useCases/UseCase';
-	import BaseSelectInput from '../../../atoms/input/select/BaseSelectInput.svelte';
+	import Translation from '../../../../app/utils/i18n/Translation';
+
 	import { soilKinds, decors } from '../../../../store/SpeciesStore';
 
 	export let species: Species = new Species([]);
@@ -127,7 +130,7 @@
 							id={decor.name}
 							name={decor.name}
 						/>
-						{decor.name}
+						{Translation.translate(['aquarium_decors', decor.name])}
 					</label>
 				{/each}
 			</div>

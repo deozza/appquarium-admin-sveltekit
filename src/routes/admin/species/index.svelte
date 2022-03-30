@@ -9,6 +9,7 @@
 	import UserUseCase from '../../../app/user/useCases/UseCase';
 	import type Result from '../../../app/utils/useCasesResult/Result';
 	import SpeciesUseCase from '../../../app/species/global/useCases/UseCase';
+	import Translation from '../../../app/utils/i18n/Translation';
 	
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
@@ -161,8 +162,8 @@
 								sveltekit:prefetch>{species.computeName()}</a
 							>
 						</td>
-						<td>{species.category}</td>
-						<td>{species.getPublicationStateContent()}</td>
+						<td>{Translation.translate(['categories', species.category])}</td>
+						<td>{Translation.translate(['publication_states', species.publication_state])}</td>
 						<td
 							>{species.created_at.getDate() +
 								'/' +
