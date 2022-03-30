@@ -1,0 +1,148 @@
+{
+    "publication_states": {
+        "DRAFT": {
+            "fr": "brouillon",
+            "en": "draft"
+        },
+        "PRE_PUBLISHED": {
+            "fr": "pré-publié",
+            "en": "pre-published"
+        },
+        "MODERATED": {
+            "fr": "modéré",
+            "en": "moderated"
+        },
+        "PUBLISHED": {
+            "fr": "publié",
+            "en": "published"
+        },
+        "ARCHIVED": {
+            "fr": "archivé",
+            "en": "archived"
+        }
+    },
+    "categories": {
+        "fish": {
+            "fr": "poisson",
+            "en": "fish"
+        },
+        "plant": {
+            "fr": "plante",
+            "en": "plant"
+        },
+        "invertebrate": {
+            "fr": "invertébré",
+            "en": "invertebrate"
+        }
+    },
+    "origins": {
+        "amazonia": {
+            "fr": "amazonie",
+            "en": "amazonia"
+        },
+        "central_america": {
+            "fr": "amérique centrale",
+            "en": "central america"
+        },
+        "tanganyika": {
+            "fr": "lac tanganyika",
+            "en": "tanganyika lake"
+        },
+        "cosmopolitan": {
+            "fr": "cosmopolitain",
+            "en": "cosmopolitan"
+        }
+    },
+    "aquarium_kinds": {
+        "individual": {
+            "fr": "individuel",
+            "en": "individual"
+        },
+        "specific": {
+            "fr": "spécifique",
+            "en": "specific"
+        },
+        "communal": {
+            "fr": "communautaire",
+            "en": "communal"
+        }
+    },
+    "animal_behaviours": {
+        "calm": {
+            "fr": "calme",
+            "en": "calm"
+        },
+        "timid": {
+            "fr": "timide",
+            "en": "timid"
+        },
+        "active": {
+            "fr": "actif",
+            "en": "active"
+        },
+        "aggressive": {
+            "fr": "aggressif",
+            "en": "aggresive"
+        },
+        "predatorous": {
+            "fr": "prédateur",
+            "en": "predatorous"
+        }
+    },
+    "animal_zones": {
+        "ground": {
+            "fr": "sol",
+            "en": "ground"
+        },
+        "medium": {
+            "fr": "milieu",
+            "en": "medium"
+        },
+        "surface": {
+            "fr": "surface",
+            "en": "surface"
+        }
+    },
+    "alimentations": {
+        "vegetarian": {
+            "fr": "herbivore",
+            "en": "vegetarian"
+        },
+        "omnivorous": {
+            "fr": "omnivore",
+            "en": "omnivorous"
+        },
+        "carnivorous": {
+            "fr": "carnivore",
+            "en": "carnivorous"
+        }
+    },
+    "soil_kinds": {
+        "quartz": {
+            "fr": "quartz",
+            "en": "quartz"
+        }
+    },
+    "aquarium_decors": {
+        "plant": {
+            "fr": "plantes",
+            "en": "plants"
+        },
+        "rock": {
+            "fr": "pierres",
+            "en": "rocks"
+        },
+        "flat_rock": {
+            "fr": "pierres plates",
+            "flat_rock": "flat rocks"
+        },
+        "snails": {
+            "fr": "coquilles d'escargots",
+            "en": "snails shells"
+        },
+        "root": {
+            "fr": "racine de mangrove",
+            "en": "mangrove roots"
+        }
+    }
+}
