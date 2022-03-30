@@ -52,11 +52,14 @@ export default class SpeciesUseCase implements UseCaseInterface {
 	}
 
 	async getTotalSpecies(jwt: string, filters: Array<object> = []): Promise<Result> {
-		let result: Result = new Result();
+		const result: Result = new Result();
 		const speciesService: Services = new Services();
 
-		let speciesConstraints: Constraints = new Constraints();
-		speciesConstraints.where = new ConstraintPart('where').addConstraint(filters);
+		const speciesConstraints: Constraints = new Constraints();
+
+		if(filters.length > 0){
+			speciesConstraints.where = new ConstraintPart('where').addConstraint(filters);
+		}
 
 		const totalSpecies: number | null = await speciesService.queryTotalSpecies(
 			jwt,
