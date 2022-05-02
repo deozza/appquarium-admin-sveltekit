@@ -97,7 +97,8 @@ export default class AnimalBehaviourHasuraAdapter
 		console.log(animalBehaviour);
 
 		insertAnimalBehaviourOneSubQuery.constraints = new Constraints();
-		insertAnimalBehaviourOneSubQuery.constraints.set = new ConstraintPart('object').addConstraint([
+
+		let constraintParts: Array<ConstraintPart> = [
 			new ConstraintPart('aquarium_kind').addConstraint(animalBehaviour.aquarium_kind),
 			new ConstraintPart('intraspecific_behaviour').addConstraint(
 				animalBehaviour.intraspecific_behaviour
@@ -105,23 +106,27 @@ export default class AnimalBehaviourHasuraAdapter
 			new ConstraintPart('extraspecific_behaviour').addConstraint(
 				animalBehaviour.extraspecific_behaviour
 			),
-			new ConstraintPart('female_per_male').addConstraint(
-				animalBehaviour.female_per_male.toString()
-			),
 			new ConstraintPart('min_group').addConstraint(animalBehaviour.min_group.toString()),
-			new ConstraintPart('max_group').addConstraint(animalBehaviour.max_group.toString()),
 			new ConstraintPart('diurnal').addConstraint(animalBehaviour.diurnal.toString()),
 			new ConstraintPart('zone').addConstraint(JSON.stringify(animalBehaviour.zone)),
 			new ConstraintPart('alimentation').addConstraint(
 				JSON.stringify(animalBehaviour.alimentation)
 			),
 			new ConstraintPart('species_uuid').addConstraint('"' + animalBehaviour.species_uuid + '"')
-		]);
+		]
+
+		if(animalBehaviour.max_group !== null) {
+			constraintParts.push(new ConstraintPart('max_group').addConstraint(animalBehaviour.max_group.toString()))
+		}
+
+		if(animalBehaviour.female_per_male !== null){
+			constraintParts.push(new ConstraintPart('female_per_male').addConstraint(animalBehaviour.female_per_male.toString()))
+		}
+
+		insertAnimalBehaviourOneSubQuery.constraints.set = new ConstraintPart('object').addConstraint(constraintParts);
 
 		queryBuilder.addReturnToQuery(insertAnimalBehaviourOneSubQuery);
 		const mutation: string = queryBuilder.buildQuery();
-
-		console.log(mutation);
 
 		try {
 			const data = await this.client.request(mutation);
