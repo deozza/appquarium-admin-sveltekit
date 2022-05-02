@@ -58,7 +58,7 @@ export default class AquariumConstraintsHasuraAdapter
 
 		insertAquariumConstraintsOneSubQuery.constraints = new Constraints();
 
-		let constraintParts: Array<object> = [
+		let constraintParts: Array<ConstraintPart> = [
 			new ConstraintPart('min_volume').addConstraint(aquariumConstraints.min_volume.toString()),
 			new ConstraintPart('soil_kind').addConstraint('"' + aquariumConstraints.soil_kind + '"'),
 			new ConstraintPart('decor').addConstraint(JSON.stringify(aquariumConstraints.decor)),
