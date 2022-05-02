@@ -27,8 +27,6 @@
 	originInput.required = true;
 
 	onMount(() => {
-		console.log(species.publication_state)
-
 		originInput.value = species.origin;
 
 		if (species.origin !== null) {
@@ -40,9 +38,6 @@
 			submitButton.isDisabled = true;
 			originInput.readonly = true;
 		}
-
-		console.log(submitButton)
-
 	});
 
 	async function submitGeneralForm() {
