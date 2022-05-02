@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { formElements } from './Modeles';
-
 	import BaseLabel from '../../../atoms/input/BaseLabel.svelte';
 	import BaseNumberInput from '../../../atoms/input/number/BaseNumberInput.svelte';
 	import BaseButton from '../../../atoms/button/BaseButton.svelte';
@@ -14,38 +12,62 @@
 	import Translation from '../../../../app/utils/i18n/Translation';
 
 	import { soilKinds, decors } from '../../../../store/SpeciesStore';
+	import BaseLabelModel from '../../../atoms/input/BaseLabelModel';
+	import BaseNumberInputModel from '../../../atoms/input/number/BaseNumberInputModel';
+	import BaseSelectInputModel from '../../../atoms/input/select/BaseSelectInputModel';
+	import BaseButtonModel from '../../../atoms/button/BaseButtonModel';
 
 	export let species: Species = new Species([]);
 	export let user: User = new User('');
+	
+	const minVolumeLabel: BaseLabelModel = new BaseLabelModel('Volume minimal (L)', 'minVolume');
+	const minVolumeInput: BaseNumberInputModel = new BaseNumberInputModel('minVolume');
+	minVolumeInput.min = 1;
+	minVolumeInput.required = true;
+	minVolumeInput.value = species.aquarium_constraints.min_volume.toString();
 
-	formElements['minVolumeInput'].value = species.aquarium_constraints.min_volume;
-	formElements['maxVolumeInput'].value = species.aquarium_constraints.max_volume;
-	formElements['minLengthInput'].value = species.aquarium_constraints.min_length;
-	formElements['maxHeightInput'].value = species.aquarium_constraints.max_height;
-	formElements['soilKindInput'].value = species.aquarium_constraints.soil_kind;
+	const maxVolumeLabel: BaseLabelModel = new BaseLabelModel('Volume maximal (L)', 'maxVolume');
+	const maxVolumeInput: BaseNumberInputModel = new BaseNumberInputModel('maxVolume');
+	maxVolumeInput.value = species.aquarium_constraints.max_volume.toString();
+
+	const minLengthLabel: BaseLabelModel = new BaseLabelModel('Longueur minimale (cm)', 'minLength');
+	const minLengthInput: BaseNumberInputModel = new BaseNumberInputModel('minLength');
+	minLengthInput.value = species.aquarium_constraints.min_length.toString();
+
+	const maxHeightLabel: BaseLabelModel = new BaseLabelModel('Hauteur maximale (cm)', 'maxHeight');
+	const maxHeightInput: BaseNumberInputModel = new BaseNumberInputModel('maxHeight');
+	maxHeightInput.value = species.aquarium_constraints.max_height.toString();
+
+	const soilKindLabel: BaseLabelModel = new BaseLabelModel('Type de sol', 'soilKind');
+	const soilKindInput: BaseSelectInputModel = new BaseSelectInputModel('soilKind');
+	soilKindInput.value = species.aquarium_constraints.soil_kind;
+
+	const decorLabel: BaseLabelModel = new BaseLabelModel('Décor', 'decor');
+
+	let submitButton: BaseButtonModel = new BaseButtonModel('Ajouter');
 
 	if (species.aquarium_constraints.uuid !== '') {
-		formElements['submitButton'].setStyleOrThrowError('warning');
-		formElements['submitButton'].content = 'Modifier';
+		submitButton.setStyleOrThrowError('warning');
+		submitButton.content = 'Modifier';
 	}
 
 	if (species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED') {
-		formElements['submitButton'].isDisabled = true;
-		formElements['minVolumeInput'].readonly = true;
-		formElements['maxVolumeInput'].readonly = true;
-		formElements['minLengthInput'].readonly = true;
-		formElements['maxHeightInput'].readonly = true;
-		formElements['soilKindInput'].readonly = true;
+		submitButton.isDisabled = true;
+		minVolumeInput.readonly = true;
+		maxVolumeInput.readonly = true;
+		minLengthInput.readonly = true;
+		maxHeightInput.readonly = true;
+		soilKindInput.readonly = true;
 	}
 
 	async function submitAquariumConstraintsForm() {
-		formElements['submitButton'].setLoading(true);
+		submitButton.setLoading(true);
 
-		species.aquarium_constraints.min_volume = formElements['minVolumeInput'].value;
-		species.aquarium_constraints.max_volume = formElements['maxVolumeInput'].value;
-		species.aquarium_constraints.min_length = formElements['minLengthInput'].value;
-		species.aquarium_constraints.max_height = formElements['maxHeightInput'].value;
-		species.aquarium_constraints.soil_kind = formElements['soilKindInput'].value;
+		species.aquarium_constraints.min_volume = parseInt(minVolumeInput.value);
+		species.aquarium_constraints.max_volume = parseInt(maxVolumeInput.value);
+		species.aquarium_constraints.min_length = parseInt(minLengthInput.value);
+		species.aquarium_constraints.max_height = parseInt(maxHeightInput.value);
+		species.aquarium_constraints.soil_kind = soilKindInput.value;
 		species.aquarium_constraints.species_uuid = species.uuid;
 
 		const speciesUseCase: SpeciesUseCase = new SpeciesUseCase();
@@ -57,7 +79,7 @@
 		}
 
 		if (result.isFailed()) {
-			formElements['submitButton'].setLoading(false);
+			submitButton.setLoading(false);
 
 			for (const error of result.errors) {
 				if (error.code === 401) {
@@ -72,7 +94,7 @@
 			console.log(result.errors);
 		}
 
-		formElements['submitButton'].setLoading(false);
+		submitButton.setLoading(false);
 
 		if (result.success?.code === 201) {
 			species.aquarium_constraints.uuid = result.content;
@@ -84,34 +106,34 @@
 	<ul class="space-y-6">
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['minVolumeLabel']} />
-				<BaseNumberInput baseNumberInputModel={formElements['minVolumeInput']} />
+				<BaseLabel baseLabelModel={minVolumeLabel} />
+				<BaseNumberInput baseNumberInputModel={minVolumeInput} />
 			</div>
 		</li>
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['maxVolumeLabel']} />
-				<BaseNumberInput baseNumberInputModel={formElements['maxVolumeInput']} />
+				<BaseLabel baseLabelModel={maxVolumeLabel} />
+				<BaseNumberInput baseNumberInputModel={maxVolumeInput} />
 			</div>
 		</li>
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['minLengthLabel']} />
-				<BaseNumberInput baseNumberInputModel={formElements['minLengthInput']} />
+				<BaseLabel baseLabelModel={minLengthLabel} />
+				<BaseNumberInput baseNumberInputModel={minLengthInput} />
 			</div>
 		</li>
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['maxHeightLabel']} />
-				<BaseNumberInput baseNumberInputModel={formElements['maxHeightInput']} />
+				<BaseLabel baseLabelModel={maxHeightLabel} />
+				<BaseNumberInput baseNumberInputModel={maxHeightInput} />
 			</div>
 		</li>
 
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['soilKindLabel']} />
+				<BaseLabel baseLabelModel={soilKindLabel} />
 				<BaseSelectInput
-					baseSelectInputModel={formElements['soilKindInput']}
+					baseSelectInputModel={soilKindInput}
 					options={$soilKinds}
 				/>
 			</div>
@@ -119,7 +141,7 @@
 
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['decorLabel']} />
+				<BaseLabel baseLabelModel={decorLabel} />
 				{#each $decors as decor}
 					<label class="px-1" for={decor.name}>
 						<input
@@ -137,7 +159,7 @@
 		</li>
 
 		<li class="flex-c space-y-2">
-			<BaseButton baseButtonModel={formElements['submitButton']} />
+			<BaseButton baseButtonModel={submitButton} />
 		</li>
 	</ul>
 </form>

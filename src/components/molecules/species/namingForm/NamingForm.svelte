@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { formElements } from './Modeles';
-
 	import BaseButton from '../../../atoms/button/BaseButton.svelte';
 	import BaseLabel from '../../../atoms/input/BaseLabel.svelte';
 	import BaseTextInput from '../../../atoms/input/text/BaseTextInput.svelte';
@@ -13,31 +11,58 @@
 	import type Result from '../../../../app/utils/useCasesResult/Result';
 	import User from '../../../../app/user/entities/User';
 	import UserUseCase from '../../../../app/user/useCases/UseCase';
+	import BaseLabelModel from '../../../atoms/input/BaseLabelModel';
+	import BaseTextInputModel from '../../../atoms/input/text/BaseTextInputModel';
+	import BaseButtonModel from '../../../atoms/button/BaseButtonModel';
 
 	export let species: Species = new Species([]);
 	export let speciesGenres: Array<SpeciesGenre> = [];
 	export let speciesFamilies: Array<SpeciesFamily> = [];
 	export let user: User = new User('');
 
+	const speciesNameLabel: BaseLabelModel = new BaseLabelModel("Nom de l'espèce", 'speciesName');
+	const speciesNameInput: BaseTextInputModel = new BaseTextInputModel('speciesName');
+	speciesNameInput.required = true;
+	speciesNameInput.value = species.naming.name;
+
+	const speciesGenreLabel: BaseLabelModel = new BaseLabelModel('Genre', 'speciesGenre');
+	const speciesGenreInput: BaseTextInputModel = new BaseTextInputModel('speciesGenre');
+	speciesGenreInput.datalist = 'speciesGenre-list';
+	speciesGenreInput.required = true;
+	speciesGenreInput.value = species.naming.species_genre.name;
+
+	const speciesFamilyLabel: BaseLabelModel = new BaseLabelModel('Famille', 'speciesFamily');
+	const speciesFamilyInput: BaseTextInputModel = new BaseTextInputModel('speciesFamily');
+	speciesFamilyInput.datalist = 'speciesFamily-list';
+	speciesFamilyInput.required = true;
+	speciesFamilyInput.value = species.naming.species_family.name;
+
+	const speciesCommonNamesLabel: BaseLabelModel = new BaseLabelModel(
+		'Noms communs',
+		'speciesCommonNames'
+	);
+	const speciesCommonNamesInput: BaseTextInputModel = new BaseTextInputModel('speciesCommonNames');
+
+	const speciesOldNamesLabel: BaseLabelModel = new BaseLabelModel('Anciens noms', 'speciesOldNames');
+	const speciesOldNamesInput: BaseTextInputModel = new BaseTextInputModel('speciesOldNames');
+
+	let submitButton: BaseButtonModel = new BaseButtonModel('Ajouter');
+
 	let commonNames: Array<string> = species.naming.common_names;
 	let oldNames: Array<string> = species.naming.old_names;
 
-	formElements['speciesNameInput'].value = species.naming.name;
-	formElements['speciesGenreInput'].value = species.naming.species_genre.name;
-	formElements['speciesFamilyInput'].value = species.naming.species_family.name;
-
 	if (species.naming.uuid !== '') {
-		formElements['submitButton'].setStyleOrThrowError('warning');
-		formElements['submitButton'].content = 'Modifier';
+		submitButton.setStyleOrThrowError('warning');
+		submitButton.content = 'Modifier';
 	}
 
 	if (species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED') {
-		formElements['submitButton'].isDisabled = true;
-		formElements['speciesGenreInput'].readonly = true;
-		formElements['speciesFamilyInput'].readonly = true;
-		formElements['speciesNameInput'].readonly = true;
-		formElements['speciesCommonNamesInput'].readonly = true;
-		formElements['speciesOldNamesInput'].readonly = true;
+		submitButton.isDisabled = true;
+		speciesGenreInput.readonly = true;
+		speciesFamilyInput.readonly = true;
+		speciesNameInput.readonly = true;
+		speciesCommonNamesInput.readonly = true;
+		speciesOldNamesInput.readonly = true;
 	}
 
 	function linkUuidWithSpeciesGenre(speciesGenreName: string) {
@@ -66,29 +91,29 @@
 	}
 
 	function newCommonName() {
-		if (formElements['speciesCommonNamesInput'].value === '') {
+		if (speciesCommonNamesInput.value === '') {
 			return;
 		}
 
-		commonNames = [...commonNames, formElements['speciesCommonNamesInput'].value];
+		commonNames = [...commonNames, speciesCommonNamesInput.value];
 		species.naming.common_names = commonNames;
-		formElements['speciesCommonNamesInput'].value = '';
+		speciesCommonNamesInput.value = '';
 	}
 
 	function newOldName() {
-		if (formElements['speciesOldNamesInput'].value === '') {
+		if (speciesOldNamesInput.value === '') {
 			return;
 		}
 
-		oldNames = [...oldNames, formElements['speciesOldNamesInput'].value];
+		oldNames = [...oldNames, speciesOldNamesInput.value];
 		species.naming.old_names = oldNames;
-		formElements['speciesOldNamesInput'].value = '';
+		speciesOldNamesInput.value = '';
 	}
 
 	async function submitNamingForm() {
-		formElements['submitButton'].setLoading(true);
+		submitButton.setLoading(true);
 
-		species.naming.name = formElements['speciesNameInput'].value;
+		species.naming.name = speciesNameInput.value;
 
 		const speciesUseCase: SpeciesUseCase = new SpeciesUseCase();
 		let result: Result;
@@ -99,7 +124,7 @@
 		}
 
 		if (result.isFailed()) {
-			formElements['submitButton'].setLoading(false);
+			submitButton.setLoading(false);
 
 			console.log(result.errors);
 
@@ -112,7 +137,7 @@
 			}
 		}
 
-		formElements['submitButton'].setLoading(false);
+		submitButton.setLoading(false);
 
 		if (result.success?.code === 201) {
 			species.uuid = result.content;
@@ -125,12 +150,12 @@
 	<ul class="space-y-6">
 		<li class="flex-c">
 			<div class="flex-r">
-				<BaseLabel baseLabelModel={formElements['speciesGenreLabel']} />
+				<BaseLabel baseLabelModel={speciesGenreLabel} />
 				<BaseTextInput
-					baseTextInputModel={formElements['speciesGenreInput']}
-					on:change={() => linkUuidWithSpeciesGenre(formElements['speciesGenreInput'].value)}
+					baseTextInputModel={speciesGenreInput}
+					on:change={() => linkUuidWithSpeciesGenre(speciesGenreInput.value)}
 				/>
-				<datalist id={formElements['speciesGenreInput'].datalist}>
+				<datalist id={speciesGenreInput.datalist}>
 					{#each speciesGenres as genre}
 						<option value={genre.name}>
 							{genre.name}
@@ -142,12 +167,12 @@
 
 		<li class="flex-c">
 			<div class="flex-r">
-				<BaseLabel baseLabelModel={formElements['speciesFamilyLabel']} />
+				<BaseLabel baseLabelModel={speciesFamilyLabel} />
 				<BaseTextInput
-					baseTextInputModel={formElements['speciesFamilyInput']}
-					on:change={() => linkUuidWithSpeciesFamily(formElements['speciesFamilyInput'].value)}
+					baseTextInputModel={speciesFamilyInput}
+					on:change={() => linkUuidWithSpeciesFamily(speciesFamilyInput.value)}
 				/>
-				<datalist id={formElements['speciesFamilyInput'].datalist}>
+				<datalist id={speciesFamilyInput.datalist}>
 					{#each speciesFamilies as family}
 						<option value={family.name}>
 							{family.name}
@@ -159,14 +184,14 @@
 
 		<li class="flex-c">
 			<div class="flex-r">
-				<BaseLabel baseLabelModel={formElements['speciesNameLabel']} />
-				<BaseTextInput baseTextInputModel={formElements['speciesNameInput']} />
+				<BaseLabel baseLabelModel={speciesNameLabel} />
+				<BaseTextInput baseTextInputModel={speciesNameInput} />
 			</div>
 		</li>
 
 		<li class="flex-c">
 			<div class="flex-r">
-				<BaseLabel baseLabelModel={formElements['speciesCommonNamesLabel']} />
+				<BaseLabel baseLabelModel={speciesCommonNamesLabel} />
 				<div class="flex-c">
 					<ul>
 						{#each species.naming.common_names as name}
@@ -182,7 +207,7 @@
 						{/each}
 					</ul>
 					<BaseTextInput
-						baseTextInputModel={formElements['speciesCommonNamesInput']}
+						baseTextInputModel={speciesCommonNamesInput}
 						on:focusout={newCommonName}
 					/>
 				</div>
@@ -191,7 +216,7 @@
 
 		<li class="flex-c">
 			<div class="flex-r">
-				<BaseLabel baseLabelModel={formElements['speciesOldNamesLabel']} />
+				<BaseLabel baseLabelModel={speciesOldNamesLabel} />
 				<div class="flex-c">
 					<ul>
 						{#each species.naming.old_names as name}
@@ -207,7 +232,7 @@
 						{/each}
 					</ul>
 					<BaseTextInput
-						baseTextInputModel={formElements['speciesOldNamesInput']}
+						baseTextInputModel={speciesOldNamesInput}
 						on:focusout={newOldName}
 					/>
 				</div>
@@ -215,7 +240,7 @@
 		</li>
 
 		<li class="flex-c space-y-2">
-			<BaseButton baseButtonModel={formElements['submitButton']} />
+			<BaseButton baseButtonModel={submitButton} />
 		</li>
 	</ul>
 </form>

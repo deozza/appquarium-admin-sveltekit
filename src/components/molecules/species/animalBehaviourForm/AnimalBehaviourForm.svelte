@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { formElements } from './Modeles';
-
 	import BaseLabel from '../../../atoms/input/BaseLabel.svelte';
 	import BaseNumberInput from '../../../atoms/input/number/BaseNumberInput.svelte';
 	import BaseButton from '../../../atoms/button/BaseButton.svelte';
@@ -19,41 +17,86 @@
 		aquariumKinds,
 		behaviours
 	} from '../../../../store/SpeciesStore';
+	import BaseLabelModel from '../../../atoms/input/BaseLabelModel';
+	import BaseSelectInputModel from '../../../atoms/input/select/BaseSelectInputModel';
+	import BaseNumberInputModel from '../../../atoms/input/number/BaseNumberInputModel';
+	import BaseButtonModel from '../../../atoms/button/BaseButtonModel';
 
 	export let species: Species = new Species([]);
 	export let user: User = new User('');
 
-	formElements['femalePerMaleInput'].value = species.animal_behaviour.female_per_male;
-	formElements['minGroupInput'].value = species.animal_behaviour.min_group;
-	formElements['maxGroupInput'].value = species.animal_behaviour.max_group;
-	formElements['aquariumKindInput'].value = species.animal_behaviour.aquarium_kind;
-	formElements['extraspecificBehaviourInput'].value =
-		species.animal_behaviour.extraspecific_behaviour;
-	formElements['intraspecificBehaviourInput'].value =
-		species.animal_behaviour.intraspecific_behaviour;
+	const alimentationLabel: BaseLabelModel = new BaseLabelModel('Alimentation', 'alimentation');
 
+	const animalZoneLabel: BaseLabelModel = new BaseLabelModel('Dans la zone', 'zoneLabel');
+
+	const aquariumKindLabel: BaseLabelModel = new BaseLabelModel("Type d'aquarium", 'aquariumKind');
+	const aquariumKindInput: BaseSelectInputModel = new BaseSelectInputModel('aquariumKind');
+	aquariumKindInput.required = true;
+	aquariumKindInput.value = species.animal_behaviour.aquarium_kind;
+
+	const intraspecificBehaviourLabel: BaseLabelModel = new BaseLabelModel(
+		'Comportement intraspécifique',
+		'intraspecificBehaviour'
+	);
+	const intraspecificBehaviourInput: BaseSelectInputModel = new BaseSelectInputModel(
+		'intraspecificBehaviour'
+	);
+	intraspecificBehaviourInput.required = true;
+	intraspecificBehaviourInput.value = species.animal_behaviour.intraspecific_behaviour;
+
+	const extraspecificBehaviourLabel: BaseLabelModel = new BaseLabelModel(
+		'Comportement extraspécifique',
+		'extraspecificBehaviour'
+	);
+	const extraspecificBehaviourInput: BaseSelectInputModel = new BaseSelectInputModel(
+		'extraspecificBehaviour'
+	);
+	extraspecificBehaviourInput.required = true;
+	extraspecificBehaviourInput.value = species.animal_behaviour.extraspecific_behaviour;
+
+	const femalePerMaleLabel: BaseLabelModel = new BaseLabelModel(
+		'Nombre de femelles par male',
+		'femalePerMale'
+	);
+	const femalePerMaleInput: BaseNumberInputModel = new BaseNumberInputModel('femalePerMale');
+	femalePerMaleInput.value = species.animal_behaviour.female_per_male.toString();
+
+	const minGroupLabel: BaseLabelModel = new BaseLabelModel('Groupe minimum', 'minGroup');
+	const minGroupInput: BaseNumberInputModel = new BaseNumberInputModel('minGroup');
+	minGroupInput.required = true;
+	minGroupInput.min = 0;
+	minGroupInput.value = species.animal_behaviour.min_group.toString();
+
+	const maxGroupLabel: BaseLabelModel = new BaseLabelModel('Groupe maximum', 'maxGroup');
+	const maxGroupInput: BaseNumberInputModel = new BaseNumberInputModel('maxGroup');
+	maxGroupInput.value = species.animal_behaviour.max_group.toString();
+
+	const diurnalLabel: BaseLabelModel = new BaseLabelModel('Est actif', 'diurnal');
+
+	let submitButton: BaseButtonModel = new BaseButtonModel('Ajouter');
+	
 	if (species.animal_behaviour.uuid !== '') {
-		formElements['submitButton'].setStyleOrThrowError('warning');
-		formElements['submitButton'].content = 'Modifier';
+		submitButton.setStyleOrThrowError('warning');
+		submitButton.content = 'Modifier';
 	}
 
 	if (species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED') {
-		formElements['submitButton'].isDisabled = true;
-		formElements['minGroupInput'].readonly = true;
-		formElements['maxGroupInput'].readonly = true;
+		submitButton.isDisabled = true;
+		minGroupInput.readonly = true;
+		maxGroupInput.readonly = true;
 	}
 
 	async function submitAnimalBehaviourForm() {
-		formElements['submitButton'].setLoading(true);
+		submitButton.setLoading(true);
 
-		species.animal_behaviour.female_per_male = formElements['femalePerMaleInput'].value;
-		species.animal_behaviour.min_group = formElements['minGroupInput'].value;
-		species.animal_behaviour.max_group = formElements['maxGroupInput'].value;
-		species.animal_behaviour.aquarium_kind = formElements['aquariumKindInput'].value;
+		species.animal_behaviour.female_per_male = parseInt(femalePerMaleInput.value);
+		species.animal_behaviour.min_group = parseInt(minGroupInput.value);
+		species.animal_behaviour.max_group = parseInt(maxGroupInput.value);
+		species.animal_behaviour.aquarium_kind = aquariumKindInput.value;
 		species.animal_behaviour.extraspecific_behaviour =
-			formElements['extraspecificBehaviourInput'].value;
+			extraspecificBehaviourInput.value;
 		species.animal_behaviour.intraspecific_behaviour =
-			formElements['intraspecificBehaviourInput'].value;
+			intraspecificBehaviourInput.value;
 
 		species.animal_behaviour.species_uuid = species.uuid;
 
@@ -66,7 +109,7 @@
 		}
 
 		if (result.isFailed()) {
-			formElements['submitButton'].setLoading(false);
+			submitButton.setLoading(false);
 
 			for (const error of result.errors) {
 				if (error.code === 401) {
@@ -81,7 +124,7 @@
 			console.log(result.errors);
 		}
 
-		formElements['submitButton'].setLoading(false);
+		submitButton.setLoading(false);
 
 		if (result.success?.code === 201) {
 			species.animal_behaviour.uuid = result.content;
@@ -93,37 +136,37 @@
 	<ul class="space-y-6">
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['aquariumKindLabel']} />
+				<BaseLabel baseLabelModel={aquariumKindLabel} />
 				<BaseSelectInput
-					baseSelectInputModel={formElements['aquariumKindInput']}
+					baseSelectInputModel={aquariumKindInput}
 					options={$aquariumKinds}
 				/>
 			</div>
 		</li>
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['minGroupLabel']} />
-				<BaseNumberInput baseNumberInputModel={formElements['minGroupInput']} />
+				<BaseLabel baseLabelModel={minGroupLabel} />
+				<BaseNumberInput baseNumberInputModel={minGroupInput} />
 			</div>
 		</li>
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['maxGroupLabel']} />
-				<BaseNumberInput baseNumberInputModel={formElements['maxGroupInput']} />
+				<BaseLabel baseLabelModel={maxGroupLabel} />
+				<BaseNumberInput baseNumberInputModel={maxGroupInput} />
 			</div>
 		</li>
 
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['femalePerMaleLabel']} />
-				<BaseNumberInput baseNumberInputModel={formElements['femalePerMaleInput']} />
+				<BaseLabel baseLabelModel={femalePerMaleLabel} />
+				<BaseNumberInput baseNumberInputModel={femalePerMaleInput} />
 			</div>
 		</li>
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['intraspecificBehaviourLabel']} />
+				<BaseLabel baseLabelModel={intraspecificBehaviourLabel} />
 				<BaseSelectInput
-					baseSelectInputModel={formElements['intraspecificBehaviourInput']}
+					baseSelectInputModel={intraspecificBehaviourInput}
 					options={$behaviours}
 				/>
 			</div>
@@ -131,16 +174,16 @@
 
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['extraspecificBehaviourLabel']} />
+				<BaseLabel baseLabelModel={extraspecificBehaviourLabel} />
 				<BaseSelectInput
-					baseSelectInputModel={formElements['extraspecificBehaviourInput']}
+					baseSelectInputModel={extraspecificBehaviourInput}
 					options={$behaviours}
 				/>
 			</div>
 		</li>
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['diurnalLabel']} />
+				<BaseLabel baseLabelModel={diurnalLabel} />
 				<div class="flex-r" style="flex: 2">
 					<label class="w-1/2 px-3 " for="diurnalTrue">
 						<input
@@ -169,7 +212,7 @@
 		</li>
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['animalZoneLabel']} />
+				<BaseLabel baseLabelModel={animalZoneLabel} />
 				<div class="flex-r" style="flex: 2">
 					{#each $animalZones as zone}
 						<label class="px-1" for={zone.name}>
@@ -189,7 +232,7 @@
 		</li>
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['alimentationLabel']} />
+				<BaseLabel baseLabelModel={alimentationLabel} />
 				<div class="flex-r" style="flex: 2">
 					{#each $alimentations as alimentation}
 						<label class="px-1" for={alimentation.name}>
@@ -209,7 +252,7 @@
 		</li>
 
 		<li class="flex-c space-y-2">
-			<BaseButton baseButtonModel={formElements['submitButton']} />
+			<BaseButton baseButtonModel={submitButton} />
 		</li>
 	</ul>
 </form>

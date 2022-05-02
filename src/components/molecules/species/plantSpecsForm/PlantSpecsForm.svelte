@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { formElements } from './Modeles';
-
 	import BaseLabel from '../../../atoms/input/BaseLabel.svelte';
 	import BaseNumberInput from '../../../atoms/input/number/BaseNumberInput.svelte';
 	import BaseButton from '../../../atoms/button/BaseButton.svelte';
@@ -11,32 +9,57 @@
 	import UserUseCase from '../../../../app/user/useCases/UseCase';
 	import BaseSelectInput from '../../../atoms/input/select/BaseSelectInput.svelte';
 	import { plantZones, growthSpeeds } from '../../../../store/SpeciesStore';
+	import BaseButtonModel from '../../../atoms/button/BaseButtonModel';
+	import BaseLabelModel from '../../../atoms/input/BaseLabelModel';
+	import BaseSelectInputModel from '../../../atoms/input/select/BaseSelectInputModel';
+	import BaseNumberInputModel from '../../../atoms/input/number/BaseNumberInputModel';
 
 	export let species: Species = new Species([]);
 	export let user: User = new User('');
 
-	formElements['sizeInput'].value = species.plant_specs.size.toString();
-	formElements['zoneInput'].value = species.plant_specs.zone.toString();
-	formElements['growthSpeedInput'].value = species.plant_specs.growth_speed;
+	const sizeLabel: BaseLabelModel = new BaseLabelModel('Taille maximale (cm)', 'size');
+	const sizeInput: BaseNumberInputModel = new BaseNumberInputModel('size');
+	sizeInput.required = true;
+	sizeInput.min = 0;
+	sizeInput.value = species.plant_specs.size.toString();
+
+	const zoneLabel: BaseLabelModel = new BaseLabelModel('Zone de plantation', 'zone');
+	const zoneInput: BaseSelectInputModel = new BaseSelectInputModel('zone');
+	zoneInput.required = true;
+	zoneInput.value = species.plant_specs.zone.toString();
+
+	const growthSpeedLabel: BaseLabelModel = new BaseLabelModel('Croissance', 'growthSpeed');
+	const growthSpeedInput: BaseSelectInputModel = new BaseSelectInputModel('growthSpeed');
+	growthSpeedInput.required = true;
+	growthSpeedInput.value = species.plant_specs.growth_speed;
+
+	const needInFertilizerLabel: BaseLabelModel = new BaseLabelModel(
+		"Besoin d'un fertilizant ?",
+		'needInFertilizer'
+	);
+
+	const needInCarboneLabel: BaseLabelModel = new BaseLabelModel('Besoin de CO2 ?', 'needInCarbone');
+
+	let submitButton: BaseButtonModel = new BaseButtonModel('Ajouter');
 
 	if (species.plant_specs.uuid !== '') {
-		formElements['submitButton'].setStyleOrThrowError('warning');
-		formElements['submitButton'].content = 'Modifier';
+		submitButton.setStyleOrThrowError('warning');
+		submitButton.content = 'Modifier';
 	}
 
 	if (species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED') {
-		formElements['submitButton'].isDisabled = true;
-		formElements['sizeInput'].readonly = true;
-		formElements['zoneInput'].readonly = true;
-		formElements['growthSpeedInput'].readonly = true;
+		submitButton.isDisabled = true;
+		sizeInput.readonly = true;
+		zoneInput.readonly = true;
+		growthSpeedInput.readonly = true;
 	}
 
 	async function submitPlantSpecsForm() {
-		formElements['submitButton'].setLoading(true);
+		submitButton.setLoading(true);
 
-		species.plant_specs.size = formElements['sizeInput'].value;
-		species.plant_specs.zone = formElements['zoneInput'].value;
-		species.plant_specs.growth_speed = formElements['growthSpeedInput'].value;
+		species.plant_specs.size = parseInt(sizeInput.value);
+		species.plant_specs.zone = zoneInput.value;
+		species.plant_specs.growth_speed = growthSpeedInput.value;
 		species.plant_specs.species_uuid = species.uuid;
 
 		const speciesUseCase: SpeciesUseCase = new SpeciesUseCase();
@@ -48,7 +71,7 @@
 		}
 
 		if (result.isFailed()) {
-			formElements['submitButton'].setLoading(false);
+			submitButton.setLoading(false);
 
 			for (const error of result.errors) {
 				if (error.code === 401) {
@@ -62,7 +85,7 @@
 			}
 		}
 
-		formElements['submitButton'].setLoading(false);
+		submitButton.setLoading(false);
 
 		if (result.success?.code === 201) {
 			species.plant_specs.uuid = result.content;
@@ -74,19 +97,19 @@
 	<ul class="space-y-6">
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['sizeLabel']} />
-				<BaseNumberInput baseNumberInputModel={formElements['sizeInput']} />
+				<BaseLabel baseLabelModel={sizeLabel} />
+				<BaseNumberInput baseNumberInputModel={sizeInput} />
 			</div>
 		</li>
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['zoneLabel']} />
-				<BaseSelectInput baseSelectInputModel={formElements['zoneInput']} options={$plantZones} />
+				<BaseLabel baseLabelModel={zoneLabel} />
+				<BaseSelectInput baseSelectInputModel={zoneInput} options={$plantZones} />
 			</div>
 		</li>
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['needInFertilizerLabel']} />
+				<BaseLabel baseLabelModel={needInFertilizerLabel} />
 				<div class="flex-r" style="flex: 2">
 					<label class="w-1/2 py-2 px-3 " for="needInFertilizerTrue">
 						<input
@@ -115,7 +138,7 @@
 		</li>
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['needInCarboneLabel']} />
+				<BaseLabel baseLabelModel={needInCarboneLabel} />
 				<div class="flex-r" style="flex: 2">
 					<label class="w-1/2 py-2 px-3 " for="needInCarboneTrue">
 						<input
@@ -144,16 +167,16 @@
 		</li>
 		<li class="flex-c">
 			<div class="flex-r ">
-				<BaseLabel baseLabelModel={formElements['growthSpeedLabel']} />
+				<BaseLabel baseLabelModel={growthSpeedLabel} />
 				<BaseSelectInput
-					baseSelectInputModel={formElements['growthSpeedInput']}
+					baseSelectInputModel={growthSpeedInput}
 					options={$growthSpeeds}
 				/>
 			</div>
 		</li>
 
 		<li class="flex-c space-y-2">
-			<BaseButton baseButtonModel={formElements['submitButton']} />
+			<BaseButton baseButtonModel={submitButton} />
 		</li>
 	</ul>
 </form>
