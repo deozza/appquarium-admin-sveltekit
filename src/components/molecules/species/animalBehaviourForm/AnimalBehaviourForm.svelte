@@ -59,7 +59,7 @@
 		'femalePerMale'
 	);
 	const femalePerMaleInput: BaseNumberInputModel = new BaseNumberInputModel('femalePerMale');
-	femalePerMaleInput.value = species.animal_behaviour.female_per_male.toString();
+	femalePerMaleInput.value = species.animal_behaviour.female_per_male !== null ? species.animal_behaviour.female_per_male.toString() : null;
 
 	const minGroupLabel: BaseLabelModel = new BaseLabelModel('Groupe minimum', 'minGroup');
 	const minGroupInput: BaseNumberInputModel = new BaseNumberInputModel('minGroup');
@@ -69,7 +69,7 @@
 
 	const maxGroupLabel: BaseLabelModel = new BaseLabelModel('Groupe maximum', 'maxGroup');
 	const maxGroupInput: BaseNumberInputModel = new BaseNumberInputModel('maxGroup');
-	maxGroupInput.value = species.animal_behaviour.max_group.toString();
+	maxGroupInput.value = species.animal_behaviour.max_group !== null ? species.animal_behaviour.max_group.toString() : null;
 
 	const diurnalLabel: BaseLabelModel = new BaseLabelModel('Est actif', 'diurnal');
 

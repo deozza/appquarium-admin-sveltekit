@@ -28,15 +28,15 @@
 
 	const maxVolumeLabel: BaseLabelModel = new BaseLabelModel('Volume maximal (L)', 'maxVolume');
 	const maxVolumeInput: BaseNumberInputModel = new BaseNumberInputModel('maxVolume');
-	maxVolumeInput.value = species.aquarium_constraints.max_volume.toString();
+	maxVolumeInput.value = species.aquarium_constraints.max_volume !== null ? species.aquarium_constraints.max_volume.toString() : null;
 
 	const minLengthLabel: BaseLabelModel = new BaseLabelModel('Longueur minimale (cm)', 'minLength');
 	const minLengthInput: BaseNumberInputModel = new BaseNumberInputModel('minLength');
-	minLengthInput.value = species.aquarium_constraints.min_length.toString();
+	minLengthInput.value = species.aquarium_constraints.min_length !== null ? species.aquarium_constraints.min_length.toString() : null;
 
 	const maxHeightLabel: BaseLabelModel = new BaseLabelModel('Hauteur maximale (cm)', 'maxHeight');
 	const maxHeightInput: BaseNumberInputModel = new BaseNumberInputModel('maxHeight');
-	maxHeightInput.value = species.aquarium_constraints.max_height.toString();
+	maxHeightInput.value = species.aquarium_constraints.max_height !== null ? species.aquarium_constraints.max_height.toString() : null;
 
 	const soilKindLabel: BaseLabelModel = new BaseLabelModel('Type de sol', 'soilKind');
 	const soilKindInput: BaseSelectInputModel = new BaseSelectInputModel('soilKind');
