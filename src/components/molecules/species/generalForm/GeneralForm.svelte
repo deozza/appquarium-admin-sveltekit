@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { formElements } from './Modeles';
-
 	import BaseLabel from '../../../atoms/input/BaseLabel.svelte';
 	import BaseButton from '../../../atoms/button/BaseButton.svelte';
 	import BaseTextInput from '../../../atoms/input/text/BaseTextInput.svelte';
@@ -13,32 +11,49 @@
 	import Translation from '../../../../app/utils/i18n/Translation';
 
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
+	import BaseButtonModel from '../../../atoms/button/BaseButtonModel';
+	import BaseLabelModel from '../../../atoms/input/BaseLabelModel';
+	import BaseTextInputModel from '../../../atoms/input/text/BaseTextInputModel';
 
 	export let species: Species = new Species([]);
 	export let speciesOrigins: Array<object> = [];
 	export let user: User = new User('');
 
-	formElements['originInput'].value = species.origin;
+	const submitButton: BaseButtonModel = new BaseButtonModel('Ajouter');
+	const originLabel: BaseLabelModel = new BaseLabelModel('Origine', 'origin');
+	const originInput: BaseTextInputModel = new BaseTextInputModel('origin');
+	originInput.datalist = 'originInput-list';
+	originInput.required = true;
 
-	if (species.origin !== null) {
-		formElements['submitButton'].setStyleOrThrowError('warning');
-		formElements['submitButton'].content = 'Modifier';
-	}
+	onMount(() => {
+		console.log(species.publication_state)
 
-	if (species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED') {
-		formElements['submitButton'].isDisabled = true;
-		formElements['originInput'].readonly = true;
-	}
+		originInput.value = species.origin;
+
+		if (species.origin !== null) {
+			submitButton.setStyleOrThrowError('warning');
+			submitButton.content = 'Modifier';
+		}
+
+		if (species.publication_state !== 'DRAFT' && species.publication_state !== 'MODERATED') {
+			submitButton.isDisabled = true;
+			originInput.readonly = true;
+		}
+
+		console.log(submitButton)
+
+	});
 
 	async function submitGeneralForm() {
-		formElements['submitButton'].setLoading(true);
-		species.origin = formElements['originInput'].value;
+		submitButton.setLoading(true);
+		species.origin = originInput.value;
 
 		const speciesUseCase: SpeciesUseCase = new SpeciesUseCase();
 		const result: Result = await speciesUseCase.updateGeneralInfos(user.jwt, species);
 
 		if (result.isFailed()) {
-			formElements['submitButton'].setLoading(false);
+			submitButton.setLoading(false);
 
 			for (const error of result.errors) {
 				if (error.code === 401) {
@@ -52,7 +67,7 @@
 			}
 		}
 
-		formElements['submitButton'].setLoading(false);
+		submitButton.setLoading(false);
 
 		if (result.success?.code === 201) {
 			species.uuid = result.content;
@@ -65,9 +80,9 @@
 	<ul class="space-y-6">
 		<li class="flex-c">
 			<div class="flex-r">
-				<BaseLabel baseLabelModel={formElements['originLabel']} />
-				<BaseTextInput baseTextInputModel={formElements['originInput']} />
-				<datalist id={formElements['originInput'].datalist}>
+				<BaseLabel baseLabelModel={originLabel} />
+				<BaseTextInput baseTextInputModel={originInput} />
+				<datalist id={originInput.datalist}>
 					{#each speciesOrigins as origin}
 						<option value={origin['name']}>
 							{Translation.translate(['origins',origin['name']])}
@@ -78,7 +93,7 @@
 		</li>
 
 		<li class="flex-c space-y-2">
-			<BaseButton baseButtonModel={formElements['submitButton']} />
+			<BaseButton baseButtonModel={submitButton} />
 		</li>
 	</ul>
 </form>
