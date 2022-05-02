@@ -3,8 +3,12 @@ export default class Translation {
 
     public static translate(keys: Array<string>): string {
         let translated: object | string = i18n
-        const local: string = navigator.language
+        let local: string = 'fr'
 
+        if(navigator !== undefined && navigator !== null
+          && navigator.language !== undefined && navigator.language !== null){
+            local = navigator.language
+        }
 
         for(const key of keys){
             if(!translated.hasOwnProperty(key)){

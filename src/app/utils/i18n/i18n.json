@@ -144,5 +144,33 @@
             "fr": "racine de mangrove",
             "en": "mangrove roots"
         }
+    },
+    "forms": {
+        "buttons": {
+            "edit": {
+                "fr": "Modifier",
+                "en": "Edit"
+            },
+            "add": {
+                "fr": "Ajouter",
+                "en": "Add"
+            },
+            "delete": {
+                "fr": "Supprimer",
+                "en": "Delete"
+            }
+        },
+        "species": {
+            "general_infos": {
+                "title": {
+                    "fr": "Infos générales",
+                    "en": "General infos"
+                },
+                "origin": {
+                    "fr": "Origine",
+                    "en": "Origin"
+                }
+            }
+        }
     }
 }
