@@ -1,3 +1,23 @@
+<script context="module" lang="ts">
+	import UserUseCase from '../app/user/useCases/UseCase';
+	import type Result from '../app/utils/useCasesResult/Result';
+	import { browser } from '$app/env';
+
+	export async function load({}) {
+		const userUserCase: UserUseCase = new UserUseCase();
+		const token: Result = userUserCase.getToken();
+
+		if (browser && token.isSuccessful()) {
+			return {
+				redirect: '/admin',
+				status: 302
+			};
+		}
+
+		return {};
+	}
+</script>
+
 <script lang="ts">
 	import { goto } from '$app/navigation';
 
@@ -13,9 +33,6 @@
 	import BaseButton from '../components/atoms/button/BaseButton.svelte';
 	import BaseTextInput from '../components/atoms/input/text/BaseTextInput.svelte';
 	import BaseLabel from '../components/atoms/input/BaseLabel.svelte';
-
-	import UserUseCase from '../app/user/useCases/UseCase';
-	import type Result from '../app/utils/useCasesResult/Result';
 
 	export let currentPageState: string = pageStates['normal'];
 

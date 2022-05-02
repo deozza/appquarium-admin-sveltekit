@@ -3,7 +3,7 @@
 	"description": "Admin platform for appquarium",
 	"version": "0.2.0",
 	"scripts": {
-		"dev": "svelte-kit dev",
+		"dev": "svelte-kit dev --host 0.0.0.0",
 		"build": "svelte-kit build",
 		"package": "svelte-kit package",
 		"preview": "svelte-kit preview",
@@ -39,5 +39,8 @@
 		"tslib": "^2.3.1",
 		"typescript": "~4.5.4"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"autoprefixer": "^10.4.5"
+	}
 }
